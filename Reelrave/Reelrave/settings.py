@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     #Local apps
     'movies.apps.MoviesConfig',
     'shows.apps.ShowsConfig',
+    'persons.apps.PersonsConfig',
 ]
 
 MIDDLEWARE = [
