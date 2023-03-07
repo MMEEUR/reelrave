@@ -52,7 +52,7 @@ class Movie(models.Model):
     
 class Picture(models.Model):
     def get_image_filename(instance, filename):
-        return f"movies/{instance.movies.name}/pictures/{filename}"
+        return f"movies/{instance.movie.name}/pictures/{filename}"
     
     title = models.CharField(max_length=30)
     movie = models.ForeignKey(Movie, related_name='pictures', on_delete=models.CASCADE)
@@ -64,7 +64,7 @@ class Picture(models.Model):
 
 class Trailer(models.Model):
     def get_video_filename(instance, filename):
-        return f"movies/{instance.movies.name}/trailers/{filename}"
+        return f"movies/{instance.movie.name}/trailers/{filename}"
     
     title = models.CharField(max_length=30)
     movie = models.ForeignKey(Movie, related_name='trailers', on_delete=models.CASCADE)
