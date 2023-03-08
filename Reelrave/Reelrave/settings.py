@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'movies.apps.MoviesConfig',
     'shows.apps.ShowsConfig',
     'persons.apps.PersonsConfig',
+    'specifications.apps.SpecificationsConfig',
 ]
 
 MIDDLEWARE = [
