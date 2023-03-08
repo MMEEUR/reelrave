@@ -28,10 +28,14 @@ class Country(models.Model):
         return self.name
 
 class Movie(models.Model):
+    def get_image_filename(instance, filename):
+        return f"movies/{instance.name}/baners/{filename}"
+    
     RATINGS = (('G', 'G'), ('PG', 'PG'), ('PG-13', 'PG-13'), ('R', 'R'), ('NC-17', 'NC-17'))
     
     name = models.CharField(max_length=100, unique=True)
     slug = models.CharField(max_length=100, unique=True, editable=False)
+    baner = models.ImageField(upload_to=get_image_filename)
     release_date = models.DateTimeField()
     time = models.DurationField()
     content_rating = models.CharField(max_length=5, choices=RATINGS)
