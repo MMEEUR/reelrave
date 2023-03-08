@@ -25,6 +25,9 @@ class Movie(models.Model):
     storyline = models.TextField()
     country_of_origin = models.ManyToManyField(Country, related_name='country_movies')
     
+    class Meta:
+        ordering = ('-release_date',)
+    
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
