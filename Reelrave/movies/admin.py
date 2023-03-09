@@ -8,6 +8,7 @@ class MovieAdmin(admin.ModelAdmin):
     list_filter = ('release_date', 'genre', 'content_rating')
     ordering = ('-release_date',)
     search_fields = ('name', 'director')
+    raw_id_fields = ('director', 'writers', 'actors')
     
 @admin.register(Picture)
 class PictureAdmin(admin.ModelAdmin):
