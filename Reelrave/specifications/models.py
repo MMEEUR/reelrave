@@ -14,9 +14,12 @@ class Genre(models.Model):
         return self.name
 
 class Country(models.Model):
+    def get_image_filename(instance, filename):
+        return f"countries/{instance.name}/{filename}"
+    
     name = models.CharField(max_length=100, unique=True)
     slug = models.CharField(max_length=100, unique=True, editable=False)
-    flag = models.ImageField(upload_to='countries/')
+    flag = models.ImageField(upload_to=get_image_filename)
     
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
