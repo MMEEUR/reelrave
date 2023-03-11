@@ -2,8 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.contrib.contenttypes.fields import GenericRelation
 from persons.models import Person
-from specifications.models import Genre, Country, Picture, Video
-from accounts.models import Comment
+from specifications.models import Genre, Country, Photo, Video, Comment
 
 # Create your models here.
 class Show(models.Model):
@@ -28,7 +27,7 @@ class Show(models.Model):
     description = models.CharField(max_length=250)
     storyline = models.TextField()
     country_of_origin = models.ManyToManyField(Country, related_name='country_movies')
-    pictures = GenericRelation(Picture)
+    pictures = GenericRelation(Photo)
     videos = GenericRelation(Video)
     comments = GenericRelation(Comment)
     
@@ -64,7 +63,7 @@ class Episode(models.Model):
     trailer = models.FileField(upload_to=get_trailer_filename) 
     description = models.CharField(max_length=250)
     released = models.DateField() 
-    pictures = GenericRelation(Picture)
+    pictures = GenericRelation(Photo)
     videos = GenericRelation(Video)
     
     class Meta:
