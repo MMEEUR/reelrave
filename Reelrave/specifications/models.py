@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from accounts.models import Profile
 
 # Create your models here.
 class Photo(models.Model):
@@ -34,6 +35,15 @@ class Video(models.Model):
     
     def __str__(self):
         return self.title
+    
+class Comment(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='user_comments')
+    body = models.TextField()
+    email = models.EmailField()
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    active = models.BooleanField(default=False)
 
 class Genre(models.Model):
     name = models.CharField(max_length=20, unique=True)
