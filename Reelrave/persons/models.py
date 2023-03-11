@@ -14,7 +14,7 @@ class Person(models.Model):
         return self.name
     
 class Role(models.Model):  
-    person = models.ManyToManyField(Person, related_name='roles')
+    persons = models.ManyToManyField(Person, related_name='roles')
     role = models.CharField(max_length=20)
     
     def __str__(self):
