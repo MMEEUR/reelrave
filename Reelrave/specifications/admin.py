@@ -18,12 +18,12 @@ class GenreAdmin(admin.ModelAdmin):
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('title', 'content_object', 'released')
     list_filter = ('released',)
-    ordering = ('-released')
+    ordering = ('-released',)
     search_fields = ('title', 'content_object')
     
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
     list_display = ('title', 'content_object', 'released')
     list_filter = ('released',)
-    ordering = ('-released')
+    ordering = ('-released',)
     search_fields = ('title', 'content_object')
