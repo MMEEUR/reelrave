@@ -4,7 +4,7 @@ from .models import Person, Role
 # Register your models here.
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'display_roles', 'birthday', 'height_centimeter')
+    list_display = ('name', 'display_roles', 'birthday', 'height_centimeter')
     list_filter = ('roles',)
     ordering = ('name',)
     search_fields = ('name',)
