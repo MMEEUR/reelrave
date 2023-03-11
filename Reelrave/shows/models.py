@@ -20,13 +20,13 @@ class Show(models.Model):
     trailer = models.FileField(upload_to=get_trailer_filename)
     release_date = models.DateField()
     content_rating = models.CharField(max_length=5, choices=RATINGS)
-    genre = models.ManyToManyField(Genre, related_name='genre_movies')
-    director = models.ManyToManyField(Person, related_name='director_movies')
-    writers = models.ManyToManyField(Person, related_name='writer_movies')
-    actors = models.ManyToManyField(Person, related_name='actor_movies')
+    genre = models.ManyToManyField(Genre, related_name='genre_shows')
+    director = models.ManyToManyField(Person, related_name='director_shows')
+    writers = models.ManyToManyField(Person, related_name='writer_shows')
+    actors = models.ManyToManyField(Person, related_name='actor_shows')
     description = models.CharField(max_length=250)
     storyline = models.TextField()
-    country_of_origin = models.ManyToManyField(Country, related_name='country_movies')
+    country_of_origin = models.ManyToManyField(Country, related_name='country_shows')
     pictures = GenericRelation(Photo)
     videos = GenericRelation(Video)
     comments = GenericRelation(Comment)
@@ -67,7 +67,7 @@ class Episode(models.Model):
     videos = GenericRelation(Video)
     
     class Meta:
-        unique_together = ('show', 'number')
+        unique_together = ('season', 'number')
         ordering = ['number']
         
     def __str__(self) -> str:
