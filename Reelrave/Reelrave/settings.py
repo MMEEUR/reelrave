@@ -40,12 +40,18 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
+    #account app
+    'accounts.apps.AccountsConfig',
+       
+    #django defualt apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    #packages
     'rest_framework',
     
     #Local apps
