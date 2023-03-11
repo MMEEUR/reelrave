@@ -18,4 +18,4 @@ class RoleAdmin(admin.ModelAdmin):
     list_display = ('role',)
     ordering = ('role',)
     search_fields = ('role',)
-    raw_id_fields = ('person',)
+    raw_id_fields = ('persons',)
