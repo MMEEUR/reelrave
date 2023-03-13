@@ -12,7 +12,7 @@ class Photo(models.Model):
         return f"{content_type_name.lower()}s/{instance.content_object.name}/photo/{filename}"
     
     title = models.CharField(max_length=30)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to={"model__in": ('show', 'movie', 'episode')})
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     image = models.ImageField(upload_to=get_photo_filename)
@@ -27,7 +27,7 @@ class Video(models.Model):
         return f"{content_type_name.lower()}s/{instance.content_object.name}/videos/{filename}"
     
     title = models.CharField(max_length=30)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to={"model__in": ('show', 'movie', 'episode')})
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     video = models.FileField(upload_to=get_video_filename, validators=[FileExtensionValidator(allowed_extensions=['mov','avi','mp4','webm','mkv'])])
@@ -39,10 +39,10 @@ class Video(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='user_comments')
     body = models.TextField()
-    email = models.EmailField()
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to={"model__in": ('show', 'movie')})
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+    created = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=False)
 
 class Genre(models.Model):
