@@ -8,5 +8,5 @@ from rest_framework.response import Response
 @api_view(['GET', 'POST'])
 def movie_list(request):
     data = Movie.objects.all()
-    serializer_data = MovieSerializer(data, many=True)
+    serializer_data = MovieSerializer(data=data, many=True)
     return Response(serializer_data.data)
