@@ -17,10 +17,10 @@ class VideoAdmin(admin.ModelAdmin):
     
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'content_object', 'created', 'active')
+    list_display = ('user_profile', 'content_object', 'created', 'active')
     list_filter = ('active', 'created')
     ordering = ('active', '-created')
-    search_fields = ('user', 'body', 'content_object')
+    search_fields = ('user_profile', 'body', 'content_object')
     
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
