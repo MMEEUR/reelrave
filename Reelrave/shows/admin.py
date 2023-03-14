@@ -1,7 +1,15 @@
 from django.contrib import admin
+from django.contrib.contenttypes.admin import GenericTabularInline
 from .models import Show, Season, Episode
+from specifications.models import Photo, Video
 
-# Register your models here.
+#Register your models here.
+class PhotoInline(GenericTabularInline):
+    model = Photo
+    
+class VideoInline(GenericTabularInline):
+    model = Video
+    
 @admin.register(Show)
 class ShowAdmin(admin.ModelAdmin):
     list_display = ('name', 'release_date', 'ending_date', 'content_rating', 'season_count', 'episode_count')
@@ -9,6 +17,7 @@ class ShowAdmin(admin.ModelAdmin):
     search_fields = ('name', 'director')
     ordering = ('-release_date',)
     raw_id_fields = ('director', 'writers', 'actors', 'country_of_origin')
+    inlines = [PhotoInline, VideoInline]
     
     def season_count(self, obj):
         return obj.seasons.count()
@@ -37,3 +46,4 @@ class EpisodeAdmin(admin.ModelAdmin):
     list_filter = ('released',)
     search_fields = ('season', 'title')
     ordering = ('-released', '-season')
+    inlines = [PhotoInline, VideoInline]
