@@ -12,7 +12,7 @@ class VideoInline(GenericTabularInline):
     
 @admin.register(Show)
 class ShowAdmin(admin.ModelAdmin):
-    list_display = ('name', 'release_date', 'ending_date', 'content_rating', 'season_count', 'episode_count')
+    list_display = ('name', 'display_genres', 'release_date', 'ending_date', 'content_rating', 'season_count', 'episode_count', 'comments_count')
     list_filter = ('content_rating', 'release_date')
     search_fields = ('name', 'director')
     ordering = ('-release_date',)
@@ -30,6 +30,14 @@ class ShowAdmin(admin.ModelAdmin):
         return episode_count
     episode_count.short_description = 'Episodes'
 
+    def comments_count(self, obj):
+        return obj.comments.count()
+    comments_count.short_description = 'Comments'
+    
+    def display_genres(self, obj):
+        return ", ".join([genre.name for genre in obj.genre.all()])
+    display_genres.short_description = 'Genres'
+    
 @admin.register(Season)
 class SeasonAdmin(admin.ModelAdmin):
     list_display = ('show', 'number', 'episode_count')
