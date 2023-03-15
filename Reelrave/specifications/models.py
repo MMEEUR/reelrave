@@ -34,7 +34,7 @@ class Video(models.Model):
     released = models.DateTimeField(auto_now_add=True, editable=False)
     
     def __str__(self):
-        return self.title
+        return f"{self.title} \"{self.content_object}\""
     
 class Comment(models.Model):
     user_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='user_comments')
@@ -44,6 +44,9 @@ class Comment(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     created = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=False)
+    
+    def __str__(self) -> str:
+        return f"{self.user_profile} on {self.content_object}"
 
 class Genre(models.Model):
     name = models.CharField(max_length=20, unique=True)
