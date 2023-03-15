@@ -45,6 +45,9 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=False)
     
+    class Meta:
+        ordering = ('-created',)
+    
     def __str__(self) -> str:
         return f"{self.user_profile} on {self.content_object}"
 
