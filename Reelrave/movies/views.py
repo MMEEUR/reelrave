@@ -2,36 +2,36 @@ from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from rest_framework.views import APIView
 from rest_framework.status import HTTP_201_CREATED
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 from .models import Movie
-from specifications.models import Comment
-from .serializers import MovieSerializer
+from .serializers import MovieListSerializer, MovieDetailSerializer
 from specifications.serializers import CommentSerializer
 
 # Create your views here.
-@api_view(['GET'])
-def movie_list(request):
-    data = Movie.objects.all()
-    serializer = MovieSerializer(data, many=True)
-    return Response(serializer.data)
+class MovieListView(ListAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieListSerializer
 
-@api_view(['GET'])
-def movie_detail(request, slug):
-    movie = get_object_or_404(Movie, slug=slug)
-    serializer = MovieSerializer(movie)
-    return Response(serializer.data)
-
-class MovieCommentView(APIView):
+class MovieDetailView(APIView):
     def get(self, request, slug):
         movie = get_object_or_404(Movie, slug=slug)
-        content_type = ContentType.objects.get_for_model(movie)
-        movie_comments = Comment.objects.filter(content_type=content_type, object_id=movie.id, active=True)
-        serializer = CommentSerializer(movie_comments, many=True)
+        serializer = MovieDetailSerializer(movie)
+        
         return Response(serializer.data)
     
     def post(self, request, slug):
-        serializer = CommentSerializer(data=request.data)
+        movie = get_object_or_404(Movie, slug=slug)
+        content_type = ContentType.objects.get_for_model(movie)
+        
+        # update data with content_type and object_id
+        data = request.data
+        data['user_profile'] = request.user.profile.id
+        data['content_type'] = content_type.id
+        data['object_id'] = movie.id
+        
+        serializer = CommentSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        
         return Response(serializer.data, status=HTTP_201_CREATED)
