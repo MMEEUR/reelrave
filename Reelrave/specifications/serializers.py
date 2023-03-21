@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Comment, Genre, Country
+from .models import Comment, Genre, Country, Photo, Video
 from accounts.serializers import UserCommentSerializer
 
 class CommentSerializer(ModelSerializer):
@@ -17,4 +17,14 @@ class GenreSerializer(ModelSerializer):
 class CountrySeralizer(ModelSerializer):
     class Meta:
         model = Country
-        exclude = ('id', 'flag')
+        exclude = ('id',)
+        
+class PhotoSerializer(ModelSerializer):
+    class Meta:
+        model = Photo
+        fields = ('title', 'image', 'released')
+        
+class VideoSerializer(ModelSerializer):
+    class Meta:
+        model = Video
+        fields = ('title', 'video', 'released')
