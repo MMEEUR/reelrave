@@ -9,7 +9,6 @@ class MovieDetailSerializer(ModelSerializer):
     director = PersonSerializer(many=True, read_only=True)
     writers = PersonSerializer(many=True, read_only=True)
     actors = PersonSerializer(many=True, read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
     pictures = PhotoSerializer(many=True, read_only=True)
     videos = VideoSerializer(many=True, read_only=True)
     
