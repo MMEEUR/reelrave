@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.status import HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
 from rest_framework.response import Response
 from .serializers import ShowListSerializer, ShowDetailSerializer
-from specifications.serializers import CommentCreateSerializer
+from specifications.serializers import CommentCreateSerializer, CommentSerializer
 from .models import Show
 
 # Create your views here.
@@ -18,9 +18,14 @@ class ShowListView(APIView):
 class ShowDetailView(APIView):
     def get(self, request, slug):
         show = get_object_or_404(Show, slug=slug)
-        serializer = ShowDetailSerializer(show)
+        comments = show.comments.filter(active=True)
         
-        return Response(serializer.data)
+        data = {
+            'show': ShowDetailSerializer(show).data,
+            'comments': CommentSerializer(comments, many=True).data
+        }
+        
+        return Response(data)
     
     def post(self, request, slug):
         if not request.user.is_authenticated or not request.user.profile:
