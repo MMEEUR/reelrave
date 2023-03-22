@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, ValidationError, CharField
 from .models import Profile
         
-class CreateUserSerializer(serializers.ModelSerializer):
-    confirm_password = serializers.CharField(write_only=True)
+class CreateUserSerializer(ModelSerializer):
+    confirm_password = CharField(write_only=True)
     
     class Meta:
         model = get_user_model()
@@ -12,7 +12,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if data['password'] != data['confirm_password']:
-            raise serializers.ValidationError("Passwords must match.")
+            raise ValidationError("Passwords must match.")
         return data
 
     def create(self, validated_data):
@@ -20,19 +20,19 @@ class CreateUserSerializer(serializers.ModelSerializer):
         user = get_user_model().objects.create_user(**validated_data)
         return user
     
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('username',)
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(ModelSerializer):
     user = UserSerializer(read_only=True)
     
     class Meta:
         model = Profile
         exclude = ('id',)
         
-class UserCommentSerializer(serializers.ModelSerializer):
+class UserCommentSerializer(ModelSerializer):
     user = UserSerializer(read_only=True)
     
     class Meta:
