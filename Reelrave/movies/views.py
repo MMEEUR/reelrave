@@ -1,17 +1,19 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from rest_framework.views import APIView
-from rest_framework.status import HTTP_201_CREATED
+from rest_framework.status import HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView
 from .models import Movie
 from .serializers import MovieListSerializer, MovieDetailSerializer
-from specifications.serializers import CommentSerializer
+from specifications.serializers import CommentCreateSerializer
 
 # Create your views here.
-class MovieListView(ListAPIView):
-    queryset = Movie.objects.all()
-    serializer_class = MovieListSerializer
+class MovieListView(APIView):
+    def get(self, request):
+        shows = Movie.objects.all()
+        serializer = MovieListSerializer(shows, many=True)
+        
+        return Response(serializer.data)
 
 class MovieDetailView(APIView):
     def get(self, request, slug):
@@ -21,6 +23,9 @@ class MovieDetailView(APIView):
         return Response(serializer.data)
     
     def post(self, request, slug):
+        if not request.user.is_authenticated or not request.user.profile:
+            return Response(status=HTTP_401_UNAUTHORIZED)
+        
         movie = get_object_or_404(Movie, slug=slug)
         content_type = ContentType.objects.get_for_model(movie)
         
@@ -30,7 +35,7 @@ class MovieDetailView(APIView):
         data['content_type'] = content_type.id
         data['object_id'] = movie.id
         
-        serializer = CommentSerializer(data=data)
+        serializer = CommentCreateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         
