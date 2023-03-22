@@ -5,7 +5,7 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
 from rest_framework.response import Response
 from .models import Movie
 from .serializers import MovieListSerializer, MovieDetailSerializer
-from specifications.serializers import CommentCreateSerializer
+from specifications.serializers import CommentCreateSerializer, CommentSerializer
 
 # Create your views here.
 class MovieListView(APIView):
@@ -18,9 +18,14 @@ class MovieListView(APIView):
 class MovieDetailView(APIView):
     def get(self, request, slug):
         movie = get_object_or_404(Movie, slug=slug)
-        serializer = MovieDetailSerializer(movie)
+        comments = movie.comments.filter(active=True)
         
-        return Response(serializer.data)
+        data = {
+            'movie': MovieDetailSerializer(movie).data,
+            'comments': CommentSerializer(comments, many=True).data
+        }
+        
+        return Response(data)
     
     def post(self, request, slug):
         if not request.user.is_authenticated or not request.user.profile:
