@@ -7,7 +7,7 @@ class CommentSerializer(ModelSerializer):
     
     class Meta:
         model = Comment
-        exclude = ('id', 'active', 'content_type', 'object_id')
+        exclude = ('id', 'active',)
         
 class GenreSerializer(ModelSerializer):
     class Meta:
