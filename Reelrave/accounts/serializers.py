@@ -19,22 +19,15 @@ class CreateUserSerializer(ModelSerializer):
         validated_data.pop('confirm_password')
         user = get_user_model().objects.create_user(**validated_data)
         return user
+
+class CommentProfileSerializer(ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('photo',)
     
-class UserSerializer(ModelSerializer):
+class UserCommentSerializer(ModelSerializer):
+    profile = CommentProfileSerializer(read_only=True)
+    
     class Meta:
         model = get_user_model()
-        fields = ('username',)
-
-class UserProfileSerializer(ModelSerializer):
-    user = UserSerializer(read_only=True)
-    
-    class Meta:
-        model = Profile
-        exclude = ('id',)
-        
-class UserCommentSerializer(ModelSerializer):
-    user = UserSerializer(read_only=True)
-    
-    class Meta:
-        model = Profile
-        fields = ('user', 'photo')
+        fields = ('username', 'profile')
