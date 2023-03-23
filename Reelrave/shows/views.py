@@ -28,15 +28,15 @@ class ShowDetailView(APIView):
         return Response(data)
     
     def post(self, request, slug):
-        if not request.user.is_authenticated or not request.user.profile:
-            return Response(status=HTTP_401_UNAUTHORIZED)
+        if not request.user.is_authenticated:
+            return Response({"error": 'You must login before you post a comment'}, status=HTTP_401_UNAUTHORIZED)
         
         show = get_object_or_404(Show, slug=slug)
         content_type = ContentType.objects.get_for_model(show)
         
         # update data with content_type and object_id
         data = request.data
-        data['user_profile'] = request.user.profile.id
+        data['user'] = request.user.id
         data['content_type'] = content_type.id
         data['object_id'] = show.id
         
