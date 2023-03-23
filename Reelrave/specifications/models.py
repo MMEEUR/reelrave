@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth import get_user_model
 from accounts.models import Profile
 
 # Create your models here.
@@ -37,7 +38,7 @@ class Video(models.Model):
         return f"{self.title} \"{self.content_object}\""
     
 class Comment(models.Model):
-    user_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='user_comments')
+    user_profile = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_comments')
     body = models.TextField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to={"model__in": ('show', 'movie')})
     object_id = models.PositiveIntegerField()
