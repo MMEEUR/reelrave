@@ -17,7 +17,7 @@ class Show(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.CharField(max_length=100, unique=True, editable=False)
     baner = models.ImageField(upload_to=get_baner_filename)
-    trailer = models.FileField(upload_to=get_trailer_filename)
+    trailer = models.FileField(upload_to=get_trailer_filename, null=True, blank=True)
     release_date = models.DateField()
     ending_date = models.DateField(null=True)
     content_rating = models.CharField(max_length=5, choices=RATINGS)
