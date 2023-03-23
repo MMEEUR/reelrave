@@ -47,7 +47,7 @@ class Season(models.Model):
         ordering = ['number']
         
     def __str__(self) -> str:
-        return f"\"{self.Show}\" Season {self.number}"
+        return f"\"{self.show}\" Season {self.number}"
     
 class Episode(models.Model):
     def get_baner_filename(instance, filename):
