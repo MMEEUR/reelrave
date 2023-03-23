@@ -61,7 +61,7 @@ class Episode(models.Model):
     title = models.CharField(max_length=100)
     time = models.DurationField()
     baner = models.ImageField(upload_to=get_baner_filename)
-    trailer = models.FileField(upload_to=get_trailer_filename) 
+    trailer = models.FileField(upload_to=get_trailer_filename, null=True, blank=True) 
     description = models.CharField(max_length=250)
     released = models.DateField() 
     pictures = GenericRelation(Photo)
