@@ -50,7 +50,7 @@ class Comment(models.Model):
         ordering = ('-created',)
     
     def __str__(self) -> str:
-        return f"{self.user_profile} on {self.content_object}"
+        return f"{self.user} on {self.content_object}"
 
 class Genre(models.Model):
     name = models.CharField(max_length=20, unique=True)
