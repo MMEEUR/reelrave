@@ -55,4 +55,5 @@ class EpisodeAdmin(admin.ModelAdmin):
     list_filter = ('released',)
     search_fields = ('season', 'title')
     ordering = ('-released', '-season')
+    raw_id_fields = ('season',)
     inlines = [PhotoInline, VideoInline]
