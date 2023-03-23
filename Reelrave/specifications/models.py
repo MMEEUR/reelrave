@@ -38,7 +38,7 @@ class Video(models.Model):
         return f"{self.title} \"{self.content_object}\""
     
 class Comment(models.Model):
-    user_profile = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_comments')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_comments')
     body = models.TextField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to={"model__in": ('show', 'movie')})
     object_id = models.PositiveIntegerField()

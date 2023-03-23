@@ -3,11 +3,11 @@ from .models import Comment, Genre, Country, Photo, Video
 from accounts.serializers import UserCommentSerializer
 
 class CommentSerializer(ModelSerializer):
-    user_profile = UserCommentSerializer(read_only=True)
+    user = UserCommentSerializer(read_only=True)
     
     class Meta:
         model = Comment
-        fields = ('user_profile', 'body', 'created')
+        fields = ('user', 'body', 'created')
 
 class CommentCreateSerializer(ModelSerializer):
     class Meta:
