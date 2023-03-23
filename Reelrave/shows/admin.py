@@ -43,6 +43,7 @@ class SeasonAdmin(admin.ModelAdmin):
     list_display = ('show', 'number', 'episode_count')
     search_fields = ('show',)
     ordering = ('show', '-number')
+    raw_id_fields = ('show',)
     
     def episode_count(self, obj):
         return obj.episodes.count()
