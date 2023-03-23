@@ -7,10 +7,10 @@ from specifications.models import Genre, Country, Photo, Video, Comment
 # Create your models here.
 class Movie(models.Model):
     def get_baner_filename(instance, filename):
-        return f"shows/{instance.name}/baners/{filename}"
+        return f"movies/{instance.name}/baners/{filename}"
     
     def get_trailer_filename(instance, filename):
-        return f"shows/{instance.name}/trailer/{filename}"
+        return f"movies/{instance.name}/trailer/{filename}"
     
     RATINGS = (('G', 'G'), ('PG', 'PG'), ('PG-13', 'PG-13'), ('R', 'R'), ('NC-17', 'NC-17'))
     
