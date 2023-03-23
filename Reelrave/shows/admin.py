@@ -16,7 +16,7 @@ class ShowAdmin(admin.ModelAdmin):
     list_filter = ('content_rating', 'release_date')
     search_fields = ('name', 'director')
     ordering = ('-release_date',)
-    raw_id_fields = ('director', 'writers', 'actors', 'country_of_origin')
+    raw_id_fields = ('creators', 'actors', 'country_of_origin')
     inlines = [PhotoInline, VideoInline]
     
     def season_count(self, obj):
