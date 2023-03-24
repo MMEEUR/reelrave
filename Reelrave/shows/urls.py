@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import ShowListView, ShowDetailView
+from .views import ShowListView, ShowDetailView, CreateCommentView
 
 app_name = 'shows'
 
 urlpatterns = [
     path('', ShowListView.as_view(), name='show_list'),
-    path('<slug:slug>/', ShowDetailView.as_view(), name='show_detail')
+    path('<slug:slug>/', ShowDetailView.as_view(), name='show_detail'),
+    path('<slug:slug>/comment/', CreateCommentView.as_view(), name='create_comment'),
 ]
