@@ -3,6 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework.views import APIView
 from rest_framework.status import HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from .serializers import ShowListSerializer, ShowDetailSerializer
 from specifications.serializers import CommentCreateSerializer, CommentSerializer
 from .models import Show
@@ -27,21 +28,21 @@ class ShowDetailView(APIView):
         
         return Response(data)
     
+class CreateCommentView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request, slug):
-        if not request.user.is_authenticated:
-            return Response({"error": 'You must login before you post a comment'}, status=HTTP_401_UNAUTHORIZED)
-        
-        show = get_object_or_404(Show, slug=slug)
-        content_type = ContentType.objects.get_for_model(show)
-        
+        movie = get_object_or_404(Show, slug=slug)
+        content_type = ContentType.objects.get_for_model(movie)
+
         # update data with content_type and object_id
         data = request.data
         data['user'] = request.user.id
         data['content_type'] = content_type.id
-        data['object_id'] = show.id
-        
+        data['object_id'] = movie.id
+
         serializer = CommentCreateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        
+
         return Response(serializer.data, status=HTTP_201_CREATED)
