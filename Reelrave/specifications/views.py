@@ -1,11 +1,26 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Genre, Country
-from .serializers import GenreSerializer, CountrySeralizer
+from rest_framework.status import HTTP_204_NO_CONTENT
+from .models import Genre, Country, Comment
+from .serializers import GenreSerializer, CountrySeralizer, CommentUpdateSerializer
 from movies.serializers import MovieListSerializer
 from shows.serializers import ShowListSerializer
-# Create your views here.
+
+class UpdateDeleteCommentView(APIView):
+    def put(self, request, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+        serializer = CommentUpdateSerializer(comment, request.data)
+        serializer.is_valid()
+        serializer.save()
+        
+        return Response(serializer.data)
+    
+    def delete(self, request, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+        comment.delete()
+        
+        return Response(status=HTTP_204_NO_CONTENT)
 
 class GenreListView(APIView):
     def get(self, request):
