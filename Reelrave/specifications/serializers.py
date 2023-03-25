@@ -7,12 +7,17 @@ class CommentSerializer(ModelSerializer):
     
     class Meta:
         model = Comment
-        fields = ('user', 'body', 'created', 'updated')
+        fields = ('id', 'user', 'body', 'created', 'updated')
 
 class CommentCreateSerializer(ModelSerializer):
     class Meta:
         model = Comment
         exclude = ('id', 'active',)
+        
+class CommentUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('body',)
         
 class GenreSerializer(ModelSerializer):
     class Meta:
