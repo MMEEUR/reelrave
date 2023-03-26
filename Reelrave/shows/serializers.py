@@ -30,7 +30,6 @@ class ShowListSerializer(ModelSerializer):
 
 
 class ShowDetailSerializer(ModelSerializer):
-    seasons = SeasonListSerializer(many=True, read_only=True)
     genre = GenreSerializer(many=True, read_only=True)
     country_of_origin = CountrySeralizer(many=True, read_only=True)
     creators = PersonSerializer(many=True, read_only=True)
