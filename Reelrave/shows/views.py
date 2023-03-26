@@ -28,11 +28,6 @@ class ShowDetailView(APIView):
         return Response(data)
 
 
-class ShowCreateCommentView(CommentCreateView):
-    def get_object(self, slug):
-        return get_object_or_404(Show, slug=slug)
-
-
 class EpisodeListView(APIView):
     def get(self, request, slug):
         show = get_object_or_404(Show, slug=slug)
@@ -59,3 +54,13 @@ class EpisodeDetailView(APIView):
         }
 
         return Response(data)
+
+
+class ShowCreateCommentView(CommentCreateView):
+    def get_object(self, slug):
+        return get_object_or_404(Show, slug=slug)
+    
+    
+class EpisodeCreateCommentView(CommentCreateView):
+    def get_object(self, episode_id):
+        return get_object_or_404(Episode, id=episode_id)
