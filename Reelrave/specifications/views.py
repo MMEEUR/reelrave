@@ -13,13 +13,18 @@ from shows.serializers import ShowListSerializer
 class CommentCreateView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get_object(self, slug):
+    def get_object(self):
         raise NotImplementedError(
             'Subclasses of CommentView must define get_object method')
 
-    def post(self, request, slug):
-        obj = self.get_object(slug)
-        content_type = ContentType.objects.get_for_model(obj)
+    def post(self, request, slug, episode_id=None):
+        if episode_id:
+            obj = self.get_object(episode_id)
+            content_type = ContentType.objects.get_for_model(obj)
+        
+        else:
+            obj = self.get_object(slug)
+            content_type = ContentType.objects.get_for_model(obj)
 
         # update data with content_type and object_id
         data = request.data
