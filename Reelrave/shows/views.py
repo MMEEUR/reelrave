@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import ShowListSerializer, ShowDetailSerializer, EpisodeDetailSerializer
+from .serializers import ShowListSerializer, ShowDetailSerializer, SeasonListSerializer, EpisodeDetailSerializer
 from specifications.serializers import CommentSerializer
 from .models import Show, Episode
 from specifications.views import CommentCreateView
@@ -31,6 +31,20 @@ class ShowDetailView(APIView):
 class ShowCreateCommentView(CommentCreateView):
     def get_object(self, slug):
         return get_object_or_404(Show, slug=slug)
+
+
+class EpisodeListView(APIView):
+    def get(self, request, slug):
+        show = get_object_or_404(Show, slug=slug)
+        seasons = show.seasons.all()
+        serializer = SeasonListSerializer(seasons, many=True)
+
+        data = {
+            "show": f"{show.name}",
+            "seasons": serializer.data
+        }
+
+        return Response(data)
 
 
 class EpisodeDetailView(APIView):
