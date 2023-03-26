@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from .models import Show, Season, Episode
-from specifications.serializers import GenreSerializer, CountrySeralizer, PhotoSerializer, VideoSerializer
+from specifications.serializers import GenreSerializer, CountrySeralizer, PhotoSerializer, VideoSerializer, CommentSerializer
 from persons.serializers import PersonSerializer
 
 
@@ -49,6 +49,7 @@ class EpisodeDetailSerializer(ModelSerializer):
     director = PersonSerializer(many=True, read_only=True)
     writers = PersonSerializer(many=True, read_only=True)
     actors = PersonSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Episode
