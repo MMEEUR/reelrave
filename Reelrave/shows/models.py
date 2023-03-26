@@ -82,6 +82,7 @@ class Episode(models.Model):
     released = models.DateField()
     pictures = GenericRelation(Photo)
     videos = GenericRelation(Video)
+    comments = GenericRelation(Comment)
 
     class Meta:
         unique_together = ('season', 'number')
