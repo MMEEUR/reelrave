@@ -89,4 +89,4 @@ class Episode(models.Model):
         ordering = ['number']
 
     def __str__(self) -> str:
-        return f"Episode-{self.number} \"{self.title}\""
+        return f"{self.season} Episode {self.number} \"{self.title}\""
