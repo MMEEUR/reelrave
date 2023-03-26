@@ -1,20 +1,48 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.contenttypes.models import ContentType
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
 from .models import Genre, Country, Comment
-from .serializers import GenreSerializer, CountrySeralizer, CommentUpdateSerializer
+from .serializers import GenreSerializer, CountrySeralizer, CommentUpdateSerializer, CommentCreateSerializer
 from movies.serializers import MovieListSerializer
 from shows.serializers import ShowListSerializer
 
 
+class CommentCreateView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, slug):
+        raise NotImplementedError(
+            'Subclasses of CommentView must define get_object method')
+
+    def post(self, request, slug):
+        obj = self.get_object(slug)
+        content_type = ContentType.objects.get_for_model(obj)
+
+        # update data with content_type and object_id
+        data = request.data
+        data['user'] = request.user.id
+        data['content_type'] = content_type.id
+        data['object_id'] = obj.id
+
+        serializer = CommentCreateSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=HTTP_201_CREATED)
+
+
 class UpdateDeleteCommentView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def put(self, request, comment_id):
         comment = get_object_or_404(Comment, id=comment_id)
 
         if comment.user == request.user:
             serializer = CommentUpdateSerializer(comment, request.data)
-            serializer.is_valid()
+            serializer.is_valid(raise_exception=True)
             serializer.save()
 
             return Response(serializer.data)
