@@ -2,17 +2,23 @@ from django.db import models
 from django.utils.text import slugify
 from django.contrib.contenttypes.fields import GenericRelation
 from persons.models import Person
-from specifications.models import Genre, Country, Photo, Video, Comment
+from specifications.models import Genre, Country, Photo, Video, Comment, Rate
 
-# Create your models here.
+RATINGS = (
+    ('G', 'G'),
+    ('PG', 'PG'),
+    ('PG-13', 'PG-13'),
+    ('R', 'R'),
+    ('NC-17', 'NC-17')
+)
+
+
 class Movie(models.Model):
     def get_baner_filename(instance, filename):
         return f"movies/{instance.name}/baners/{filename}"
     
     def get_trailer_filename(instance, filename):
         return f"movies/{instance.name}/trailer/{filename}"
-    
-    RATINGS = (('G', 'G'), ('PG', 'PG'), ('PG-13', 'PG-13'), ('R', 'R'), ('NC-17', 'NC-17'))
     
     name = models.CharField(max_length=100, unique=True)
     slug = models.CharField(max_length=100, unique=True, editable=False)
@@ -31,6 +37,7 @@ class Movie(models.Model):
     pictures = GenericRelation(Photo)
     videos = GenericRelation(Video)
     comments = GenericRelation(Comment)
+    ratings = GenericRelation(Rate)
     
     class Meta:
         ordering = ('-release_date',)
