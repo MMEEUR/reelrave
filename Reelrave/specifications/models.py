@@ -56,7 +56,7 @@ class Comment(models.Model):
         return f"{self.user} on {self.content_object}"
 
 
-class Rate(models.Model):
+class Rating(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_ratings')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to={"model__in": ('show', 'movie', 'episode')})
     object_id = models.PositiveIntegerField()
@@ -64,6 +64,10 @@ class Rate(models.Model):
     rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ('-updated',)
+        unique_together = ('user', 'content_type', 'object_id')
 
     def __str__(self) -> str:
         return f"{self.user} {self.rating} for \"{self.content_object}\""
