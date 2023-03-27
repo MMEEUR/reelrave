@@ -3,11 +3,73 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
-from .models import Genre, Country, Comment
-from .serializers import GenreSerializer, CountrySeralizer, CommentUpdateSerializer, CommentCreateSerializer
+from rest_framework.exceptions import ValidationError
+from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
+from .models import Genre, Country, Comment, Rating
+from .serializers import GenreSerializer, CountrySeralizer, CommentUpdateSerializer, CommentCreateSerializer, RatingCreateSerializer, RatingUpdateSerializer
 from movies.serializers import MovieListSerializer
 from shows.serializers import ShowListSerializer
+
+
+class CreateRatingView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        raise NotImplementedError(
+            'Subclasses of CommentView must define get_object method')
+
+    def post(self, request, slug, episode_id=None):
+        if episode_id:
+            obj = self.get_object(episode_id)
+            content_type = ContentType.objects.get_for_model(obj)
+
+        else:
+            obj = self.get_object(slug)
+            content_type = ContentType.objects.get_for_model(obj)
+
+        # update data with content_type and object_id
+        data = request.data
+        data['user'] = request.user.id
+        data['content_type'] = content_type.id
+        data['object_id'] = obj.id
+
+        try:
+            serializer = RatingCreateSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            return Response(serializer.data, status=HTTP_201_CREATED)
+
+        except ValidationError:
+            return Response({"error": "You already have rating for this content"}, status=HTTP_400_BAD_REQUEST)
+
+
+class UpdateDeleteRatingView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request, rating_id):
+        rating = get_object_or_404(Rating, id=rating_id)
+
+        if rating.user == request.user:
+            serializer = RatingUpdateSerializer(rating, request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            return Response(serializer.data)
+
+        else:
+            return Response(status=HTTP_401_UNAUTHORIZED)
+
+    def delete(self, request, rating_id):
+        rating = get_object_or_404(Rating, id=rating_id)
+
+        if rating.user == request.user:
+            rating.delete()
+
+            return Response(status=HTTP_204_NO_CONTENT)
+
+        else:
+            return Response(status=HTTP_401_UNAUTHORIZED)
 
 
 class CommentCreateView(APIView):
@@ -21,7 +83,7 @@ class CommentCreateView(APIView):
         if episode_id:
             obj = self.get_object(episode_id)
             content_type = ContentType.objects.get_for_model(obj)
-        
+
         else:
             obj = self.get_object(slug)
             content_type = ContentType.objects.get_for_model(obj)
