@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.contrib.contenttypes.fields import GenericRelation
 from persons.models import Person
-from specifications.models import Genre, Country, Photo, Video, Comment, Rate
+from specifications.models import Genre, Country, Photo, Video, Comment, Rating
 
 RATINGS = (
     ('TV-Y', 'TV-Y'),
@@ -37,7 +37,7 @@ class Show(models.Model):
     pictures = GenericRelation(Photo)
     videos = GenericRelation(Video)
     comments = GenericRelation(Comment)
-    ratings = GenericRelation(Rate)
+    ratings = GenericRelation(Rating)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -84,7 +84,7 @@ class Episode(models.Model):
     pictures = GenericRelation(Photo)
     videos = GenericRelation(Video)
     comments = GenericRelation(Comment)
-    ratings = GenericRelation(Rate)
+    ratings = GenericRelation(Rating)
 
     class Meta:
         unique_together = ('season', 'number')
