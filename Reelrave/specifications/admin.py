@@ -28,7 +28,7 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'content_object', 'rating', 'created', 'updated')
+    list_display = ('id', 'user', 'content_object', 'rating', 'created', 'updated')
     list_filter = ('updated',)
     ordering = ('-updated',)
     search_fields = ('user', 'content_object')
