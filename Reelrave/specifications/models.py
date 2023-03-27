@@ -75,7 +75,7 @@ class Rating(models.Model):
 
 class Genre(models.Model):
     name = models.CharField(max_length=20, unique=True)
-    slug = models.CharField(max_length=20, unique=True, editable=False)
+    slug = models.SlugField(max_length=20, unique=True, editable=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -90,7 +90,7 @@ class Country(models.Model):
         return f"countries/{instance.name}/{filename}"
 
     name = models.CharField(max_length=100, unique=True)
-    slug = models.CharField(max_length=100, unique=True, editable=False)
+    slug = models.SlugField(max_length=100, unique=True, editable=False)
     flag = models.ImageField(upload_to=get_country_filename)
 
     def save(self, *args, **kwargs):
