@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import GenreDetailView, GenreListView, CountryListView, CountryDetailView, UpdateDeleteCommentView
+from .views import GenreDetailView, GenreListView, CountryListView, CountryDetailView, UpdateDeleteCommentView, UpdateDeleteRatingView
 
 app_name = 'spec'
 
@@ -9,4 +9,5 @@ urlpatterns = [
     path('countries/', CountryListView.as_view(), name='countries'),
     path('countries/<slug:slug>/', CountryDetailView.as_view(), name='country_detail'),
     path('comment/<int:comment_id>/', UpdateDeleteCommentView.as_view(), name='comment_update_delete'),
+    path('rating/<int:rating_id>/', UpdateDeleteRatingView.as_view(), name='rating_update_delete'),
 ]
