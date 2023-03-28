@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.utils.functional import cached_property
 from django.contrib.contenttypes.fields import GenericRelation
 from persons.models import Person
 from specifications.models import Genre, Country, Photo, Video, Comment, Rating
@@ -38,6 +39,22 @@ class Show(models.Model):
     videos = GenericRelation(Video)
     comments = GenericRelation(Comment)
     ratings = GenericRelation(Rating)
+    
+    @cached_property
+    def total_ratings(self):
+        ratings_count = self.ratings.exclude(rating=0).count()
+        
+        return ratings_count if ratings_count else None
+    
+    @cached_property
+    def average_rating(self):
+        ratings = self.ratings.exclude(rating=0).all()
+        
+        if ratings:
+            return ratings.aggregate(models.Avg('rating'))['rating__avg']
+        
+        else:
+            return None
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -94,6 +111,22 @@ class Episode(models.Model):
     videos = GenericRelation(Video)
     comments = GenericRelation(Comment)
     ratings = GenericRelation(Rating)
+    
+    @cached_property
+    def total_ratings(self):
+        ratings_count = self.ratings.exclude(rating=0).count()
+        
+        return ratings_count if ratings_count else None
+    
+    @cached_property
+    def average_rating(self):
+        ratings = self.ratings.exclude(rating=0).all()
+        
+        if ratings:
+            return ratings.aggregate(models.Avg('rating'))['rating__avg']
+        
+        else:
+            return None
 
     class Meta:
         unique_together = ('season', 'number')
