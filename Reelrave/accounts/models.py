@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.core.files.images import ImageFile
 from django.utils.translation import gettext_lazy as _
+from django.utils.functional import cached_property
 from PIL import Image
 
 
@@ -15,6 +16,10 @@ class Profile(models.Model):
     bio = models.CharField(max_length=50, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     photo = models.ImageField(upload_to=get_image_filename, null=True, blank=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'png'])])
+    
+    @cached_property
+    def comments_count(self):
+        return self.user.user_comments.filter(active=True).count()
 
     def __str__(self) -> str:
         return self.user.username
