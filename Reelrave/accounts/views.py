@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, get_user_model
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.status import HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .serializers import CreateUserSerializer, ProfileSerializer
 from .models import Profile
@@ -32,7 +32,7 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
 
         if not user:
-            return Response({"error": "Invalid login credentials"}, status=HTTP_401_UNAUTHORIZED)
+            return Response({"error": "Invalid login credentials"}, status=HTTP_400_BAD_REQUEST)
 
         old_refresh_tokens = RefreshToken.objects.filter(user=user)
 
