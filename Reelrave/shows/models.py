@@ -45,11 +45,20 @@ class Show(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+    def get_top_rated_episodes(self, num_episodes=2):
+        top_episodes = Episode.objects.filter(season__show=self).annotate(avg_rating=models.Avg('ratings__rating')).order_by('-avg_rating')[:num_episodes]
+        
+        return top_episodes
+
+    def get_most_recent_episode(self):
+        latest_episodes = Episode.objects.filter(season__show=self).order_by('-released').last()
+        
+        return latest_episodes
 
 
 class Season(models.Model):
-    show = models.ForeignKey(
-        Show, on_delete=models.CASCADE, related_name='seasons')
+    show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name='seasons')
     number = models.PositiveSmallIntegerField()
 
     class Meta:
