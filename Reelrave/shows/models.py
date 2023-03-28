@@ -40,6 +40,9 @@ class Show(models.Model):
     comments = GenericRelation(Comment)
     ratings = GenericRelation(Rating)
     
+    class Meta:
+        ordering = ('-release_date',)
+    
     @cached_property
     def total_ratings(self):
         ratings_count = self.ratings.exclude(rating=0).count()
@@ -64,7 +67,10 @@ class Show(models.Model):
         return self.name
     
     def get_top_rated_episodes(self, num_episodes=2):
-        top_episodes = Episode.objects.filter(season__show=self).annotate(avg_rating=models.Avg('ratings__rating')).order_by('-avg_rating')[:num_episodes]
+        top_episodes = Episode.objects.filter(
+            season__show=self).exclude(
+            ratings__rating=0).annotate(
+            avg_rating=models.Avg('ratings__rating')).order_by('-avg_rating')[:num_episodes]
         
         return top_episodes
 
