@@ -1,5 +1,5 @@
-from django.shortcuts import redirect
-from django.contrib.auth import authenticate
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth import authenticate, get_user_model
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -80,3 +80,15 @@ class ProfileView(APIView):
         serializer.save()
 
         return Response(serializer.data)
+    
+class GlobalProfileView(APIView):
+    def get(self, request, user_id):
+        user = get_object_or_404(get_user_model(), id=user_id)
+        profile = user.profile
+        
+        data = {
+            "user": user.username,
+            "profile": ProfileSerializer(profile).data
+        }
+        
+        return Response(data)
