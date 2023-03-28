@@ -7,7 +7,3 @@ class ProflieAdmin(admin.ModelAdmin):
     list_display = ('user', 'date_of_birth', 'comments_count')
     ordering = ('user',)
     search_fields = ('user',)
-    
-    def comments_count(self, obj):
-        return obj.user.user_comments.filter(active=True).count()
-    comments_count.short_description = 'Comments'
