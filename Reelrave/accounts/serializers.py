@@ -41,4 +41,4 @@ class UserCommentSerializer(ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('username', 'profile')
+        fields = ('id', 'username', 'profile')
