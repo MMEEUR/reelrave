@@ -1,7 +1,7 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, FloatField, IntegerField
 from .models import Movie
 from persons.serializers import PersonSerializer
-from specifications.serializers import CommentSerializer, GenreSerializer, CountrySeralizer, PhotoSerializer, VideoSerializer
+from specifications.serializers import GenreSerializer, CountrySeralizer, PhotoSerializer, VideoSerializer
 
 class MovieDetailSerializer(ModelSerializer):
     genre = GenreSerializer(many=True, read_only=True)
@@ -11,6 +11,8 @@ class MovieDetailSerializer(ModelSerializer):
     actors = PersonSerializer(many=True, read_only=True)
     pictures = PhotoSerializer(many=True, read_only=True)
     videos = VideoSerializer(many=True, read_only=True)
+    average_rating = FloatField()
+    total_ratings = IntegerField()
     
     class Meta:
         model = Movie
@@ -23,4 +25,4 @@ class MovieListSerializer(ModelSerializer):
     
     class Meta:
         model = Movie
-        fields = ('name', 'slug', 'baner', 'release_date', 'time', 'genre', 'director', 'description', 'country_of_origin')
+        fields = ('name', 'slug', 'average_rating', 'baner', 'release_date', 'time', 'genre', 'director', 'description', 'country_of_origin')
