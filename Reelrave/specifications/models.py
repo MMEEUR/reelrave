@@ -4,7 +4,6 @@ from django.core.validators import FileExtensionValidator, MinValueValidator, Ma
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
-from accounts.models import Profile
 
 
 class Photo(models.Model):
@@ -61,7 +60,7 @@ class Rating(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to={"model__in": ('show', 'movie', 'episode')})
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
