@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import ShowListSerializer, ShowDetailSerializer, SeasonListSerializer, EpisodeDetailSerializer
+from .serializers import ShowListSerializer, ShowDetailSerializer, SeasonListSerializer, EpisodeDetailSerializer, EpisodeListSerializer
 from specifications.serializers import CommentSerializer
 from .models import Show, Episode
 from specifications.views import CommentCreateView, CreateRatingView
@@ -19,10 +19,14 @@ class ShowDetailView(APIView):
     def get(self, request, slug):
         show = get_object_or_404(Show, slug=slug)
         comments = show.comments.filter(active=True)
+        top_rated_episodes = show.get_top_rated_episodes()
+        most_recent_episode = show.get_most_recent_episode()
 
         data = {
-            'show': ShowDetailSerializer(show).data,
-            'comments': CommentSerializer(comments, many=True).data
+            "show": ShowDetailSerializer(show).data,
+            "comments": CommentSerializer(comments, many=True).data,
+            "top_rated_episodes": EpisodeListSerializer(top_rated_episodes, many=True).data,
+            "most_recent_episode": EpisodeListSerializer(most_recent_episode).data
         }
 
         return Response(data)
