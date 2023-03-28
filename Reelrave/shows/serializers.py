@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, FloatField, IntegerField
 from .models import Show, Season, Episode
 from specifications.serializers import GenreSerializer, CountrySeralizer, PhotoSerializer, VideoSerializer, CommentSerializer
 from persons.serializers import PersonSerializer
@@ -7,7 +7,8 @@ from persons.serializers import PersonSerializer
 class EpisodeListSerializer(ModelSerializer):
     class Meta:
         model = Episode
-        fields = ('id', 'number', 'title', 'baner', 'released')
+        fields = ('id', 'number', 'title',
+                  'average_rating', 'baner', 'released')
 
 
 class SeasonListSerializer(ModelSerializer):
@@ -25,7 +26,7 @@ class ShowListSerializer(ModelSerializer):
 
     class Meta:
         model = Show
-        fields = ('name', 'slug', 'baner', 'release_date', 'ending_date',
+        fields = ('name', 'slug', 'average_rating', 'baner', 'release_date', 'ending_date',
                   'content_rating', 'genre', 'director', 'description', 'country_of_origin')
 
 
@@ -36,6 +37,8 @@ class ShowDetailSerializer(ModelSerializer):
     actors = PersonSerializer(many=True, read_only=True)
     pictures = PhotoSerializer(many=True, read_only=True)
     videos = VideoSerializer(many=True, read_only=True)
+    average_rating = FloatField()
+    total_ratings = IntegerField()
 
     class Meta:
         model = Show
@@ -50,7 +53,9 @@ class EpisodeDetailSerializer(ModelSerializer):
     writers = PersonSerializer(many=True, read_only=True)
     actors = PersonSerializer(many=True, read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
-
+    average_rating = FloatField()
+    total_ratings = IntegerField()
+    
     class Meta:
         model = Episode
-        exclude = ('id', 'season', 'number')
+        exclude = ('id',)
