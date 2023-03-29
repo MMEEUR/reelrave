@@ -49,10 +49,24 @@ class Comment(models.Model):
     active = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ('-created',)
+        ordering = ('-updated',)
 
     def __str__(self) -> str:
         return f"{self.user} on {self.content_object}"
+    
+class CommentLikeDisLike(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_like_dislike')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_comment_like_dislikes')
+    like_or_dislike = models.BooleanField()
+    updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ('-updated')
+    
+    def __str__(self) -> str:
+        opinion = "Liked" if self.like_or_dislike else "DisLiked"
+
+        return f"{self.user} {opinion} {self.comment}"
 
 
 class Rating(models.Model):
