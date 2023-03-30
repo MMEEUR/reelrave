@@ -1,5 +1,5 @@
-from rest_framework.serializers import ModelSerializer
-from .models import Comment, Genre, Country, Photo, Video, Rating
+from rest_framework.serializers import ModelSerializer, IntegerField
+from .models import Comment, CommentLikeDisLike, Genre, Country, Photo, Video, Rating
 from accounts.serializers import UserCommentSerializer
 
 
@@ -7,19 +7,29 @@ class RatingCreateSerializer(ModelSerializer):
     class Meta:
         model = Rating
         exclude = ('id',)
-        
+
+
 class RatingUpdateSerializer(ModelSerializer):
     class Meta:
         model = Rating
         fields = ('rating',)
 
 
+class CommentLikeDisLikeSerializer(ModelSerializer):
+    class Meta:
+        model = CommentLikeDisLike
+        fields = ('like_or_dislike',)
+
+
 class CommentSerializer(ModelSerializer):
     user = UserCommentSerializer(read_only=True)
+    likes_count = IntegerField()
+    dislikes_count = IntegerField()
 
     class Meta:
         model = Comment
-        fields = ('id', 'user', 'body', 'created', 'updated')
+        fields = ('id', 'user', 'body', 'likes_count',
+                  'dislikes_count', 'created', 'updated')
 
 
 class CommentCreateSerializer(ModelSerializer):
