@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.utils.functional import cached_property
 from django.core.validators import FileExtensionValidator, MinValueValidator, MaxValueValidator
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -50,23 +51,35 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ('-updated',)
-
+        
+    @cached_property
+    def likes_count(self):
+        return self.comment_likes_dislikes.filter(like_or_dislike=True).count()
+    
+    @cached_property
+    def dislikes_count(self):
+        return self.comment_likes_dislikes.filter(like_or_dislike=False).count()
+        
     def __str__(self) -> str:
         return f"{self.user} on {self.content_object}"
     
 class CommentLikeDisLike(models.Model):
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_like_dislike')
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_likes_dislikes')
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_comment_like_dislikes')
     like_or_dislike = models.BooleanField()
     updated = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ('-updated')
+        ordering = ('-updated',)
+        unique_together = ('user', 'comment')
+        verbose_name_plural = 'Comment Likes & Dislikes'
+        
+    @property
+    def opinion(self):
+        return "Liked" if self.like_or_dislike else "DisLiked"
     
     def __str__(self) -> str:
-        opinion = "Liked" if self.like_or_dislike else "DisLiked"
-
-        return f"{self.user} {opinion} {self.comment}"
+        return f"{self.user} {self.opinion} {self.comment}"
 
 
 class Rating(models.Model):
