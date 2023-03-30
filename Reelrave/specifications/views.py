@@ -3,12 +3,47 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import ValidationError
-from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
-from .models import Genre, Country, Comment, Rating
-from .serializers import GenreSerializer, CountrySeralizer, CommentUpdateSerializer, CommentCreateSerializer, RatingCreateSerializer, RatingUpdateSerializer
+from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
+from .models import Genre, Country, Comment, CommentLikeDisLike, Rating
+from .serializers import (
+    GenreSerializer, CountrySeralizer,
+    RatingCreateSerializer, RatingUpdateSerializer,
+    CommentUpdateSerializer, CommentCreateSerializer,
+    CommentLikeDisLikeSerializer, CommentLikeDisLikeUpdateSerializer
+)
 from movies.serializers import MovieListSerializer
 from shows.serializers import ShowListSerializer
+
+
+class CommentLikeDisLikeView(APIView):
+    permission_classes = (IsAuthenticated,)
+    
+    def post(self, request, comment_id):
+        data = request.data
+        
+        data['comment'] = comment_id
+        data['user'] = request.user.id
+
+        serializer = CommentLikeDisLikeSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        return Response(serializer.data, status=HTTP_201_CREATED)
+        
+    def put(self, request, comment_id):
+        comment_opinion = get_object_or_404(CommentLikeDisLike, comment=comment_id, user=request.user)
+        
+        serializer = CommentLikeDisLikeUpdateSerializer(comment_opinion, request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        return Response(serializer.data)
+    
+    def delete(self, request, comment_id):
+        comment_opinion = get_object_or_404(CommentLikeDisLike, comment=comment_id, user=request.user)
+        comment_opinion.delete()
+        
+        return Response(status=HTTP_204_NO_CONTENT)
 
 
 class CreateRatingView(APIView):
@@ -33,15 +68,11 @@ class CreateRatingView(APIView):
         data['content_type'] = content_type.id
         data['object_id'] = obj.id
 
-        try:
-            serializer = RatingCreateSerializer(data=data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+        serializer = RatingCreateSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
-            return Response(serializer.data, status=HTTP_201_CREATED)
-
-        except ValidationError:
-            return Response({"error": "You already have rating for this content"}, status=HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=HTTP_201_CREATED)
 
 
 class UpdateDeleteRatingView(APIView):
