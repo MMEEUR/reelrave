@@ -18,6 +18,12 @@ class RatingUpdateSerializer(ModelSerializer):
 class CommentLikeDisLikeSerializer(ModelSerializer):
     class Meta:
         model = CommentLikeDisLike
+        exclude = ('id',)
+        
+        
+class CommentLikeDisLikeUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = CommentLikeDisLike
         fields = ('like_or_dislike',)
 
 
