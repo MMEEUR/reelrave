@@ -44,7 +44,20 @@ class Show(models.Model):
     
     class Meta:
         ordering = ('-release_date',)
-
+        
+    @property
+    def season_count(self):
+        return self.seasons.count()
+    
+    @property
+    def episode_count(self):
+        episode_count = 0
+        
+        for season in self.seasons.all():
+            episode_count += season.episodes.count()
+            
+        return episode_count
+   
     @cached_property
     def total_ratings(self):
         ratings_count = self.ratings.exclude(rating=0).count()
