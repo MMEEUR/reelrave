@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .serializers import CreateUserSerializer, ProfileSerializer
+from specifications.serializers import WatchListSerializer
 from .models import Profile
 
 
@@ -69,9 +70,14 @@ class ProfileView(APIView):
 
     def get(self, request):
         profile = self.get_object()
-        serializer = ProfileSerializer(profile)
+        watchlist = request.user.watchlist.all()
+        
+        data = {
+            "profile": ProfileSerializer(profile).data,
+            "watchlist": WatchListSerializer(watchlist, many=True).data,
+        }
 
-        return Response(serializer.data)
+        return Response(data)
 
     def put(self, request):
         profile = self.get_object()
