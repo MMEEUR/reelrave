@@ -100,7 +100,7 @@ class Rating(models.Model):
     
     
 class WatchList(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_watchlist')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='watchlist')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to={"model__in": ('show', 'movie', 'episode')})
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
