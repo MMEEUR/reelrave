@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.functional import cached_property
 from django.contrib.contenttypes.fields import GenericRelation
@@ -43,7 +44,7 @@ class Show(models.Model):
     
     class Meta:
         ordering = ('-release_date',)
-    
+
     @cached_property
     def total_ratings(self):
         ratings_count = self.ratings.exclude(rating=0).count()
@@ -79,7 +80,7 @@ class Show(models.Model):
         latest_episodes = Episode.objects.filter(season__show=self).order_by('-released').last()
         
         return latest_episodes
-
+    
 
 class Season(models.Model):
     show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name='seasons')
@@ -102,7 +103,7 @@ class Episode(models.Model):
 
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name="episodes")
     number = models.PositiveSmallIntegerField()
-    title = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     content_rating = models.CharField(max_length=5, choices=RATINGS)
     director = models.ManyToManyField(Person, related_name='director_episodes')
     writers = models.ManyToManyField(Person, related_name='writer_episodes')
@@ -113,13 +114,17 @@ class Episode(models.Model):
     trailer = models.FileField(upload_to=get_trailer_filename, null=True, blank=True)
     description = models.CharField(max_length=250)
     storyline = models.TextField()
-    released = models.DateField()
+    release_date = models.DateField()
     pictures = GenericRelation(Photo)
     videos = GenericRelation(Video)
     comments = GenericRelation(Comment)
     ratings = GenericRelation(Rating)
     watchlist = GenericRelation(WatchList)
     
+    class Meta:
+        unique_together = ('season', 'number')
+        ordering = ['-number']
+ 
     @cached_property
     def total_ratings(self):
         ratings_count = self.ratings.exclude(rating=0).count()
@@ -136,9 +141,5 @@ class Episode(models.Model):
         else:
             return None
 
-    class Meta:
-        unique_together = ('season', 'number')
-        ordering = ['number']
-
     def __str__(self) -> str:
-        return f"{self.season} Episode {self.number} \"{self.title}\""
+        return f"{self.season} Episode {self.number} \"{self.name}\""
