@@ -7,7 +7,7 @@ from persons.serializers import PersonSerializer
 class EpisodeListSerializer(ModelSerializer):
     class Meta:
         model = Episode
-        fields = ('id', 'number', 'title',
+        fields = ('number', 'title', 'get_absolute_url',
                   'average_rating', 'baner', 'released')
 
 
@@ -26,7 +26,7 @@ class ShowListSerializer(ModelSerializer):
 
     class Meta:
         model = Show
-        fields = ('name', 'slug', 'average_rating', 'baner', 'release_date', 'ending_date',
+        fields = ('name', 'get_absolute_url', 'average_rating', 'baner', 'release_date', 'ending_date',
                   'content_rating', 'genre', 'director', 'description', 'country_of_origin')
 
 
