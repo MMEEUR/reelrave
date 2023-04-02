@@ -57,7 +57,11 @@ class Show(models.Model):
             episode_count += season.episodes.count()
             
         return episode_count
-   
+    
+    @property
+    def get_absolute_url(self):
+        return reverse("shows:show_detail", kwargs={"slug": self.slug})
+    
     @cached_property
     def total_ratings(self):
         ratings_count = self.ratings.exclude(rating=0).count()
@@ -137,7 +141,11 @@ class Episode(models.Model):
     class Meta:
         unique_together = ('season', 'number')
         ordering = ['-number']
- 
+        
+    @property
+    def get_absolute_url(self):
+        return reverse("episode_detail", kwargs={"slug": self.season.show.slug, "episode_id": self.id})
+    
     @cached_property
     def total_ratings(self):
         ratings_count = self.ratings.exclude(rating=0).count()
