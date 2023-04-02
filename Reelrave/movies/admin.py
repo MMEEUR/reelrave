@@ -19,10 +19,10 @@ class MovieAdmin(admin.ModelAdmin):
     raw_id_fields = ('director', 'writers', 'actors', 'country_of_origin')
     inlines = [PhotoInline, VideoInline]
     
+    @admin.display(description='Comments')
     def comments_count(self, obj):
         return obj.comments.count()
-    comments_count.short_description = 'Comments'
     
+    @admin.display(description='Genres')
     def display_genres(self, obj):
         return ", ".join([genre.name for genre in obj.genre.all()])
-    display_genres.short_description = 'Genres'
