@@ -3,7 +3,7 @@ from django.utils.text import slugify
 from django.utils.functional import cached_property
 from django.contrib.contenttypes.fields import GenericRelation
 from persons.models import Person
-from specifications.models import Genre, Country, Photo, Video, Comment, Rating
+from specifications.models import Genre, Country, Photo, Video, Comment, Rating, WatchList
 
 RATINGS = (
     ('TV-Y', 'TV-Y'),
@@ -39,6 +39,7 @@ class Show(models.Model):
     videos = GenericRelation(Video)
     comments = GenericRelation(Comment)
     ratings = GenericRelation(Rating)
+    watchlist = GenericRelation(WatchList)
     
     class Meta:
         ordering = ('-release_date',)
@@ -117,6 +118,7 @@ class Episode(models.Model):
     videos = GenericRelation(Video)
     comments = GenericRelation(Comment)
     ratings = GenericRelation(Rating)
+    watchlist = GenericRelation(WatchList)
     
     @cached_property
     def total_ratings(self):
