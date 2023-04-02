@@ -1,6 +1,12 @@
 from rest_framework.serializers import ModelSerializer, IntegerField
-from .models import Comment, CommentLikeDisLike, Genre, Country, Photo, Video, Rating
+from .models import Comment, CommentLikeDisLike, Genre, Country, Photo, Video, Rating, WatchList
 from accounts.serializers import UserCommentSerializer
+
+
+class WatchListAddSerializer(ModelSerializer):
+    class Meta:
+        model = WatchList
+        exclude = ('id', 'created')
 
 
 class RatingCreateSerializer(ModelSerializer):
