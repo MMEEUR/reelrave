@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.functional import cached_property
 from django.contrib.contenttypes.fields import GenericRelation
@@ -44,6 +45,10 @@ class Movie(models.Model):
     class Meta:
         ordering = ('-release_date',)
         
+    @property
+    def get_absolute_url(self):
+        return reverse("movies:movie_detail", kwargs={"slug": self.slug})
+    
     @cached_property
     def total_ratings(self):
         ratings_count = self.ratings.exclude(rating=0).count()
