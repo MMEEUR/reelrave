@@ -1,6 +1,54 @@
-from rest_framework.serializers import ModelSerializer, IntegerField
+from rest_framework.serializers import (
+    Serializer, ModelSerializer, ImageField,
+    DateField, CharField, URLField,
+    DurationField, FloatField
+)
 from .models import Comment, CommentLikeDisLike, Genre, Country, Photo, Video, Rating, WatchList
 from accounts.serializers import UserCommentSerializer
+
+
+class CountrySeralizer(ModelSerializer):
+    class Meta:
+        model = Country
+        exclude = ('id',)
+
+
+class PhotoSerializer(ModelSerializer):
+    class Meta:
+        model = Photo
+        fields = ('title', 'image', 'released')
+
+
+class VideoSerializer(ModelSerializer):
+    class Meta:
+        model = Video
+        fields = ('title', 'video', 'released')
+
+
+class GenreSerializer(ModelSerializer):
+    class Meta:
+        model = Genre
+        exclude = ('id',)
+
+
+class ContentSerializer(Serializer):
+    name = CharField()
+    baner = ImageField()
+    get_absolute_url = URLField()
+    release_date = DateField()
+    time = DurationField(required=False)
+    content_rating = CharField()
+    genre = GenreSerializer(many=True, read_only=True)
+    average_rating = FloatField()
+    description = CharField()
+
+
+class WatchListSerializer(ModelSerializer):
+    content_object = ContentSerializer(read_only=True)
+    
+    class Meta:
+        model = WatchList
+        fields = ('content_object', 'created')
 
 
 class WatchListAddSerializer(ModelSerializer):
@@ -35,8 +83,6 @@ class CommentLikeDisLikeUpdateSerializer(ModelSerializer):
 
 class CommentSerializer(ModelSerializer):
     user = UserCommentSerializer(read_only=True)
-    likes_count = IntegerField()
-    dislikes_count = IntegerField()
 
     class Meta:
         model = Comment
@@ -54,27 +100,3 @@ class CommentUpdateSerializer(ModelSerializer):
     class Meta:
         model = Comment
         fields = ('body',)
-
-
-class GenreSerializer(ModelSerializer):
-    class Meta:
-        model = Genre
-        exclude = ('id',)
-
-
-class CountrySeralizer(ModelSerializer):
-    class Meta:
-        model = Country
-        exclude = ('id',)
-
-
-class PhotoSerializer(ModelSerializer):
-    class Meta:
-        model = Photo
-        fields = ('title', 'image', 'released')
-
-
-class VideoSerializer(ModelSerializer):
-    class Meta:
-        model = Video
-        fields = ('title', 'video', 'released')
