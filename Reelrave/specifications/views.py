@@ -4,15 +4,58 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
-from .models import Genre, Country, Comment, CommentLikeDisLike, Rating
+from .models import Genre, Country, Comment, CommentLikeDisLike, Rating, WatchList
 from .serializers import (
     GenreSerializer, CountrySeralizer,
     RatingCreateSerializer, RatingUpdateSerializer,
     CommentUpdateSerializer, CommentCreateSerializer,
-    CommentLikeDisLikeSerializer, CommentLikeDisLikeUpdateSerializer
+    CommentLikeDisLikeSerializer, CommentLikeDisLikeUpdateSerializer,
+    WatchListAddSerializer
 )
 from movies.serializers import MovieListSerializer
 from shows.serializers import ShowListSerializer
+
+
+class WatchListView(APIView):
+    permission_classes = (IsAuthenticated,)
+    
+    def get_object(self):
+        raise NotImplementedError(
+            'Subclasses of CommentView must define get_object method')
+    
+    def post(self, request, slug, episode_id=None):
+        if episode_id:
+            obj = self.get_object(episode_id)
+            content_type = ContentType.objects.get_for_model(obj)
+
+        else:
+            obj = self.get_object(slug)
+            content_type = ContentType.objects.get_for_model(obj)
+
+        data = {}
+        data['user'] = request.user.id
+        data['content_type'] = content_type.id
+        data['object_id'] = obj.id
+
+        serializer = WatchListAddSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=HTTP_201_CREATED)
+    
+    def delete(self, request, slug, episode_id=None):
+        if episode_id:
+            obj = self.get_object(episode_id)
+            content_type = ContentType.objects.get_for_model(obj)
+
+        else:
+            obj = self.get_object(slug)
+            content_type = ContentType.objects.get_for_model(obj)
+
+        watchlist = get_object_or_404(WatchList, user=request.user, content_type=content_type.id, object_id=obj.id)
+        watchlist.delete()
+        
+        return Response(status=HTTP_204_NO_CONTENT)
 
 
 class CommentLikeDisLikeView(APIView):
