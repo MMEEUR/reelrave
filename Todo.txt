@@ -1,0 +1,5 @@
+Backend:
+
+- Update comment and rating views
+- Add get_absolute_url to profile model
+- Add trailer model and remove trailer field from show, movie, episode models
