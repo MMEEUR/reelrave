@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Country, Genre, Photo, Video, Comment, CommentLikeDisLike, Rating
+from .models import Country, Genre, Photo, Video, Comment, CommentLikeDisLike, Rating, WatchList
 
 
 @admin.register(Photo)
@@ -36,9 +36,17 @@ class CommentLikeDisLikeAdmin(admin.ModelAdmin):
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'content_object', 'rating', 'created', 'updated')
+    list_display = ('user', 'content_object', 'rating', 'created', 'updated')
     list_filter = ('updated',)
     ordering = ('-updated',)
+    search_fields = ('user', 'content_object')
+
+
+@admin.register(WatchList)
+class WatchListAdmin(admin.ModelAdmin):
+    list_display = ('user', 'content_object', 'created')
+    list_filter = ('created',)
+    ordering = ('-created',)
     search_fields = ('user', 'content_object')
 
 
