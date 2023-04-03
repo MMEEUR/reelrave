@@ -89,7 +89,7 @@ class CommentLikeDisLikeView(APIView):
         return Response(status=HTTP_204_NO_CONTENT)
 
 
-class CreateRatingView(APIView):
+class RatingView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
@@ -116,34 +116,37 @@ class CreateRatingView(APIView):
         serializer.save()
 
         return Response(serializer.data, status=HTTP_201_CREATED)
-
-
-class UpdateDeleteRatingView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def put(self, request, rating_id):
-        rating = get_object_or_404(Rating, id=rating_id)
-
-        if rating.user == request.user:
-            serializer = RatingUpdateSerializer(rating, request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-
-            return Response(serializer.data)
+    
+    def put(self, request, slug, episode_id=None):
+        if episode_id:
+            obj = self.get_object(episode_id)
+            content_type = ContentType.objects.get_for_model(obj)
 
         else:
-            return Response(status=HTTP_401_UNAUTHORIZED)
-
-    def delete(self, request, rating_id):
-        rating = get_object_or_404(Rating, id=rating_id)
-
-        if rating.user == request.user:
-            rating.delete()
-
-            return Response(status=HTTP_204_NO_CONTENT)
+            obj = self.get_object(slug)
+            content_type = ContentType.objects.get_for_model(obj)
+            
+        rating = get_object_or_404(Rating, user=request.user, content_type=content_type.id, object_id=obj.id)
+        
+        serializer = RatingUpdateSerializer(rating, request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        return Response(serializer.data)
+    
+    def delete(self, request, slug, episode_id=None):
+        if episode_id:
+            obj = self.get_object(episode_id)
+            content_type = ContentType.objects.get_for_model(obj)
 
         else:
-            return Response(status=HTTP_401_UNAUTHORIZED)
+            obj = self.get_object(slug)
+            content_type = ContentType.objects.get_for_model(obj)
+            
+        rating = get_object_or_404(Rating, user=request.user, content_type=content_type.id, object_id=obj.id)
+        rating.delete()
+        
+        return Response(status=HTTP_204_NO_CONTENT)
 
 
 class CommentCreateView(APIView):
