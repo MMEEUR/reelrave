@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from .serializers import ShowListSerializer, ShowDetailSerializer, SeasonListSerializer, EpisodeDetailSerializer, EpisodeListSerializer
 from specifications.serializers import CommentSerializer
 from .models import Show, Episode
-from specifications.views import CommentCreateView, CreateRatingView, WatchListView
+from specifications.views import CommentCreateView, RatingView, WatchListView
 
 
 class ShowListView(APIView):
@@ -70,12 +70,12 @@ class EpisodeCreateCommentView(CommentCreateView):
         return get_object_or_404(Episode, id=episode_id)
     
     
-class ShowCreateRatingView(CreateRatingView):
+class ShowRatingView(RatingView):
     def get_object(self, slug):
         return get_object_or_404(Show, slug=slug)
     
     
-class EpisodeCreateRatingView(CreateRatingView):
+class EpisodeRatingView(RatingView):
     def get_object(self, episode_id):
         return get_object_or_404(Episode, id=episode_id)
     
