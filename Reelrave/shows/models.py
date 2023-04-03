@@ -143,8 +143,12 @@ class Episode(models.Model):
         ordering = ['-number']
         
     @property
+    def title(self):
+        return f"{self.season} Episode {self.number} \"{self.name}\""
+        
+    @property
     def get_absolute_url(self):
-        return reverse("episode_detail", kwargs={"slug": self.season.show.slug, "episode_id": self.id})
+        return reverse("shows:episode_detail", kwargs={"slug": self.season.show.slug, "episode_id": self.id})
     
     @cached_property
     def total_ratings(self):
