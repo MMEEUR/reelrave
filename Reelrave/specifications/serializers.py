@@ -1,7 +1,7 @@
 from rest_framework.serializers import (
     Serializer, ModelSerializer, ImageField,
     DateField, CharField, URLField,
-    DurationField, FloatField
+    DurationField, FloatField, IntegerField
 )
 from .models import Comment, CommentLikeDisLike, Genre, Country, Photo, Video, Rating, WatchList
 from accounts.serializers import UserCommentSerializer
@@ -33,10 +33,13 @@ class GenreSerializer(ModelSerializer):
 
 class ContentSerializer(Serializer):
     name = CharField()
+    title = CharField(required=False)
     baner = ImageField()
     get_absolute_url = URLField()
     release_date = DateField()
     time = DurationField(required=False)
+    season_count = IntegerField(required=False)
+    episode_count = IntegerField(required=False)
     content_rating = CharField()
     genre = GenreSerializer(many=True, read_only=True)
     average_rating = FloatField()
