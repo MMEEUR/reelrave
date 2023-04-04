@@ -94,7 +94,7 @@ class Show(models.Model):
         return top_episodes
 
     def get_most_recent_episode(self):
-        latest_episodes = Episode.objects.filter(season__show=self).order_by('-released').last()
+        latest_episodes = Episode.objects.filter(season__show=self).order_by('-release_date').last()
         
         return latest_episodes
     
