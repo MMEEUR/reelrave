@@ -108,7 +108,7 @@ class Season(models.Model):
         ordering = ['number']
 
     def __str__(self) -> str:
-        return f"\"{self.show}\" Season {self.number}"
+        return f"'{self.show}' Season {self.number}"
 
 
 class Episode(models.Model):
@@ -144,7 +144,7 @@ class Episode(models.Model):
         
     @property
     def title(self):
-        return f"{self.season} Episode {self.number} \"{self.name}\""
+        return f"{self.season} Episode {self.number} '{self.name}'"
         
     @property
     def get_absolute_url(self):
