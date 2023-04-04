@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
@@ -16,6 +17,10 @@ class Profile(models.Model):
     bio = models.CharField(max_length=50, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     photo = models.ImageField(upload_to=get_image_filename, null=True, blank=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'png'])])
+    
+    @property
+    def get_absolute_url(self):
+        return reverse("accounts:global_profile", kwargs={"user_id": self.user.id})
     
     @cached_property
     def comments_count(self):
