@@ -13,7 +13,7 @@ from .models import Profile
 class CreateUserView(APIView):
     def post(self, request):
         if request.user.is_authenticated:
-            return redirect('account:profile')
+            return redirect('accounts:profile')
 
         serializer = CreateUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -25,7 +25,7 @@ class CreateUserView(APIView):
 class LoginView(APIView):
     def post(self, request):
         if request.user.is_authenticated:
-            return redirect('account:profile')
+            return redirect('accounts:profile')
         
         username = request.data.get("username")
         password = request.data.get("password")
