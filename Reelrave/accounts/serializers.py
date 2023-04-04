@@ -33,7 +33,7 @@ class ProfileSerializer(ModelSerializer):
 class CommentProfileSerializer(ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('photo',)
+        fields = ('photo', 'get_absolute_url')
 
 
 class UserCommentSerializer(ModelSerializer):
@@ -41,4 +41,4 @@ class UserCommentSerializer(ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'username', 'profile')
+        fields = ('username', 'profile')
