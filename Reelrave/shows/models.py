@@ -20,13 +20,9 @@ class Show(models.Model):
     def get_baner_filename(instance, filename):
         return f"shows/{instance.name}/baners/{filename}"
 
-    def get_trailer_filename(instance, filename):
-        return f"shows/{instance.name}/trailer/{filename}"
-
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True, editable=False)
     baner = models.ImageField(upload_to=get_baner_filename)
-    trailer = models.FileField(upload_to=get_trailer_filename, null=True, blank=True)
     release_date = models.DateField()
     ending_date = models.DateField(null=True)
     content_rating = models.CharField(max_length=5, choices=RATINGS)
@@ -115,9 +111,6 @@ class Episode(models.Model):
     def get_baner_filename(instance, filename):
         return f"shows/{instance.season.show}/Season {instance.season.number}/Episode-{instance.number}/baner/{filename}"
 
-    def get_trailer_filename(instance, filename):
-        return f"shows/{instance.season.show}/Season {instance.season.number}/Episode-{instance.number}/trailer/{filename}"
-
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name="episodes")
     number = models.PositiveSmallIntegerField()
     name = models.CharField(max_length=100)
@@ -128,7 +121,6 @@ class Episode(models.Model):
     genre = models.ManyToManyField(Genre, related_name='genre_episodes')
     time = models.DurationField()
     baner = models.ImageField(upload_to=get_baner_filename)
-    trailer = models.FileField(upload_to=get_trailer_filename, null=True, blank=True)
     description = models.CharField(max_length=250)
     storyline = models.TextField()
     release_date = models.DateField()
