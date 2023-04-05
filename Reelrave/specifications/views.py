@@ -73,7 +73,7 @@ class CommentLikeDisLikeView(APIView):
         
         return Response(serializer.data, status=HTTP_201_CREATED)
         
-    def put(self, request, comment_id):
+    def patch(self, request, comment_id):
         comment_opinion = get_object_or_404(CommentLikeDisLike, comment=comment_id, user=request.user)
         
         serializer = CommentLikeDisLikeUpdateSerializer(comment_opinion, request.data)
@@ -117,7 +117,7 @@ class RatingView(APIView):
 
         return Response(serializer.data, status=HTTP_201_CREATED)
     
-    def put(self, request, slug, episode_id=None):
+    def patch(self, request, slug, episode_id=None):
         if episode_id:
             obj = self.get_object(episode_id)
             content_type = ContentType.objects.get_for_model(obj)
@@ -181,7 +181,7 @@ class CommentCreateView(APIView):
 class UpdateDeleteCommentView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def put(self, request, comment_id):
+    def patch(self, request, comment_id):
         comment = get_object_or_404(Comment, id=comment_id)
 
         if comment.user == request.user:
