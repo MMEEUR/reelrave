@@ -1,5 +1,6 @@
 Backend:
 
+- Change put some put requests to patch
 - Add trailer model and remove trailer field from show, movie, episode models
 |
 - Add get_absolute_url to profile model (Done)
