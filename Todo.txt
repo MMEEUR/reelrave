@@ -6,8 +6,8 @@ Backend:
 - Install redis
 - Add top 250 movies & shows views
 - Add pagination to views
-- Change put some put requests to patch
 |
+- Change some put requests to patch (Done)
 - Add trailer model and remove trailer field from show, movie, episode models (Done)
 - Add get_absolute_url to profile model (Done)
 - Update comment and rating views (Done)
