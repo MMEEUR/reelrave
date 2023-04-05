@@ -18,6 +18,9 @@ class Photo(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     image = models.ImageField(upload_to=get_photo_filename)
     released = models.DateTimeField(auto_now_add=True, editable=False)
+    
+    class Meta:
+        ordering = ('-released',)
 
     def __str__(self):
         return self.title
@@ -26,7 +29,9 @@ class Photo(models.Model):
 class Video(models.Model):
     def get_video_filename(instance, filename):
         content_type_name = instance.content_type.model
-        return f"{content_type_name.lower()}s/{instance.content_object.name}/videos/{filename}"
+        video_type = "trailers" if instance.is_trailer else "videos"
+        
+        return f"{content_type_name.lower()}s/{instance.content_object.name}/{video_type}/{filename}"
 
     title = models.CharField(max_length=30)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to={"model__in": ('show', 'movie', 'episode')})
@@ -34,6 +39,10 @@ class Video(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     video = models.FileField(upload_to=get_video_filename, validators=[FileExtensionValidator(allowed_extensions=['mov', 'avi', 'mp4', 'webm', 'mkv'])])
     released = models.DateTimeField(auto_now_add=True, editable=False)
+    is_trailer = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ('-released',)
 
     def __str__(self):
         return f"{self.title} \"{self.content_object}\""
