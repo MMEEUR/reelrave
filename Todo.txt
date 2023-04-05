@@ -1,5 +1,11 @@
 Backend:
 
+- Join user ratings and liked comments in ralated views
+- Add password reset view
+- Caching get_top_rated_episodes & get_most_recent_episode
+- Install redis
+- Add top 250 movies & shows views
+- Add pagination to views
 - Change put some put requests to patch
 |
 - Add trailer model and remove trailer field from show, movie, episode models (Done)
