@@ -22,7 +22,7 @@ class PhotoSerializer(ModelSerializer):
 class VideoSerializer(ModelSerializer):
     class Meta:
         model = Video
-        fields = ('title', 'video', 'released')
+        fields = ('title', 'video', 'released', 'is_trailer')
 
 
 class GenreSerializer(ModelSerializer):
