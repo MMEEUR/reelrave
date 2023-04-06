@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from .models import Movie
 from .serializers import MovieListSerializer, MovieDetailSerializer
 from specifications.serializers import CommentSerializer
-from specifications.views import CommentCreateView, RatingView, WatchListView
+from specifications.views import CommentCreateView, RatingView, WatchListView, GenreDetailView, CountryDetailView
 
 
 class MovieListView(APIView):
@@ -41,3 +41,13 @@ class MovieRatingView(RatingView):
 class MovieWatchListView(WatchListView):
     def get_object(self, slug):
         return get_object_or_404(Movie, slug=slug)
+    
+    
+class MovieGenreView(GenreDetailView):
+    model = "movies"
+    serializer_class = MovieListSerializer
+    
+    
+class MovieCountryView(CountryDetailView):
+    model = "movies"
+    serializer_class = MovieListSerializer
