@@ -10,6 +10,8 @@ from .views import (
     EpisodeCreateCommentView,
     EpisodeRatingView,
     EpisodeWatchListView,
+    ShowGenreView,
+    ShowCountryView,
 )
 
 app_name = 'shows'
@@ -25,4 +27,6 @@ urlpatterns = [
     path('<slug:slug>/episodes/<int:episode_id>/comment/', EpisodeCreateCommentView.as_view(), name='episode_create_comment'),
     path('<slug:slug>/episodes/<int:episode_id>/rating/', EpisodeRatingView.as_view(), name='episode_rating'),
     path('<slug:slug>/episodes/<int:episode_id>/watchlist/', EpisodeWatchListView.as_view(), name='episode_watchlist'),
+    path('genre/<slug:genre>/', ShowGenreView.as_view(), name='show_by_genre'),
+    path('country/<slug:country>/', ShowCountryView.as_view(), name='show_by_country'),
 ]
