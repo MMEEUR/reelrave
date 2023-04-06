@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
+from rest_framework.pagination import PageNumberPagination
 from .models import Genre, Country, Comment, CommentLikeDisLike, Rating, WatchList
 from .serializers import (
     GenreSerializer, CountrySeralizer,
@@ -215,21 +216,34 @@ class GenreListView(APIView):
 
 
 class GenreDetailView(APIView):
-    def get(self, request, slug):
-        genre = get_object_or_404(Genre, slug=slug)
-        movies = genre.genre_movies.all()
-        shows = genre.genre_shows.all()
+    model = None
+    serializer_class = None
+    
+    def get(self, request, genre):
+        genre = get_object_or_404(Genre, slug=genre)
+        
+        if self.model == "movies":    
+            content_list = genre.genre_movies.all()
+            
+        elif self.model == "shows":
+            content_list = genre.genre_shows.all()
 
-        serializer1 = MovieListSerializer(movies, many=True)
-        serializer2 = ShowListSerializer(shows, many=True)
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        page = paginator.paginate_queryset(content_list, request)
+        serializer = self.serializer_class(page, many=True)
 
         data = {
             'genre': genre.name,
-            'movies': serializer1.data,
-            'shows': serializer2.data
+            self.model : serializer.data,
         }
 
-        return Response(data)
+        response = Response(data)
+        response['Total-Count'] = paginator.page.paginator.count
+        response['Page-Size'] = paginator.page_size
+        response['Page'] = paginator.page.number
+        
+        return response
 
 
 class CountryListView(APIView):
@@ -241,18 +255,31 @@ class CountryListView(APIView):
 
 
 class CountryDetailView(APIView):
-    def get(self, request, slug):
-        country = get_object_or_404(Country, slug=slug)
-        movies = country.country_movies.all()
-        shows = country.country_shows.all()
+    model = None
+    serializer_class = None
+    
+    def get(self, request, country):
+        country = get_object_or_404(Country, slug=country)
+        
+        if self.model == "movies":    
+            content_list = country.country_movies.all()
+            
+        elif self.model == "shows":
+            content_list = country.country_shows.all()
 
-        serializer1 = MovieListSerializer(movies, many=True)
-        serializer2 = ShowListSerializer(shows, many=True)
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        page = paginator.paginate_queryset(content_list, request)
+        serializer = self.serializer_class(page, many=True)
 
         data = {
-            'country': country.name,
-            'movies': serializer1.data,
-            'shows': serializer2.data
+            'genre': country.name,
+            self.model : serializer.data,
         }
 
-        return Response(data)
+        response = Response(data)
+        response['Total-Count'] = paginator.page.paginator.count
+        response['Page-Size'] = paginator.page_size
+        response['Page'] = paginator.page.number
+        
+        return response
