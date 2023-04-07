@@ -7,8 +7,8 @@ Backend:
 - Caching get_top_rated_episodes & get_most_recent_episode
 - Install redis
 - Add top 250 movies & shows views
-- Add pagination to views
 |
+- Add pagination to views (Done)
 - Change some put requests to patch (Done)
 - Add trailer model and remove trailer field from show, movie, episode models (Done)
 - Add get_absolute_url to profile model (Done)
