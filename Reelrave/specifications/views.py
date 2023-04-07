@@ -13,8 +13,6 @@ from .serializers import (
     CommentLikeDisLikeSerializer, CommentLikeDisLikeUpdateSerializer,
     WatchListAddSerializer
 )
-from movies.serializers import MovieListSerializer
-from shows.serializers import ShowListSerializer
 
 
 class WatchListView(APIView):
