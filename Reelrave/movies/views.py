@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from .models import Movie
 from .serializers import MovieListSerializer, MovieDetailSerializer
 from specifications.serializers import CommentSerializer
@@ -10,9 +11,18 @@ from specifications.views import CommentCreateView, RatingView, WatchListView, G
 class MovieListView(APIView):
     def get(self, request):
         shows = Movie.objects.all()
-        serializer = MovieListSerializer(shows, many=True)
+        
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        page = paginator.paginate_queryset(shows, request)
+        serializer = MovieListSerializer(page, many=True)
 
-        return Response(serializer.data)
+        response = Response(serializer.data)
+        response['Total-Count'] = paginator.page.paginator.count
+        response['Page-Size'] = paginator.page_size
+        response['Page'] = paginator.page.number
+        
+        return response
 
 
 class MovieDetailView(APIView):
