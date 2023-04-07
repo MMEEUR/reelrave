@@ -5,7 +5,7 @@ from .models import Person, Role
 class RoleSerializer(ModelSerializer):
     class Meta:
         model = Role
-        fields = ('role',)
+        fields = ('role', 'slug')
 
 
 class PersonSerializer(ModelSerializer):
