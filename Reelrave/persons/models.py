@@ -1,15 +1,21 @@
 from django.db import models
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 
 class Role(models.Model):  
-    role = models.CharField(max_length=20, verbose_name=_("Role"))
+    role = models.CharField(max_length=20, verbose_name=_("Role"), unique=True)
+    slug = models.SlugField(max_length=20, unique=True)
     
     class Meta:
         verbose_name_plural = _("Roles")
     
     def __str__(self):
         return self.role
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.role)
+        super().save(*args, **kwargs)
     
     
 class Person(models.Model):
