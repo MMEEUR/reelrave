@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from .serializers import ShowListSerializer, ShowDetailSerializer, SeasonListSerializer, EpisodeDetailSerializer, EpisodeListSerializer
 from specifications.serializers import CommentSerializer
 from .models import Show, Episode
@@ -10,9 +11,18 @@ from specifications.views import CommentCreateView, RatingView, WatchListView, G
 class ShowListView(APIView):
     def get(self, request):
         shows = Show.objects.all()
-        serializer = ShowListSerializer(shows, many=True)
+        
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        page = paginator.paginate_queryset(shows, request)
+        serializer = ShowListSerializer(page, many=True)
 
-        return Response(serializer.data)
+        response = Response(serializer.data)
+        response['Total-Count'] = paginator.page.paginator.count
+        response['Page-Size'] = paginator.page_size
+        response['Page'] = paginator.page.number
+        
+        return response
 
 
 class ShowDetailView(APIView):
