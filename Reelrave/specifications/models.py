@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.text import slugify
-from django.utils.functional import cached_property
 from django.core.validators import FileExtensionValidator, MinValueValidator, MaxValueValidator
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -61,11 +60,11 @@ class Comment(models.Model):
     class Meta:
         ordering = ('-updated',)
         
-    @cached_property
+    @property
     def likes_count(self):
         return self.comment_likes_dislikes.filter(like_or_dislike=True).count()
     
-    @cached_property
+    @property
     def dislikes_count(self):
         return self.comment_likes_dislikes.filter(like_or_dislike=False).count()
         

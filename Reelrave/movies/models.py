@@ -45,7 +45,7 @@ class Movie(models.Model):
     def get_absolute_url(self):
         return reverse("movies:movie_detail", kwargs={"slug": self.slug})
     
-    @cached_property
+    @property
     def total_ratings(self):
         ratings_count = self.ratings.exclude(rating=0).count()
         
@@ -60,6 +60,8 @@ class Movie(models.Model):
         
         else:
             return None
+        
+    average_rating.cache_timeout = 86400
     
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

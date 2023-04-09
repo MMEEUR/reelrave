@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.core.files.images import ImageFile
 from django.utils.translation import gettext_lazy as _
-from django.utils.functional import cached_property
 from PIL import Image
 
 
@@ -22,7 +21,7 @@ class Profile(models.Model):
     def get_absolute_url(self):
         return reverse("accounts:global_profile", kwargs={"user_id": self.user.id})
     
-    @cached_property
+    @property
     def comments_count(self):
         return self.user.user_comments.filter(active=True).count()
 

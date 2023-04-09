@@ -58,7 +58,7 @@ class Show(models.Model):
     def get_absolute_url(self):
         return reverse("shows:show_detail", kwargs={"slug": self.slug})
     
-    @cached_property
+    @property
     def total_ratings(self):
         ratings_count = self.ratings.exclude(rating=0).count()
         
@@ -73,6 +73,8 @@ class Show(models.Model):
         
         else:
             return None
+        
+    average_rating.cache_timeout = 86400
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -129,7 +131,7 @@ class Episode(models.Model):
     def get_absolute_url(self):
         return reverse("shows:episode_detail", kwargs={"slug": self.season.show.slug, "episode_id": self.id})
     
-    @cached_property
+    @property
     def total_ratings(self):
         ratings_count = self.ratings.exclude(rating=0).count()
         
@@ -144,6 +146,8 @@ class Episode(models.Model):
         
         else:
             return None
+        
+    average_rating.cache_timeout = 86400
 
     def __str__(self) -> str:
         return f"{self.season} Episode {self.number} \"{self.name}\""
