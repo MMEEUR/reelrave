@@ -4,6 +4,13 @@ from specifications.serializers import GenreSerializer, CountrySeralizer, PhotoS
 from persons.serializers import PersonSerializer
 
 
+class TopShowsSerializer(ModelSerializer):
+    class Meta:
+        model = Show
+        fields = ('name', 'baner', 'get_absolute_url',
+                  'release_date', 'total_ratings', 'average_rating')
+
+
 class EpisodeListSerializer(ModelSerializer):
     class Meta:
         model = Episode
