@@ -75,15 +75,41 @@ class ShowDetailView(APIView):
     def get(self, request, slug):
         show = get_object_or_404(Show, slug=slug)
         comments = show.comments.filter(active=True)
-        top_rated_episodes = show.get_top_rated_episodes()
-        most_recent_episode = show.get_most_recent_episode()
-
-        data = {
-            "show": ShowDetailSerializer(show).data,
-            "comments": CommentSerializer(comments, many=True).data,
+        
+        cache_key = f"top_recent_episodes:{slug}"
+        cached_result = cache.get(cache_key)
+        
+        if cached_result is not None:
+            data = {
+                "show": ShowDetailSerializer(show).data,
+                "comments": CommentSerializer(comments, many=True).data,
+            }
+            data.update(cached_result)
+            
+            return Response(data)
+        
+        num_episodes = 2
+        
+        top_rated_episodes = Episode.objects.filter(season__show=show)\
+            .annotate(avg_rating=Avg('ratings__rating', filter=~Q(ratings__rating=0)))\
+            .order_by('-avg_rating')[:num_episodes]\
+                            
+        most_recent_episode = Episode.objects.filter(season__show=show)\
+            .order_by('-release_date').last()
+        
+        episodes = {
             "top_rated_episodes": EpisodeListSerializer(top_rated_episodes, many=True).data,
             "most_recent_episode": EpisodeListSerializer(most_recent_episode).data
         }
+        
+        if most_recent_episode:
+            cache.set(cache_key, episodes, 86400) # cache for 24 hours
+        
+        data = {
+            "show": ShowDetailSerializer(show).data,
+            "comments": CommentSerializer(comments, many=True).data,
+        }
+        data.update(episodes)
 
         return Response(data)
 
