@@ -4,6 +4,13 @@ from persons.serializers import PersonSerializer
 from specifications.serializers import GenreSerializer, CountrySeralizer, PhotoSerializer, VideoSerializer
 
 
+class TopMoviesSerializer(ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = ('name', 'baner', 'get_absolute_url',
+                  'release_date', 'total_ratings', 'average_rating')
+
+
 class MovieDetailSerializer(ModelSerializer):
     genre = GenreSerializer(many=True, read_only=True)
     country_of_origin = CountrySeralizer(many=True, read_only=True)
