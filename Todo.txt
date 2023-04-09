@@ -6,8 +6,8 @@ Backend:
 - Add password reset view
 - Caching get_top_rated_episodes & get_most_recent_episode
 - Remove unnecessary cached_properties
-- Add top 250 movies & shows views
 |
+- Add top 250 movies & shows views (Done)
 - Install redis (Done)
 - Add pagination to views (Done)
 - Change some put requests to patch (Done)
