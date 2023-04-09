@@ -1,11 +1,57 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import Avg, Q, Count
+from django.core.cache import cache
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from .serializers import ShowListSerializer, ShowDetailSerializer, SeasonListSerializer, EpisodeDetailSerializer, EpisodeListSerializer
+from .serializers import (
+    ShowListSerializer, ShowDetailSerializer,
+    SeasonListSerializer, EpisodeDetailSerializer,
+    EpisodeListSerializer, TopShowsSerializer
+)
 from specifications.serializers import CommentSerializer
 from .models import Show, Episode
+from specifications.models import Genre
 from specifications.views import CommentCreateView, RatingView, WatchListView, GenreDetailView, CountryDetailView
+
+
+class TopShowsView(APIView):
+    def get(self, request, genre=None):
+        if genre:
+            genre_obj = get_object_or_404(Genre, slug=genre)
+        
+        cache_key = f"top_shows:{genre}"
+        cached_result = cache.get(cache_key)
+        
+        if cached_result is not None:
+            return Response(cached_result)
+        
+        minimum_ratings = 1
+        minimum_episodes = 1
+        
+        if genre:
+            top_movies = Show.objects.filter(genre=genre_obj)\
+                        .annotate(num_ratings=Count('ratings'))\
+                        .filter(num_ratings__gte=minimum_ratings)\
+                        .annotate(num_episodes=Count('seasons__episodes'))\
+                        .filter(num_episodes__gte=minimum_episodes)\
+                        .annotate(avg_rating=Avg('ratings__rating', filter=~Q(ratings__rating=0)))\
+                        .order_by('-avg_rating')[:250]
+
+        else:
+            top_movies = Show.objects.annotate(num_ratings=Count('ratings'))\
+                        .filter(num_ratings__gte=minimum_ratings)\
+                        .annotate(num_episodes=Count('seasons__episodes'))\
+                        .filter(num_episodes__gte=minimum_episodes)\
+                        .annotate(avg_rating=Avg('ratings__rating', filter=~Q(ratings__rating=0)))\
+                        .order_by('-avg_rating')[:250]
+        
+        serializer = TopShowsSerializer(top_movies, many=True)
+        
+        if serializer:
+            cache.set(cache_key, serializer.data, 86400) # cache for 24 hours
+        
+        return Response(serializer.data)
 
 
 class ShowListView(APIView):
