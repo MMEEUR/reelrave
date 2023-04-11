@@ -8,6 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .serializers import CreateUserSerializer, ProfileSerializer
 from specifications.serializers import WatchListSerializer
 from .models import Profile
+from .tasks import send_welcome_email
 
 
 class CreateUserView(APIView):
@@ -18,6 +19,8 @@ class CreateUserView(APIView):
         serializer = CreateUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        
+        send_welcome_email.delay(email=request.data['email'], username=request.data['username'])
 
         return Response(serializer.data, status=HTTP_201_CREATED)
 
