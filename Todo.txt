@@ -4,9 +4,9 @@ Backend:
 - Add search capability
 - Join user ratings and liked comments in ralated views
 - Add password reset view
-- Install Celery
 - Install Rabbitmq
 |
+- Install Celery (Done)
 - Remove unnecessary cached_properties (Done)
 - Caching get_top_rated_episodes & get_most_recent_episode (Done)
 - Add top 250 movies & shows views (Done)
