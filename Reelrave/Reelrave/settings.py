@@ -30,10 +30,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    #account app
+    # Account app
     'accounts.apps.AccountsConfig',
        
-    #django defualt apps
+    # Django defualt apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    # third party packages
+    # Third party packages
     'rest_framework',
     
-    #Local apps
+    # Local apps
     'movies.apps.MoviesConfig',
     'shows.apps.ShowsConfig',
     'persons.apps.PersonsConfig',
@@ -88,6 +88,8 @@ REST_FRAMEWORK = {
     )
 }
 
+# WSGI app
+
 WSGI_APPLICATION = 'Reelrave.wsgi.application'
 
 
@@ -114,6 +116,12 @@ CACHES = {
     }
 }
 
+# Celery configuration
+# RabbitMQ configuration
+
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_TIMEZONE = 'UTC'
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -132,6 +140,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Authentication settings
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'accounts.auth.EmailAuthBackend'
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -143,7 +157,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -159,9 +172,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
-# Login with email
+# Email settings
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'accounts.auth.EmailAuthBackend'
-]
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
