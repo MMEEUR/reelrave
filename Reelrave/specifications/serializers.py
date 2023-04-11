@@ -37,6 +37,7 @@ class ContentSerializer(Serializer):
     baner = ImageField()
     get_absolute_url = URLField()
     release_date = DateField()
+    ending_date = DateField(required=False)
     time = DurationField(required=False)
     season_count = IntegerField(required=False)
     episode_count = IntegerField(required=False)
