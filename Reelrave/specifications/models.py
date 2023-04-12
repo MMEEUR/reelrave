@@ -149,6 +149,14 @@ class Country(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True, editable=False)
     flag = models.ImageField(upload_to=get_country_filename)
+    
+    @property
+    def movies_count(self):
+        return self.country_movies.count()
+    
+    @property
+    def shows_count(self):
+        return self.country_shows.count()
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
