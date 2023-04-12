@@ -31,6 +31,23 @@ class GenreSerializer(ModelSerializer):
         exclude = ('id',)
 
 
+class GenreListSerializer(ModelSerializer):    
+    class Meta:
+        model = Genre
+        fields = ('name', 'slug', 'movies_count', 'shows_count')
+        
+    def __init__(self, *args, **kwargs):
+        include_movies_count = kwargs.pop('include_movies_count', True)
+        
+        super().__init__(*args, **kwargs)
+        
+        if include_movies_count and 'shows_count' in self.fields:
+            self.fields.pop('shows_count')
+        
+        elif not include_movies_count and 'movies_count' in self.fields:
+            self.fields.pop('movies_count')
+
+
 class ContentSerializer(Serializer):
     name = CharField()
     title = CharField(required=False)
