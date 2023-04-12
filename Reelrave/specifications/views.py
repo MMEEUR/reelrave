@@ -7,7 +7,7 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_40
 from rest_framework.pagination import PageNumberPagination
 from .models import Genre, Country, Comment, CommentLikeDisLike, Rating, WatchList
 from .serializers import (
-    GenreSerializer, CountrySeralizer,
+    GenreListSerializer, CountrySeralizer,
     RatingCreateSerializer, RatingUpdateSerializer,
     CommentUpdateSerializer, CommentCreateSerializer,
     CommentLikeDisLikeSerializer, CommentLikeDisLikeUpdateSerializer,
@@ -207,10 +207,15 @@ class UpdateDeleteCommentView(APIView):
 
 class GenreListView(APIView):
     def get(self, request):
-        genres = Genre.objects.all()
-        serializer = GenreSerializer(genres, many=True)
+        movie_genres = Genre.objects.filter(genre_movies__isnull=False).distinct()
+        shows_genres = Genre.objects.filter(genre_shows__isnull=False).distinct()
+        
+        data = {
+            "movies": GenreListSerializer(movie_genres, many=True).data,
+            "shows": GenreListSerializer(shows_genres, many=True, include_movies_count=False).data,
+        }
 
-        return Response(serializer.data)
+        return Response(data)
 
 
 class GenreDetailView(APIView):
