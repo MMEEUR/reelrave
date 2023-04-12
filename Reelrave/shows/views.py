@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import Avg, Q, Count
 from django.core.cache import cache
+from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
@@ -26,8 +27,8 @@ class TopShowsView(APIView):
         if cached_result is not None:
             return Response(cached_result)
         
-        minimum_ratings = 1
-        minimum_episodes = 1
+        minimum_ratings = settings.SHOW_MINIMUM_RATINGS
+        minimum_episodes = settings.SHOW_MINIMUM_EPISODES
         
         if genre:
             top_movies = Show.objects.filter(genre=genre_obj)\
