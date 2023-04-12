@@ -126,6 +126,14 @@ class Genre(models.Model):
     name = models.CharField(max_length=20, unique=True)
     slug = models.SlugField(max_length=20, unique=True, editable=False)
 
+    @property
+    def movies_count(self):
+        return self.genre_movies.count()
+    
+    @property
+    def shows_count(self):
+        return self.genre_shows.count()
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
