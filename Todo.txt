@@ -4,8 +4,8 @@ Backend:
 - Add search capability
 - Join user ratings and liked comments in ralated views
 - Add password reset view
-- Move minimum_ratings & minimum_episodes to django settings
 |
+- Move minimum_ratings & minimum_episodes to django settings (Done)
 - Install Rabbitmq (Done)
 - Install Celery (Done)
 - Remove unnecessary cached_properties (Done)
