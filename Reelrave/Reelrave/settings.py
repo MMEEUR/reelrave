@@ -175,3 +175,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 # Email settings
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Top 250 Settings
+
+MOVIE_MINIMUM_RATINGS = 1
+SHOW_MINIMUM_RATINGS = 1
+SHOW_MINIMUM_EPISODES = 1
