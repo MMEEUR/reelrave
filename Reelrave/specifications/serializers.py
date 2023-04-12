@@ -1,16 +1,11 @@
 from rest_framework.serializers import (
-    Serializer, ModelSerializer, ImageField,
+    SlugField, ImageField,
     DateField, CharField, URLField,
-    DurationField, FloatField, IntegerField
+    DurationField, FloatField, IntegerField,
+    ModelSerializer, Serializer,
 )
 from .models import Comment, CommentLikeDisLike, Genre, Country, Photo, Video, Rating, WatchList
 from accounts.serializers import UserCommentSerializer
-
-
-class CountrySeralizer(ModelSerializer):
-    class Meta:
-        model = Country
-        exclude = ('id',)
 
 
 class PhotoSerializer(ModelSerializer):
@@ -23,6 +18,12 @@ class VideoSerializer(ModelSerializer):
     class Meta:
         model = Video
         fields = ('title', 'video', 'released', 'is_trailer')
+        
+        
+class CountrySeralizer(ModelSerializer):
+    class Meta:
+        model = Country
+        exclude = ('id',)
 
 
 class GenreSerializer(ModelSerializer):
@@ -31,11 +32,13 @@ class GenreSerializer(ModelSerializer):
         exclude = ('id',)
 
 
-class GenreListSerializer(ModelSerializer):    
-    class Meta:
-        model = Genre
-        fields = ('name', 'slug', 'movies_count', 'shows_count')
-        
+class GenreCountryListSerializer(Serializer):
+    name = CharField()
+    slug = SlugField()
+    flag = ImageField(required=False)
+    movies_count = IntegerField(required=False)
+    shows_count = IntegerField(required=False)
+    
     def __init__(self, *args, **kwargs):
         include_movies_count = kwargs.pop('include_movies_count', True)
         
