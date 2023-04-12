@@ -1,12 +1,12 @@
 Backend:
 
-- Separate genre & countries by show & movie and order by count of them
 - Add search capability
 - Join user ratings, liked comments and watchlist in ralated views
 - Add password reset view
 - Add email confirm code view
 - Change database to postgresql
 |
+- Separate genre & countries by show & movie (Done)
 - Move minimum_ratings & minimum_episodes to django settings (Done)
 - Install Rabbitmq (Done)
 - Install Celery (Done)
