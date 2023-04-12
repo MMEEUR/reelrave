@@ -7,11 +7,10 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_40
 from rest_framework.pagination import PageNumberPagination
 from .models import Genre, Country, Comment, CommentLikeDisLike, Rating, WatchList
 from .serializers import (
-    GenreListSerializer, CountrySeralizer,
     RatingCreateSerializer, RatingUpdateSerializer,
     CommentUpdateSerializer, CommentCreateSerializer,
     CommentLikeDisLikeSerializer, CommentLikeDisLikeUpdateSerializer,
-    WatchListAddSerializer
+    WatchListAddSerializer, GenreCountryListSerializer
 )
 
 
@@ -205,19 +204,6 @@ class UpdateDeleteCommentView(APIView):
             return Response(status=HTTP_401_UNAUTHORIZED)
 
 
-class GenreListView(APIView):
-    def get(self, request):
-        movie_genres = Genre.objects.filter(genre_movies__isnull=False).distinct()
-        shows_genres = Genre.objects.filter(genre_shows__isnull=False).distinct()
-        
-        data = {
-            "movies": GenreListSerializer(movie_genres, many=True).data,
-            "shows": GenreListSerializer(shows_genres, many=True, include_movies_count=False).data,
-        }
-
-        return Response(data)
-
-
 class GenreDetailView(APIView):
     model = None
     serializer_class = None
@@ -249,14 +235,6 @@ class GenreDetailView(APIView):
         return response
 
 
-class CountryListView(APIView):
-    def get(self, request):
-        countries = Country.objects.all()
-        serializer = CountrySeralizer(countries, many=True)
-
-        return Response(serializer.data)
-
-
 class CountryDetailView(APIView):
     model = None
     serializer_class = None
@@ -286,3 +264,29 @@ class CountryDetailView(APIView):
         response['Page'] = paginator.page.number
         
         return response
+    
+    
+class GenreListView(APIView):
+    def get(self, request):
+        movie_genres = Genre.objects.filter(genre_movies__isnull=False).distinct()
+        shows_genres = Genre.objects.filter(genre_shows__isnull=False).distinct()
+        
+        data = {
+            "movies": GenreCountryListSerializer(movie_genres, many=True).data,
+            "shows": GenreCountryListSerializer(shows_genres, many=True, include_movies_count=False).data,
+        }
+
+        return Response(data)
+    
+    
+class CountryListView(APIView):
+    def get(self, request):
+        movie_countries = Country.objects.filter(country_movies__isnull=False).distinct()
+        shows_countries = Country.objects.filter(country_shows__isnull=False).distinct()
+        
+        data = {
+            "movies": GenreCountryListSerializer(movie_countries, many=True).data,
+            "shows": GenreCountryListSerializer(shows_countries, many=True, include_movies_count=False).data,
+        }
+
+        return Response(data)
