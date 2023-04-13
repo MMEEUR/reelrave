@@ -4,8 +4,8 @@ Backend:
 - Join user ratings, liked comments and watchlist in ralated views
 - Add password reset view
 - Add email confirm code view
-- Change database to postgresql
 |
+- Change database to postgresql (Done)
 - Separate genre & countries by show & movie (Done)
 - Move minimum_ratings & minimum_episodes to django settings (Done)
 - Install Rabbitmq (Done)
