@@ -43,13 +43,3 @@ class Profile(models.Model):
                 
             except OSError:
                 raise ValidationError(_('Invalid image file.')) 
-    
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        
-        if self.photo:
-            image = ImageFile(self.photo)
-            
-            if image.width > 1920 or image.height > 1080:
-                image.thumbnail((1920, 1080), resample=Image.LANCZOS)
-                image.save(self.photo.path)
