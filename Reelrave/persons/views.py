@@ -29,9 +29,9 @@ def person_list(request, role=None):
     }
 
     response = Response(data)
-    response['Total-Count'] = paginator.page.paginator.count
-    response['Page-Size'] = paginator.page_size
-    response['Page'] = paginator.page.number
+    response['X-Total-Count'] = paginator.page.paginator.count
+    response['X-Page-Size'] = paginator.page_size
+    response['X-Page'] = paginator.page.number
     
     return response
 

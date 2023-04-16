@@ -8,12 +8,14 @@ from rest_framework.pagination import PageNumberPagination
 from .models import Movie
 from specifications.models import Genre
 from .serializers import MovieListSerializer, MovieDetailSerializer, TopMoviesSerializer
-from specifications.serializers import CommentSerializer
+from specifications.serializers import CommentSerializer, GenreSerializer
 from specifications.views import CommentCreateView, RatingView, WatchListView, GenreDetailView, CountryDetailView
 
 
 class TopMoviesView(APIView):
     def get(self, request, genre=None):
+        movie_genres = Genre.objects.filter(genre_movies__isnull=False).distinct()
+        
         if genre:
             genre_obj = get_object_or_404(Genre, slug=genre)
         
@@ -21,7 +23,12 @@ class TopMoviesView(APIView):
         cached_result = cache.get(cache_key)
         
         if cached_result is not None:
-            return Response(cached_result)
+            data = {
+            "top_movies": cached_result,
+            "movie_genres": GenreSerializer(movie_genres, many=True).data
+            }
+            
+            return Response(data)
         
         minimum_ratings = settings.MOVIE_MINIMUM_RATINGS
         
@@ -38,12 +45,17 @@ class TopMoviesView(APIView):
                         .annotate(avg_rating=Avg('ratings__rating', filter=~Q(ratings__rating=0)))\
                         .order_by('-avg_rating')[:250]
         
-        serializer = TopMoviesSerializer(top_movies, many=True)
+        movie_serializer = TopMoviesSerializer(top_movies, many=True)
         
-        if serializer:
-            cache.set(cache_key, serializer.data, 86400) # cache for 24 hours
+        if top_movies:
+            cache.set(cache_key, movie_serializer.data, 86400) # cache for 24 hours
+            
+        data = {
+            "top_movies": movie_serializer.data,
+            "movie_genres": GenreSerializer(movie_genres, many=True).data
+        }
         
-        return Response(serializer.data)
+        return Response(data)
 
 
 class MovieListView(APIView):
@@ -56,9 +68,9 @@ class MovieListView(APIView):
         serializer = MovieListSerializer(page, many=True)
 
         response = Response(serializer.data)
-        response['Total-Count'] = paginator.page.paginator.count
-        response['Page-Size'] = paginator.page_size
-        response['Page'] = paginator.page.number
+        response['X-Total-Count'] = paginator.page.paginator.count
+        response['X-Page-Size'] = paginator.page_size
+        response['X-Page'] = paginator.page.number
 
         return response
 

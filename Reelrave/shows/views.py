@@ -31,7 +31,7 @@ class TopShowsView(APIView):
         minimum_episodes = settings.SHOW_MINIMUM_EPISODES
         
         if genre:
-            top_movies = Show.objects.filter(genre=genre_obj)\
+            top_shows = Show.objects.filter(genre=genre_obj)\
                         .annotate(num_ratings=Count('ratings'))\
                         .filter(num_ratings__gte=minimum_ratings)\
                         .annotate(num_episodes=Count('seasons__episodes'))\
@@ -40,16 +40,16 @@ class TopShowsView(APIView):
                         .order_by('-avg_rating')[:250]
 
         else:
-            top_movies = Show.objects.annotate(num_ratings=Count('ratings'))\
+            top_shows = Show.objects.annotate(num_ratings=Count('ratings'))\
                         .filter(num_ratings__gte=minimum_ratings)\
                         .annotate(num_episodes=Count('seasons__episodes'))\
                         .filter(num_episodes__gte=minimum_episodes)\
                         .annotate(avg_rating=Avg('ratings__rating', filter=~Q(ratings__rating=0)))\
                         .order_by('-avg_rating')[:250]
         
-        serializer = TopShowsSerializer(top_movies, many=True)
+        serializer = TopShowsSerializer(top_shows, many=True)
         
-        if serializer:
+        if top_shows:
             cache.set(cache_key, serializer.data, 86400) # cache for 24 hours
         
         return Response(serializer.data)
@@ -65,9 +65,9 @@ class ShowListView(APIView):
         serializer = ShowListSerializer(page, many=True)
 
         response = Response(serializer.data)
-        response['Total-Count'] = paginator.page.paginator.count
-        response['Page-Size'] = paginator.page_size
-        response['Page'] = paginator.page.number
+        response['X-Total-Count'] = paginator.page.paginator.count
+        response['X-Page-Size'] = paginator.page_size
+        response['X-Page'] = paginator.page.number
         
         return response
 
