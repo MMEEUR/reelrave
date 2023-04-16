@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Role(models.Model):  
     role = models.CharField(max_length=20, verbose_name=_("Role"), unique=True)
-    slug = models.SlugField(max_length=20, unique=True)
+    slug = models.SlugField(max_length=20, unique=True, editable=False)
     
     class Meta:
         verbose_name_plural = _("Roles")
