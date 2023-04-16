@@ -1,6 +1,6 @@
 # Endpoitns
 
-This file contains endpoitns and http methods for **Frontend Developer**
+This file contains endpoints and http methods for **Frontend Developer**
 
 ## Movies
 
