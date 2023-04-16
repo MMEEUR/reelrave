@@ -1,0 +1,28 @@
+{
+  "country": "United States",
+  "movies": [
+    {
+      "name": "The Shawshank Redemption",
+      "get_absolute_url": "/movies/the-shawshank-redemption/",
+      "average_rating": null,
+      "baner": "/movies/The%20Shawshank%20Redemption/baners/ShawshankRedemptionMoviePoster.jpg",
+      "release_date": "1994-09-10",
+      "time": "02:22:32",
+      "genre": [{ "name": "Drama", "slug": "drama" }],
+      "director": [
+        {
+          "name": "Frank Darabont",
+          "picture": "/presons/Frank%20Darabont/pictures/MV5BNjk0MTkxNzQwOF5BMl5BanBnXkFtZTcwODM5OTMwNA._V1__2MpMMOO.jpg"
+        }
+      ],
+      "description": "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.",
+      "country_of_origin": [
+        {
+          "name": "United States",
+          "slug": "united-states",
+          "flag": "/countries/United%20States/us-flag_PCWxzXs.gif"
+        }
+      ]
+    }
+  ]
+}
