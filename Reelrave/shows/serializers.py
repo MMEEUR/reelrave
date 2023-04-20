@@ -7,14 +7,14 @@ from persons.serializers import PersonSerializer
 class TopShowsSerializer(ModelSerializer):
     class Meta:
         model = Show
-        fields = ('name', 'baner', 'get_absolute_url',
+        fields = ('id', 'name', 'baner', 'get_absolute_url',
                   'release_date', 'total_ratings', 'average_rating')
 
 
 class EpisodeListSerializer(ModelSerializer):
     class Meta:
         model = Episode
-        fields = ('number', 'name', 'get_absolute_url',
+        fields = ('number', 'name', 'id', 'get_absolute_url',
                   'average_rating', 'baner', 'release_date')
 
 
@@ -33,7 +33,7 @@ class ShowListSerializer(ModelSerializer):
 
     class Meta:
         model = Show
-        fields = ('name', 'get_absolute_url', 'average_rating', 'baner', 'release_date', 'ending_date',
+        fields = ('id', 'name', 'get_absolute_url', 'average_rating', 'baner', 'release_date', 'ending_date',
                   'content_rating', 'genre', 'director', 'description', 'country_of_origin')
 
 
@@ -49,7 +49,7 @@ class ShowDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Show
-        exclude = ('id',)
+        fields = "__all__"
 
 
 class EpisodeDetailSerializer(ModelSerializer):
@@ -65,4 +65,4 @@ class EpisodeDetailSerializer(ModelSerializer):
     
     class Meta:
         model = Episode
-        exclude = ('id',)
+        fields = "__all__"

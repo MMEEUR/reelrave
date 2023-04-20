@@ -7,7 +7,7 @@ from specifications.serializers import GenreSerializer, CountrySeralizer, PhotoS
 class TopMoviesSerializer(ModelSerializer):
     class Meta:
         model = Movie
-        fields = ('name', 'baner', 'get_absolute_url',
+        fields = ('id', 'name', 'baner', 'get_absolute_url',
                   'release_date', 'total_ratings', 'average_rating')
 
 
@@ -24,7 +24,7 @@ class MovieDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Movie
-        exclude = ('id',)
+        fields = "__all__"
 
 
 class MovieListSerializer(ModelSerializer):
@@ -34,5 +34,5 @@ class MovieListSerializer(ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ('name', 'get_absolute_url', 'average_rating', 'baner', 'release_date',
+        fields = ('id', 'name', 'get_absolute_url', 'average_rating', 'baner', 'release_date',
                   'time', 'genre', 'director', 'description', 'country_of_origin')

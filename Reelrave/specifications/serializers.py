@@ -2,7 +2,7 @@ from rest_framework.serializers import (
     SlugField, ImageField,
     DateField, CharField, URLField,
     DurationField, FloatField, IntegerField,
-    ModelSerializer, Serializer,
+    ModelSerializer, Serializer, BooleanField
 )
 from .models import Comment, CommentLikeDisLike, Genre, Country, Photo, Video, Rating, WatchList
 from accounts.serializers import UserCommentSerializer
@@ -65,6 +65,12 @@ class ContentSerializer(Serializer):
     genre = GenreSerializer(many=True, read_only=True)
     average_rating = FloatField()
     description = CharField()
+
+
+class ActivitySerializer(Serializer):
+    object_id = IntegerField()
+    rating = FloatField(required=False)
+    like_or_dislike = BooleanField(required=False)
 
 
 class WatchListSerializer(ModelSerializer):
