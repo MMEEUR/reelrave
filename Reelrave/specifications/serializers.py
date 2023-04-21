@@ -68,9 +68,9 @@ class ContentSerializer(Serializer):
 
 
 class ActivitySerializer(Serializer):
+    content_type = CharField()
     object_id = IntegerField()
     rating = FloatField(required=False)
-    like_or_dislike = BooleanField(required=False)
 
 
 class WatchListSerializer(ModelSerializer):
