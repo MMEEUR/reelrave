@@ -38,15 +38,6 @@ class LoginView(APIView):
         if not user:
             return Response({"error": "Invalid login credentials"}, status=HTTP_400_BAD_REQUEST)
 
-        # old_refresh_tokens = RefreshToken.objects.filter(user=user)
-
-        # for token in old_refresh_tokens:
-        #     try:
-        #         token.blacklist()
-
-        #     except TokenError:
-        #         pass
-
         refresh = RefreshToken.for_user(user)
         access = refresh.access_token
 
