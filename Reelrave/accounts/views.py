@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .serializers import CreateUserSerializer, ProfileSerializer
-from specifications.serializers import WatchListSerializer
+from specifications.serializers import WatchListSerializer, ActivitySerializer
 from .models import Profile
 from .tasks import send_welcome_email
 
@@ -38,21 +38,28 @@ class LoginView(APIView):
         if not user:
             return Response({"error": "Invalid login credentials"}, status=HTTP_400_BAD_REQUEST)
 
-        old_refresh_tokens = RefreshToken.objects.filter(user=user)
+        # old_refresh_tokens = RefreshToken.objects.filter(user=user)
 
-        for token in old_refresh_tokens:
-            try:
-                token.blacklist()
+        # for token in old_refresh_tokens:
+        #     try:
+        #         token.blacklist()
 
-            except TokenError:
-                pass
+        #     except TokenError:
+        #         pass
 
         refresh = RefreshToken.for_user(user)
         access = refresh.access_token
 
+        watchlist = user.watchlist.all()
+        ratings = user.user_ratings.all()
+        
         return Response({
             "refresh": str(refresh),
-            "access": str(access)
+            "access": str(access),
+            "activity": {
+                "watchlist": ActivitySerializer(watchlist, many=True).data,
+                "ratings": ActivitySerializer(ratings, many=True).data,
+            }
         })
 
 
