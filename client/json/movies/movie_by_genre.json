@@ -2,6 +2,7 @@
   "genre": "Drama",
   "movies": [
     {
+      "id": 1,
       "name": "The Shawshank Redemption",
       "get_absolute_url": "/movies/the-shawshank-redemption/",
       "average_rating": 10,

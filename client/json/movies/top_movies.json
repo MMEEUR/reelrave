@@ -1,6 +1,7 @@
 {
   "top_movies": [
     {
+      "id": 1,
       "name": "The Shawshank Redemption",
       "baner": "/movies/The%20Shawshank%20Redemption/baners/ShawshankRedemptionMoviePoster.jpg",
       "get_absolute_url": "/movies/the-shawshank-redemption/",
