@@ -24,8 +24,8 @@ class TopMoviesView(APIView):
         
         if cached_result is not None:
             data = {
-            "top_movies": cached_result,
-            "movie_genres": GenreSerializer(movie_genres, many=True).data
+                "top_movies": cached_result,
+                "movie_genres": GenreSerializer(movie_genres, many=True).data
             }
             
             return Response(data)
@@ -60,11 +60,11 @@ class TopMoviesView(APIView):
 
 class MovieListView(APIView):
     def get(self, request):
-        shows = Movie.objects.all()
+        movies = Movie.objects.all()
 
         paginator = PageNumberPagination()
         paginator.page_size = 10
-        page = paginator.paginate_queryset(shows, request)
+        page = paginator.paginate_queryset(movies, request)
         serializer = MovieListSerializer(page, many=True)
 
         response = Response(serializer.data)
