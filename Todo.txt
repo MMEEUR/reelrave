@@ -6,6 +6,7 @@ Backend:
 - Add password reset view
 - Add password change view
 - Add email confirm code view
+- Update role model
 |
 - Join user ratings, liked comments and watchlist in ralated views (Done)
 - Change database to postgresql (Done)
