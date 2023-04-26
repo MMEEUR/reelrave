@@ -4,10 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
-from rest_framework_simplejwt.tokens import RefreshToken, TokenError
-from .serializers import CreateUserSerializer, ProfileSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import UserCreateSerializer, ProfileSerializer, UserProfileSerializer
 from specifications.serializers import WatchListSerializer, ActivitySerializer
-from .models import Profile
 from .tasks import send_welcome_email
 
 
@@ -16,7 +15,7 @@ class CreateUserView(APIView):
         if request.user.is_authenticated:
             return redirect('accounts:profile')
 
-        serializer = CreateUserSerializer(data=request.data)
+        serializer = UserCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         
@@ -57,32 +56,18 @@ class LoginView(APIView):
 class ProfileView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get_object(self):
-        user = self.request.user
-
-        try:
-            profile = user.profile
-
-        except Profile.DoesNotExist:
-            profile = Profile(user=user)
-            profile.save()
-
-        return profile
-
-    def get(self, request):
-        profile = self.get_object()
+    def get(self, request):    
         watchlist = request.user.watchlist.all()
         
         data = {
-            "profile": ProfileSerializer(profile).data,
+            "user": UserProfileSerializer(request.user).data,
             "watchlist": WatchListSerializer(watchlist, many=True).data,
         }
 
         return Response(data)
 
     def put(self, request):
-        profile = self.get_object()
-        serializer = ProfileSerializer(profile, request.data)
+        serializer = UserProfileSerializer(request.user, request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 

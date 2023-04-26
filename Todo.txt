@@ -2,6 +2,7 @@ Backend:
 
 - Dockerizing the project
 - Create home app
+- Add shows endpoints and json examples
 - Add search capability
 - Add password reset view
 - Add password change view
