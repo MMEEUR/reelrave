@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'shows.apps.ShowsConfig',
     'persons.apps.PersonsConfig',
     'specifications.apps.SpecificationsConfig',
+    'home.apps.HomeConfig',
 ]
 
 MIDDLEWARE = [
@@ -109,8 +110,8 @@ DATABASES = {
     }
 }
 
-# Redis
 # Cache settings
+# Redis
 
 CACHES = {
     'default': {
