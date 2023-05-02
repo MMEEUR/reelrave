@@ -1,0 +1,11 @@
+[
+    {
+        "id": 1,
+        "name": "Breaking Bad",
+        "baner": "/shows/Breaking%20Bad/baners/breaking_bad_FhOogQy.jpg",
+        "get_absolute_url": "/shows/breaking-bad/",
+        "release_date": "2008-01-20",
+        "total_ratings": 1,
+        "average_rating": 10.0
+    }
+]

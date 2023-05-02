@@ -1,0 +1,19 @@
+{
+    "show": "Breaking Bad",
+    "seasons": [
+        {
+            "episodes": [
+                {
+                    "number": 1,
+                    "name": "Pilot",
+                    "id": 1,
+                    "get_absolute_url": "/shows/breaking-bad/episodes/1/",
+                    "average_rating": 8.0,
+                    "baner": "/shows/Breaking%20Bad/Season%201/Episode-1/baner/pilot_LS2G0YB.jpg",
+                    "release_date": "2008-01-20"
+                }
+            ],
+            "number": 1
+        }
+    ]
+}

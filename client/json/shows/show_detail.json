@@ -1,0 +1,104 @@
+{
+    "show": {
+        "id": 1,
+        "genre": [
+            {
+                "name": "Drama",
+                "slug": "drama"
+            },
+            {
+                "name": "Crime",
+                "slug": "crime"
+            },
+            {
+                "name": "Thriller",
+                "slug": "thriller"
+            }
+        ],
+        "country_of_origin": [
+            {
+                "name": "United States",
+                "slug": "united-states",
+                "flag": "/countries/United%20States/us-flag_PCWxzXs.gif"
+            }
+        ],
+        "creators": [
+            {
+                "name": "Vince Gilligan",
+                "picture": "/presons/Vince%20Gilligan/pictures/479803_Rsr1W2E.webp"
+            }
+        ],
+        "actors": [
+            {
+                "name": "Bryan Cranston",
+                "picture": "/presons/Bryan%20Cranston/pictures/3830800.jpg-c_310_420_x-f_jpg-q_x-xxyxx_sJ3oULF.jpg"
+            },
+            {
+                "name": "Aaron Paul",
+                "picture": "/presons/Aaron%20Paul/pictures/AaronPaulTIFFSept2012_V7Z5VLI.jpg"
+            }
+        ],
+        "pictures": [
+            {
+                "title": "breaking is bad",
+                "image": "/shows/Breaking%20Bad/photo/pilot.jpg",
+                "released": "2023-05-02T15:13:06.500630Z"
+            }
+        ],
+        "videos": [
+            {
+                "title": "breaking is very bad",
+                "video": "/shows/Breaking%20Bad/trailers/Galaxy_Brain_meme_2.mp4",
+                "released": "2023-05-02T15:13:06.539526Z",
+                "is_trailer": true
+            }
+        ],
+        "average_rating": 10.0,
+        "total_ratings": 1,
+        "name": "Breaking Bad",
+        "slug": "breaking-bad",
+        "baner": "/shows/Breaking%20Bad/baners/breaking_bad_FhOogQy.jpg",
+        "release_date": "2008-01-20",
+        "ending_date": "2013-09-29",
+        "content_rating": "TV-MA",
+        "description": "A chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine with a former student in order to secure his family's future.",
+        "storyline": "Walter H. White is a chemistry genius, but works as a chemistry teacher in an Albequerque, New Mexico high school. His life drastically changes when he's diagnosed with stage III terminal lung cancer, and given a short amount of time left to live: a mere matter of months. To ensure his handicapped son and his pregnant wife have a financial future, Walt uses his chemistry background to create and sell the world's finest crystal methamphetamine. To sell his signature \"blue meth,\" he teams up with Jesse Pinkman, a former student of his. The meth makes them very rich very quickly, but it attracts the attention of his DEA brother in law Hank. As Walt and Jesse's status in the drug world escalates, Walt becomes a dangerous criminal and Jesse becomes a hot-headed salesman. Hank is always hot on his tail, and it forces Walt to come up with new ways to cover his tracks."
+    },
+    "comments": [
+        {
+            "id": 2,
+            "user": {
+                "username": "Admin",
+                "profile": {
+                    "photo": "/users/Admin/photos/102924-_k09H29t.jpg",
+                    "get_absolute_url": "/account/profile/1/"
+                }
+            },
+            "body": "This is a test",
+            "likes_count": 0,
+            "dislikes_count": 0,
+            "created": "2023-05-02T15:08:10.820733Z",
+            "updated": "2023-05-02T15:08:20.741581Z"
+        }
+    ],
+    "top_rated_episodes": [
+        {
+            "number": 1,
+            "name": "Pilot",
+            "id": 1,
+            "get_absolute_url": "/shows/breaking-bad/episodes/1/",
+            "average_rating": 8.0,
+            "baner": "/shows/Breaking%20Bad/Season%201/Episode-1/baner/pilot_LS2G0YB.jpg",
+            "release_date": "2008-01-20"
+        }
+    ],
+    "most_recent_episode": {
+        "number": 1,
+        "name": "Pilot",
+        "id": 1,
+        "get_absolute_url": "/shows/breaking-bad/episodes/1/",
+        "average_rating": 8.0,
+        "baner": "/shows/Breaking%20Bad/Season%201/Episode-1/baner/pilot_LS2G0YB.jpg",
+        "release_date": "2008-01-20"
+    }
+}
