@@ -6,6 +6,7 @@ Backend:
 - Add password change view
 - Add email confirm code view
 - Add check email & username view
+- Add home app view
 |
 - Add shows endpoints and json examples (Done)
 - Create home app (Done)
