@@ -121,7 +121,7 @@ class Episode(models.Model):
     
     class Meta:
         unique_together = ('season', 'number')
-        ordering = ['-number']
+        ordering = ('release_date',)
         
     @property
     def title(self):
