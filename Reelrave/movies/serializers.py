@@ -9,6 +9,13 @@ class TopMoviesSerializer(ModelSerializer):
         model = Movie
         fields = ('id', 'name', 'baner', 'get_absolute_url',
                   'release_date', 'total_ratings', 'average_rating')
+        
+        
+class FeaturedMoviesSerializer(ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = ('id' 'name', 'baner', 'get_absolute_url',
+                  'release_date', 'average_rating')
 
 
 class MovieDetailSerializer(ModelSerializer):
