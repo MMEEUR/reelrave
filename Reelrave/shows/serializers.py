@@ -66,3 +66,9 @@ class EpisodeDetailSerializer(ModelSerializer):
     class Meta:
         model = Episode
         fields = "__all__"
+        
+        
+class LatestEpisodesSerializers(ModelSerializer):
+    class Meta:
+        model = Episode
+        fields = ('id', 'name', 'title', 'baner', 'get_absolute_url')
