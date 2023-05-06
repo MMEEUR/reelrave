@@ -37,6 +37,7 @@ class Movie(models.Model):
     comments = GenericRelation(Comment)
     ratings = GenericRelation(Rating)
     watchlist = GenericRelation(WatchList)
+    featured = models.BooleanField(default=False)
     
     class Meta:
         ordering = ('-release_date',)
