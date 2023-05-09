@@ -6,9 +6,9 @@ Backend:
 - Add password change view
 - Add email confirm code view
 - Add check email & username view
-- Add home app view
 - Install gunicorn
 |
+- Add home app view (Done)
 - Add shows endpoints and json examples (Done)
 - Create home app (Done)
 - Join user ratings, liked comments and watchlist in ralated views (Done)
