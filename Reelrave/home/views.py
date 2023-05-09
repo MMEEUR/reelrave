@@ -8,6 +8,8 @@ from specifications.models import Video
 from movies.serializers import FeaturedMoviesSerializer, MovieListSerializer
 from specifications.serializers import VideoSerializer
 from shows.serializers import LatestEpisodesSerializers
+from .search import search_content
+from .serializers import SearchContentserializer
 
 
 class HomeView(APIView):
@@ -27,3 +29,20 @@ class HomeView(APIView):
         }
         
         return Response(data)
+    
+    
+class SearchView(APIView):
+    def get(self, request):
+        query = request.GET.get("q", "")
+        
+        if query:
+            object_list = search_content(query)
+            
+            data = {
+                "query": query,
+                "result": SearchContentserializer(object_list, many=True).data
+            }
+            
+            return Response(data)
+            
+        return Response()
