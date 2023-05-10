@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework.views import APIView
@@ -36,6 +37,16 @@ class SearchView(APIView):
         query = request.GET.get("q", "")
         
         if query:
+            
+            # Check cache for results
+            
+            cache_key = f"search:{query}"
+            cached_result = cache.get(cache_key)
+            
+            if cached_result:
+                
+                return Response(cached_result)
+            
             object_list = search_content(query)
             
             data = {
@@ -43,6 +54,8 @@ class SearchView(APIView):
                 "result": SearchContentserializer(object_list, many=True).data
             }
             
+            cache.set(cache_key, data, 3600)
+        
             return Response(data)
             
         return Response()
