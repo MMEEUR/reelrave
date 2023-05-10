@@ -1,42 +1,37 @@
 from django.db.models import QuerySet
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.contrib.postgres.search import SearchQuery, TrigramSimilarity
 from shows.models import Show, Episode
 from movies.models import Movie
 
 
-def search_content(query: str) -> QuerySet | None:
+def search_content(query: str) -> QuerySet:
     
-    if query:
-        search_query = SearchQuery(query, search_type="websearch")
-        search_vector = SearchVector("name", weight="A") + SearchVector("description", weight="B")
+    search_query = SearchQuery(query)
 
-        shows = (
-            Show.objects.annotate(
-                search=search_vector, rank=SearchRank(search_vector, search_query)
-            )
-            .filter(rank__gte=0.4)
-            .values("id", "name", "baner", "release_date", "search", "rank")
+    shows = (
+        Show.objects.annotate(
+            search=search_query, similarity=TrigramSimilarity('name', query),
         )
-        
-        movies = (
-            Movie.objects.annotate(
-                search=search_vector, rank=SearchRank(search_vector, search_query)
-            )
-            .filter(rank__gte=0.4)
-            .values("id", "name", "baner", "release_date", "search", "rank")
+        .filter(similarity__gt=0.3)
+        .values("id", "name", "baner", "release_date", "search", "similarity")
+    )
+    
+    movies = (
+        Movie.objects.annotate(
+            search=search_query, similarity=TrigramSimilarity('name', query),
         )
-        
-        episodes = (
-            Episode.objects.annotate(
-                search=search_vector, rank=SearchRank(search_vector, search_query)
-            )
-            .filter(rank__gte=0.4)
-            .values("id", "name", "baner", "release_date", "search", "rank")
+        .filter(similarity__gt=0.3)
+        .values("id", "name", "baner", "release_date", "search", "similarity")
+    )
+    
+    episodes = (
+        Episode.objects.annotate(
+            search=search_query, similarity=TrigramSimilarity('name', query),
         )
+        .filter(similarity__gt=0.3)
+        .values("id", "name", "baner", "release_date", "search", "similarity")
+    )
 
-        qs = shows.union(movies, episodes).order_by("-rank")
+    qs = shows.union(movies, episodes).order_by("-similarity")
 
-        return qs
-
-    else:
-        return None
+    return qs
