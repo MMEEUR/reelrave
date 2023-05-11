@@ -1,37 +1,38 @@
-from django.db.models import QuerySet
-from django.contrib.postgres.search import SearchQuery, TrigramSimilarity
+from typing import List
+from django.contrib.postgres.search import TrigramSimilarity
 from shows.models import Show, Episode
 from movies.models import Movie
 
 
-def search_content(query: str) -> QuerySet:
-    
-    search_query = SearchQuery(query)
+def search_content(query: str) -> List:
+    shows = Show.objects.annotate(
+        similarity=TrigramSimilarity("name", query),
+    ).filter(similarity__gt=0.1)
 
-    shows = (
-        Show.objects.annotate(
-            search=search_query, similarity=TrigramSimilarity('name', query),
-        )
-        .filter(similarity__gt=0.3)
-        .values("id", "name", "baner", "release_date", "search", "similarity")
-    )
-    
-    movies = (
-        Movie.objects.annotate(
-            search=search_query, similarity=TrigramSimilarity('name', query),
-        )
-        .filter(similarity__gt=0.3)
-        .values("id", "name", "baner", "release_date", "search", "similarity")
-    )
-    
-    episodes = (
-        Episode.objects.annotate(
-            search=search_query, similarity=TrigramSimilarity('name', query),
-        )
-        .filter(similarity__gt=0.3)
-        .values("id", "name", "baner", "release_date", "search", "similarity")
-    )
+    movies = Movie.objects.annotate(
+        similarity=TrigramSimilarity("name", query),
+    ).filter(similarity__gt=0.1)
 
-    qs = shows.union(movies, episodes).order_by("-similarity")
+    episodes = Episode.objects.annotate(
+        similarity=TrigramSimilarity("name", query),
+    ).filter(similarity__gt=0.1)
 
-    return qs
+    results = []
+
+    for obj in (movies, shows, episodes):
+        for item in obj:
+            results.append(
+                {
+                    "object_id": item.id,
+                    "object_type": obj.model.__name__.lower(),
+                    "name": item.name,
+                    "baner": item.baner,
+                    "release_date": item.release_date,
+                    "get_absolute_url": item.get_absolute_url,
+                    "similarity": item.similarity,
+                }
+            )
+
+    results = sorted(results, key=lambda x: x["similarity"], reverse=True)
+
+    return results
