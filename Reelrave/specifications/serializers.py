@@ -2,11 +2,33 @@ from rest_framework.serializers import (
     SlugField, ImageField,
     DateField, CharField, URLField,
     DurationField, FloatField, IntegerField,
-    ModelSerializer, Serializer, BooleanField
+    ModelSerializer, Serializer
 )
 from .models import Comment, CommentLikeDisLike, Genre, Country, Photo, Video, Rating, WatchList
 from accounts.serializers import UserCommentSerializer
 
+
+class OriginContentSerializer(Serializer):
+    name = CharField()
+    title = CharField(required=False)
+    get_absolute_url = URLField()
+    
+    
+class PhotoListSerializer(ModelSerializer):
+    content_object = OriginContentSerializer(read_only=True)
+    
+    class Meta:
+        model = Video
+        fields = ('title', 'video', 'released', 'content_object')
+
+
+class VideoListSerializer(ModelSerializer):
+    content_object = OriginContentSerializer(read_only=True)
+    
+    class Meta:
+        model = Video
+        fields = ('title', 'video', 'released', 'is_trailer', 'content_object')
+        
 
 class PhotoSerializer(ModelSerializer):
     class Meta:
