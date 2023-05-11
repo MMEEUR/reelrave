@@ -3,7 +3,9 @@ from rest_framework.serializers import Serializer, \
 
 
 class SearchContentserializer(Serializer):
-    id = IntegerField()
+    object_id = IntegerField()
+    object_type = CharField()
     name = CharField()
     baner = URLField()
     release_date = DateField()
+    get_absolute_url = URLField()
