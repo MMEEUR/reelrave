@@ -5,13 +5,48 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
 from rest_framework.pagination import PageNumberPagination
-from .models import Genre, Country, Comment, CommentLikeDisLike, Rating, WatchList
+from .models import Genre, Country, Comment, CommentLikeDisLike, Rating, WatchList, Photo, Video
 from .serializers import (
     RatingCreateSerializer, RatingUpdateSerializer,
     CommentUpdateSerializer, CommentCreateSerializer,
     CommentLikeDisLikeSerializer, CommentLikeDisLikeUpdateSerializer,
-    WatchListAddSerializer, GenreCountryListSerializer
+    WatchListAddSerializer, GenreCountryListSerializer,
+    VideoListSerializer, PhotoListSerializer
 )
+
+
+class PhotoListView(APIView):
+    def get(self, request):
+        photos = Photo.objects.all()
+        
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        page = paginator.paginate_queryset(photos, request)
+        serializer = PhotoListSerializer(page, many=True)
+        
+        response = Response(serializer.data)
+        response['X-Total-Count'] = paginator.page.paginator.count
+        response['X-Page-Size'] = paginator.page_size
+        response['X-Page'] = paginator.page.number
+        
+        return response
+    
+    
+class VideoListView(APIView):
+    def get(self, request):
+        videos = Video.objects.all()
+        
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        page = paginator.paginate_queryset(videos, request)
+        serializer = VideoListSerializer(page, many=True)
+        
+        response = Response(serializer.data)
+        response['X-Total-Count'] = paginator.page.paginator.count
+        response['X-Page-Size'] = paginator.page_size
+        response['X-Page'] = paginator.page.number
+        
+        return response
 
 
 class WatchListView(APIView):
