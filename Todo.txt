@@ -1,6 +1,7 @@
 Backend:
 
 - Dockerizing the project
+- Custom user model
 - Add password reset view
 - Add password change view
 - Add email confirm code view
