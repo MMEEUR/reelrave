@@ -8,6 +8,7 @@ Backend:
 - Add check email & username view
 - Install gunicorn
 |
+- Install nginx (Done)
 - Add search capability (Done)
 - Add home app view (Done)
 - Add shows endpoints and json examples (Done)
