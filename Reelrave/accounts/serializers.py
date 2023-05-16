@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from rest_framework.serializers import ModelSerializer, ValidationError, CharField, EmailField
-from .models import Profile
 
 
 class UserCreateSerializer(ModelSerializer):
@@ -22,36 +21,26 @@ class UserCreateSerializer(ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('confirm_password')
         user = get_user_model().objects.create_user(**validated_data)
-        Profile.objects.get_or_create(user=user)
 
         return user
 
-
-class ProfileSerializer(ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ('bio', 'date_of_birth', 'photo')
-        
         
 class UserProfileSerializer(ModelSerializer):
     username = CharField(required=False)
     email = EmailField(required=False)
-    profile = ProfileSerializer(read_only=True)
     
     class Meta:
         model = get_user_model()
-        fields = ('username', 'email', 'profile')
-        
-        
-class CommentProfileSerializer(ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ('photo', 'get_absolute_url')
+        fields = ('username', 'email', 'bio', 'date_of_birth', 'photo')
 
 
 class UserCommentSerializer(ModelSerializer):
-    profile = CommentProfileSerializer(read_only=True)
-
     class Meta:
         model = get_user_model()
-        fields = ('username', 'profile')
+        fields = ('username', 'photo', 'get_absolute_url')
+        
+        
+class GlobalProfileSerializer(ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'photo', 'date_of_birth', 'bio')
