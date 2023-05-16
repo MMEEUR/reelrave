@@ -3,9 +3,9 @@ from django.contrib.auth import authenticate, get_user_model
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserCreateSerializer, ProfileSerializer, UserProfileSerializer
+from .serializers import UserCreateSerializer, GlobalProfileSerializer, UserProfileSerializer
 from specifications.serializers import WatchListSerializer, ActivitySerializer
 from .tasks import send_welcome_email
 
@@ -40,8 +40,8 @@ class LoginView(APIView):
         refresh = RefreshToken.for_user(user)
         access = refresh.access_token
 
-        watchlist = user.watchlist.all()
-        ratings = user.user_ratings.all()
+        watchlist = user.watchlist.all().values('content_type', 'object_id')
+        ratings = user.user_ratings.all().values('content_type', 'object_id', 'rating')
         
         return Response({
             "refresh": str(refresh),
@@ -73,14 +73,15 @@ class ProfileView(APIView):
 
         return Response(serializer.data)
     
+    
 class GlobalProfileView(APIView):
     def get(self, request, user_id):
         user = get_object_or_404(get_user_model(), id=user_id)
-        profile = user.profile
         
-        data = {
-            "user": user.username,
-            "profile": ProfileSerializer(profile).data
-        }
+        if user.is_staff:
+            
+            return Response(status=HTTP_404_NOT_FOUND)
+
+        serializer = GlobalProfileSerializer(user)
         
-        return Response(data)
+        return Response(serializer.data)
