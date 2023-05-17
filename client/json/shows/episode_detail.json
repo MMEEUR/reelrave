@@ -59,10 +59,8 @@
                 "id": 3,
                 "user": {
                     "username": "Admin",
-                    "profile": {
-                        "photo": "/users/Admin/photos/102924-_k09H29t.jpg",
-                        "get_absolute_url": "/account/profile/1/"
-                    }
+                    "photo": "/users/Admin/photos/102924-_k09H29t.jpg",
+                    "get_absolute_url": "/account/profile/1/"
                 },
                 "body": "this is a test",
                 "likes_count": 0,
