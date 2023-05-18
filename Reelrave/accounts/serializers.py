@@ -1,5 +1,8 @@
 from django.contrib.auth import get_user_model
-from rest_framework.serializers import ModelSerializer, ValidationError, CharField, EmailField
+from rest_framework.serializers import (
+    ModelSerializer, ValidationError, CharField,
+    EmailField, Serializer
+)
 
 
 class UserCreateSerializer(ModelSerializer):
@@ -44,3 +47,14 @@ class GlobalProfileSerializer(ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('username', 'photo', 'date_of_birth', 'bio')
+        
+        
+class ChangePasswordSerializer(Serializer):
+    old_password = CharField(required=True)
+    new_password = CharField(required=True)
+    
+    def validate(self, attrs):
+        if attrs['new_password'] == attrs['old_password']:
+            raise ValidationError({"error": "New password should be different from the old password."})
+        
+        return super().validate(attrs)
