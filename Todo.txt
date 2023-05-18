@@ -2,11 +2,11 @@ Backend:
 
 - Dockerizing the project
 - Add password reset view
-- Add password change view
 - Add email confirm code view
 - Add check email & username view
 - Install gunicorn
 |
+- Add password change view (Done)
 - Custom user model (Done)
 - Install nginx (Done)
 - Add search capability (Done)
