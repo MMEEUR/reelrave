@@ -1,11 +1,16 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.hashers import check_password
+from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserCreateSerializer, GlobalProfileSerializer, UserProfileSerializer
+from .serializers import (
+    UserCreateSerializer, GlobalProfileSerializer, UserProfileSerializer,
+    ChangePasswordSerializer
+)
 from specifications.serializers import WatchListSerializer, ActivitySerializer
 from .tasks import send_welcome_email
 
@@ -80,8 +85,30 @@ class GlobalProfileView(APIView):
         
         if user.is_staff:
             
-            return Response(status=HTTP_404_NOT_FOUND)
+            raise NotFound()
 
         serializer = GlobalProfileSerializer(user)
         
         return Response(serializer.data)
+    
+    
+class ChangePasswordView(APIView):
+    permission_classes = (IsAuthenticated,)
+    
+    def patch(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        user = request.user
+        
+        new_password = serializer.validated_data.get('new_password')
+        old_password = serializer.validated_data.get('old_password')
+        
+        if not check_password(old_password, user.password):
+            
+            return Response({"old_password": "Incorrect password."}, HTTP_400_BAD_REQUEST)
+        
+        user.set_password(new_password)
+        user.save()
+        
+        return Response({"detail": "Password changed successfully."})
