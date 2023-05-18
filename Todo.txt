@@ -1,5 +1,6 @@
 Backend:
 
+- Add websocket chatroom view
 - Dockerizing the project
 - Add password reset view
 - Add email confirm code view
