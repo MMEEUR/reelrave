@@ -14,6 +14,9 @@ from specifications.serializers import WatchListSerializer, ActivitySerializer
 from .tasks import send_welcome_email
 
 
+User = get_user_model()
+
+
 class CreateUserView(APIView):
     def post(self, request):
         if request.user.is_authenticated:
@@ -80,7 +83,7 @@ class ProfileView(APIView):
     
 class GlobalProfileView(APIView):
     def get(self, request, user_id):
-        user = get_object_or_404(get_user_model(), id=user_id)
+        user = get_object_or_404(User, id=user_id)
         
         if user.is_staff:
             
@@ -105,3 +108,21 @@ class ChangePasswordView(APIView):
         user.save()
         
         return Response({"detail": "Password changed successfully."})
+
+    
+class CheckUsernameEmailView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        email = request.data.get('email')
+
+        data = {}
+
+        if username:
+            if User.objects.filter(username=username).exists():
+                data['username'] = True
+
+        if email:
+            if User.objects.filter(email=email).exists():
+                data['email'] = True
+
+        return Response(data)
