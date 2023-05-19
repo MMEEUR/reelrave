@@ -1,6 +1,5 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.hashers import check_password
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -96,18 +95,12 @@ class ChangePasswordView(APIView):
     permission_classes = (IsAuthenticated,)
     
     def patch(self, request):
-        serializer = ChangePasswordSerializer(data=request.data)
+        serializer = ChangePasswordSerializer(data=request.data, context={"user": request.user})
         serializer.is_valid(raise_exception=True)
         
-        user = request.user
-        
         new_password = serializer.validated_data.get('new_password')
-        old_password = serializer.validated_data.get('old_password')
         
-        if not check_password(old_password, user.password):
-            
-            return Response({"old_password": "Incorrect password."}, HTTP_400_BAD_REQUEST)
-        
+        user = request.user
         user.set_password(new_password)
         user.save()
         
