@@ -1,12 +1,10 @@
 from django.contrib.auth import get_user_model
-from rest_framework.serializers import (
-    ModelSerializer, ValidationError, CharField,
-    EmailField, Serializer
-)
+from django.contrib.auth.password_validation import validate_password
+from rest_framework import serializers
 
 
-class UserCreateSerializer(ModelSerializer):
-    confirm_password = CharField(write_only=True)
+class UserCreateSerializer(serializers.ModelSerializer):
+    confirm_password = serializers.CharField(write_only=True)
 
     class Meta:
         model = get_user_model()
@@ -17,7 +15,7 @@ class UserCreateSerializer(ModelSerializer):
         
     def validate(self, data):
         if data['password'] != data['confirm_password']:
-            raise ValidationError("Passwords must match.")
+            raise serializers.ValidationError("Passwords must match.")
 
         return data
 
@@ -28,33 +26,40 @@ class UserCreateSerializer(ModelSerializer):
         return user
 
         
-class UserProfileSerializer(ModelSerializer):
-    username = CharField(required=False)
-    email = EmailField(required=False)
+class UserProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(required=False)
+    email = serializers.EmailField(required=False)
     
     class Meta:
         model = get_user_model()
         fields = ('username', 'email', 'bio', 'date_of_birth', 'photo')
 
 
-class UserCommentSerializer(ModelSerializer):
+class UserCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('username', 'photo', 'get_absolute_url')
         
         
-class GlobalProfileSerializer(ModelSerializer):
+class GlobalProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('username', 'photo', 'date_of_birth', 'bio')
         
         
-class ChangePasswordSerializer(Serializer):
-    old_password = CharField(required=True)
-    new_password = CharField(required=True)
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
     
     def validate(self, attrs):
+        user = self.context['user']
+        
+        if not user.check_password(attrs['old_password']):
+            raise serializers.ValidationError("Incorrect password.")
+        
         if attrs['new_password'] == attrs['old_password']:
-            raise ValidationError({"error": "New password should be different from the old password."})
+            raise serializers.ValidationError("New password should be different from the old password.")
+        
+        validate_password(attrs['new_password'])
         
         return super().validate(attrs)
