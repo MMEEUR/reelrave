@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser
+from .models import CustomUser, PasswordReset
 
 
 @admin.register(CustomUser)
@@ -13,3 +13,9 @@ class CustomUserAdmin(UserAdmin):
     list_display = ["username", "email", "is_staff", "comments_count"]
     fieldsets = UserAdmin.fieldsets + ((None, {"fields": ("bio", "date_of_birth", "photo")}),)
     add_fieldsets = UserAdmin.add_fieldsets + ((None, {"fields": ("bio", "date_of_birth", "photo")}),)
+    
+    
+@admin.register(PasswordReset)
+class PasswordResetAdmin(admin.ModelAdmin):
+    list_display = ("user", "created_at")
+    search_fields = ("user",)
