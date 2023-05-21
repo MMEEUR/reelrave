@@ -3,10 +3,10 @@ Backend:
 - Add websocket chatroom view
 - Login with google account
 - Dockerizing the project
-- Add password reset view
 - Add email confirm code view
 - Install gunicorn
 |
+- Add password reset view (Done)
 - Add check email & username view(Done)
 - Add password change view (Done)
 - Custom user model (Done)
