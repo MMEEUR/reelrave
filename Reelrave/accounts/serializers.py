@@ -1,13 +1,18 @@
+from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from .models import PasswordReset
+
+
+User = get_user_model()
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = get_user_model()
+        model = User
         fields = (
             'username', 'email', 'password', 'confirm_password'
         )
@@ -21,7 +26,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop('confirm_password')
-        user = get_user_model().objects.create_user(**validated_data)
+        user = User.objects.create_user(**validated_data)
 
         return user
 
@@ -31,19 +36,19 @@ class UserProfileSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=False)
     
     class Meta:
-        model = get_user_model()
+        model = User
         fields = ('username', 'email', 'bio', 'date_of_birth', 'photo')
 
 
 class UserCommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = get_user_model()
+        model = User
         fields = ('username', 'photo', 'get_absolute_url')
         
         
 class GlobalProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = get_user_model()
+        model = User
         fields = ('username', 'photo', 'date_of_birth', 'bio')
         
         
@@ -63,3 +68,32 @@ class ChangePasswordSerializer(serializers.Serializer):
         validate_password(attrs['new_password'])
         
         return super().validate(attrs)
+    
+    
+class PasswordResetRequestSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+
+    def validate_username(self, username):
+        user = User.objects.get(username=username)
+
+        if not user or user.is_staff:
+            raise serializers.ValidationError("User with this username does not exist.")
+
+        if PasswordReset.objects.filter(user=user, created_at__date=timezone.now().date()).count() >= 5:
+            raise serializers.ValidationError("You have exceeded the maximum password reset requests for today.")
+
+        return username
+    
+    
+class PasswordResetSerializer(serializers.Serializer):
+    new_password = serializers.CharField(required=True)
+        
+    def validate(self, attrs):
+            user = self.context['user']
+            
+            if user.check_password(attrs['new_password']):
+                raise serializers.ValidationError("New password should be different from the old password.")
+            
+            validate_password(attrs['new_password'])
+            
+            return super().validate(attrs)
