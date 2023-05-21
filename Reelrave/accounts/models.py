@@ -1,4 +1,8 @@
+import uuid
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import pre_delete
+from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
@@ -49,3 +53,22 @@ class CustomUser(AbstractUser):
 
             except OSError:
                 raise ValidationError(_("Invalid image file."))
+            
+            
+class PasswordReset(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, editable=False)
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def __str__(self):
+        return f"Password reset request for {self.user.username}"
+    
+    class Meta:
+        ordering = ('-created_at',)
+        
+        
+@receiver(pre_delete, sender=PasswordReset)
+def delete_expired_password_resets(sender, instance, **kwargs):
+    # Check if the instance is older than 24 hours
+    if instance.created_at < timezone.now() - timezone.timedelta(hours=24):
+        instance.delete()
