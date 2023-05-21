@@ -1,3 +1,5 @@
+from django.urls import reverse
+from django.core.mail import send_mail
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework.exceptions import NotFound
@@ -8,9 +10,11 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import (
     UserCreateSerializer, GlobalProfileSerializer, UserProfileSerializer,
-    ChangePasswordSerializer
+    ChangePasswordSerializer, PasswordResetRequestSerializer,
+    PasswordResetSerializer
 )
 from specifications.serializers import WatchListSerializer, ActivitySerializer
+from .models import PasswordReset
 from .tasks import send_welcome_email
 
 
@@ -126,3 +130,50 @@ class CheckUsernameEmailView(APIView):
                 data['email'] = True
 
         return Response(data)
+    
+    
+class ResetPasswordRequestView(APIView):
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        username = serializer.validated_data["username"]
+        user = User.objects.get(username=username)
+
+        token = PasswordReset.objects.create(user=user).token
+        print(token)
+        
+        reset_password_url = reverse('accounts:reset_password', kwargs={'token': token})
+
+        subject = "Password Reset"
+        message = f"Click the following link to reset your password: {reset_password_url}"
+        from_email = "admin@example.com"
+        to_email = user.email
+        
+        send_mail(subject, message, from_email, [to_email], fail_silently=False)
+
+        return Response({"detail": "Password reset email has been sent."})
+    
+    
+class ResetPasswordView(APIView):
+    def post(self, request, token):
+        try:
+            password_reset = PasswordReset.objects.get(token=token)
+            
+        except PasswordReset.DoesNotExist:
+            
+            raise NotFound()   
+        
+        user = password_reset.user
+        
+        serializer = PasswordResetSerializer(data=request.data, context={"user": user})
+        serializer.is_valid(raise_exception=True)
+        
+        password = serializer.validated_data["new_password"]
+        
+        user.set_password(password)
+        user.save()
+        
+        PasswordReset.objects.filter(user=user).delete()
+        
+        return Response({"detail": "Password has been reset successfully."})
