@@ -11,7 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import (
     UserCreateSerializer, GlobalProfileSerializer, UserProfileSerializer,
     ChangePasswordSerializer, PasswordResetRequestSerializer,
-    PasswordResetSerializer
+    ValidatePasswordSerializer
 )
 from specifications.serializers import WatchListSerializer, ActivitySerializer
 from .models import PasswordReset
@@ -141,7 +141,6 @@ class ResetPasswordRequestView(APIView):
         user = User.objects.get(username=username)
 
         token = PasswordReset.objects.create(user=user).token
-        print(token)
         
         reset_password_url = reverse('accounts:reset_password', kwargs={'token': token})
 
@@ -166,7 +165,7 @@ class ResetPasswordView(APIView):
         
         user = password_reset.user
         
-        serializer = PasswordResetSerializer(data=request.data, context={"user": user})
+        serializer = ValidatePasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
         password = serializer.validated_data["new_password"]
