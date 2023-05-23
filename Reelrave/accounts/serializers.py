@@ -52,9 +52,17 @@ class GlobalProfileSerializer(serializers.ModelSerializer):
         fields = ('username', 'photo', 'date_of_birth', 'bio')
         
         
-class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required=True)
+class ValidatePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
+        
+    def validate(self, attrs):      
+            validate_password(attrs['new_password'])
+            
+            return super().validate(attrs)
+        
+        
+class ChangePasswordSerializer(ValidatePasswordSerializer):
+    old_password = serializers.CharField(required=True)
     
     def validate(self, attrs):
         user = self.context['user']
@@ -64,8 +72,6 @@ class ChangePasswordSerializer(serializers.Serializer):
         
         if attrs['new_password'] == attrs['old_password']:
             raise serializers.ValidationError("New password should be different from the old password.")
-        
-        validate_password(attrs['new_password'])
         
         return super().validate(attrs)
     
@@ -83,17 +89,3 @@ class PasswordResetRequestSerializer(serializers.Serializer):
             raise serializers.ValidationError("You have exceeded the maximum password reset requests for today.")
 
         return username
-    
-    
-class PasswordResetSerializer(serializers.Serializer):
-    new_password = serializers.CharField(required=True)
-        
-    def validate(self, attrs):
-            user = self.context['user']
-            
-            if user.check_password(attrs['new_password']):
-                raise serializers.ValidationError("New password should be different from the old password.")
-            
-            validate_password(attrs['new_password'])
-            
-            return super().validate(attrs)
