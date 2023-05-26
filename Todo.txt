@@ -4,9 +4,9 @@ Backend:
 - Login with google account
 - Dockerizing the project
 - Add email confirm code view
-- Install gunicorn
 - Complete the readme file
 |
+- Install gunicorn (Done)
 - Add password reset view (Done)
 - Add check email & username view(Done)
 - Add password change view (Done)
