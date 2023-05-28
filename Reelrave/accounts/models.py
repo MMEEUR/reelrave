@@ -1,4 +1,4 @@
-import uuid
+import uuid, random
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import pre_delete
@@ -15,7 +15,7 @@ class CustomUser(AbstractUser):
     def get_image_filename(instance, filename):
         return f"users/{instance.username}/photos/{filename}"
 
-    email = models.EmailField(_("email address"))
+    email = models.EmailField(_("email address"), unique=True, blank=False, null=False)
     bio = models.CharField(max_length=50, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     photo = models.ImageField(
@@ -67,8 +67,25 @@ class PasswordReset(models.Model):
         ordering = ('-created_at',)
         
         
-@receiver(pre_delete, sender=PasswordReset)
-def delete_expired_password_resets(sender, instance, **kwargs):
-    # Check if the instance is older than 24 hours
-    if instance.created_at < timezone.now() - timezone.timedelta(hours=24):
-        instance.delete()
+class EmailConfirm(models.Model):
+    email = models.EmailField(editable=False)
+    code = models.PositiveSmallIntegerField(unique=True, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    
+    def __str__(self):
+        return self.email
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.code = self.generate_code()
+            
+        self.validate_codes_count()
+            
+        super().save(*args, **kwargs)
+
+    def generate_code(self):
+        return random.randint(1000, 9999)
+    
+    def validate_codes_count(self):
+        if EmailConfirm.objects.filter(email=self.email).count() >= 3:
+            raise ValidationError("Maximum number of records with this email reached.")
