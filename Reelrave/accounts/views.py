@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import authenticate, get_user_model
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -11,10 +11,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import (
     UserCreateSerializer, GlobalProfileSerializer, UserProfileSerializer,
     ChangePasswordSerializer, PasswordResetRequestSerializer,
-    ValidatePasswordSerializer
+    ValidatePasswordSerializer, ResendEmailConfirmCodeSerializer
 )
 from specifications.serializers import WatchListSerializer, ActivitySerializer
-from .models import PasswordReset
+from .models import PasswordReset, EmailConfirm
 from .tasks import send_welcome_email
 
 
@@ -30,9 +30,31 @@ class CreateUserView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         
+        email = request.data['email']
+        username = request.data['username']
+        
+        EmailConfirm.objects.filter(email=email).delete()
+        
         send_welcome_email.delay(email=request.data['email'], username=request.data['username'])
 
         return Response(serializer.data, status=HTTP_201_CREATED)
+    
+    
+class ResendEmailConfirmCodeView(APIView):
+    def post(self, request):
+        serializer = ResendEmailConfirmCodeSerializer(data=request.data)
+        serializer.is_valid()
+        
+        email = serializer.validated_data('email')
+        
+        if EmailConfirm.objects.filter(email=email).count() == 3:
+            raise ValidationError("Too many requests, try later.")
+            
+        code = EmailConfirm.objects.create(email=email).code
+            
+        send_mail(email, f"Your confirm code:\n\n\t {code}")
+            
+        return Response({"detail": "Confirm code has been sent."})
 
 
 class LoginView(APIView):
