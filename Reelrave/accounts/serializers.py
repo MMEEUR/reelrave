@@ -1,8 +1,10 @@
 from django.utils import timezone
+from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from .models import PasswordReset
+from rest_framework.response import Response
+from .models import PasswordReset, EmailConfirm
 
 
 User = get_user_model()
@@ -10,25 +12,45 @@ User = get_user_model()
 
 class UserCreateSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
+    email_code = serializers.IntegerField(required=False, write_only=True)
 
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'password', 'confirm_password'
+            'username', 'email', 'password', 'confirm_password', 'email_code'
         )
         extra_kwargs = {'password': {'write_only': True}}
         
-    def validate(self, data):
-        if data['password'] != data['confirm_password']:
+    def validate(self, attrs):
+        validated_data = super().validate(attrs)
+        
+        email = attrs['email']
+        code = attrs.get('email_code')
+           
+        if attrs['password'] != attrs['confirm_password']:
             raise serializers.ValidationError("Passwords must match.")
-
-        return data
-
-    def create(self, validated_data):
+        
+        if code:
+            try:
+                EmailConfirm.objects.get(email=email, code=code)
+                
+            except EmailConfirm.DoesNotExist:
+                raise serializers.ValidationError("Confirm code is incorrect.")
+            
+        else:
+            if EmailConfirm.objects.filter(email=email).count() == 3:
+                raise serializers.ValidationError("Too many requests, try later.")
+            
+            code = EmailConfirm.objects.create(email=email).code
+            
+            send_mail("Activation Code", f"Your confirm code:\n\n\t {code}", "a@g.com", [email])
+            
+            raise serializers.ValidationError("Confirm code has been sent.")
+        
         validated_data.pop('confirm_password')
-        user = User.objects.create_user(**validated_data)
-
-        return user
+        validated_data.pop('email_code')
+            
+        return validated_data
 
         
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -89,3 +111,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
             raise serializers.ValidationError("You have exceeded the maximum password reset requests for today.")
 
         return username
+    
+    
+class ResendEmailConfirmCodeSerializer(serializers.Serializer):
+    email = serializers.EmailField()
