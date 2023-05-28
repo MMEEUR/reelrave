@@ -35,7 +35,7 @@ class CreateUserView(APIView):
         
         EmailConfirm.objects.filter(email=email).delete()
         
-        send_welcome_email.delay(email=request.data['email'], username=request.data['username'])
+        send_welcome_email.delay(email=email, username=username)
 
         return Response(serializer.data, status=HTTP_201_CREATED)
     
@@ -43,16 +43,16 @@ class CreateUserView(APIView):
 class ResendEmailConfirmCodeView(APIView):
     def post(self, request):
         serializer = ResendEmailConfirmCodeSerializer(data=request.data)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         
-        email = serializer.validated_data('email')
+        email = serializer.validated_data.get('email')
         
         if EmailConfirm.objects.filter(email=email).count() == 3:
             raise ValidationError("Too many requests, try later.")
             
         code = EmailConfirm.objects.create(email=email).code
             
-        send_mail(email, f"Your confirm code:\n\n\t {code}")
+        send_mail("Activation Code", f"Your confirm code:\n\n\t {code}", "a@g.com", [email])
             
         return Response({"detail": "Confirm code has been sent."})
 
