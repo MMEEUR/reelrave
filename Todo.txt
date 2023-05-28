@@ -3,9 +3,9 @@ Backend:
 - Add websocket chatroom view
 - Login with google account
 - Dockerizing the project
-- Add email confirm code view
 - Complete the readme file
 |
+- Add email confirm code view (Done)
 - Install gunicorn (Done)
 - Add password reset view (Done)
 - Add check email & username view(Done)
