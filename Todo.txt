@@ -4,6 +4,7 @@ Backend:
 - Login with google account
 - Dockerizing the project
 - Complete the readme file
+- Add collection model
 |
 - Add email confirm code view (Done)
 - Install gunicorn (Done)
