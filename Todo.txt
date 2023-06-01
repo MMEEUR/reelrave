@@ -5,8 +5,8 @@ Backend:
 - Dockerizing the project
 - Complete the readme file
 - Add collection model
-- Create a task to delete email code records 
 |
+- Create a task to delete expired records (Done)
 - Add email confirm code view (Done)
 - Install gunicorn (Done)
 - Add password reset view (Done)
