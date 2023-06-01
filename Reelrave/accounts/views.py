@@ -1,4 +1,5 @@
 from django.urls import reverse
+from django.utils import timezone
 from django.core.mail import send_mail
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import authenticate, get_user_model
@@ -42,13 +43,16 @@ class CreateUserView(APIView):
     
 class ResendEmailConfirmCodeView(APIView):
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('accounts:profile')
+        
         serializer = ResendEmailConfirmCodeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
         email = serializer.validated_data.get('email')
         
-        if EmailConfirm.objects.filter(email=email).count() == 3:
-            raise ValidationError("Too many requests, try later.")
+        if EmailConfirm.objects.filter(email=email, expires__gte=timezone.now()).exists():
+            raise ValidationError("You must wait 2 minutes before requesting resend code.")
             
         code = EmailConfirm.objects.create(email=email).code
             
@@ -159,8 +163,7 @@ class ResetPasswordRequestView(APIView):
         serializer = PasswordResetRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
-        username = serializer.validated_data["username"]
-        user = User.objects.get(username=username)
+        user = serializer.validated_data["user"]
 
         token = PasswordReset.objects.create(user=user).token
         
