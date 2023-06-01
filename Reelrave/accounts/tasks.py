@@ -1,5 +1,8 @@
+from django.utils import timezone
 from django.core.mail import send_mail
 from celery import shared_task
+from .models import EmailConfirm, PasswordReset
+
 
 @shared_task
 def send_welcome_email(email: str, username: str):
@@ -30,3 +33,9 @@ def send_welcome_email(email: str, username: str):
         [email],
         fail_silently=False
     )
+    
+    
+@shared_task
+def delete_expired_records():
+    PasswordReset.objects.filter(expires__lt=timezone.now()).delete()
+    EmailConfirm.objects.filter(expires__lt=timezone.now()).delete()
