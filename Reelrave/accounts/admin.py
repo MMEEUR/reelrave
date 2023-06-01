@@ -10,18 +10,21 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     model = CustomUser
 
-    list_display = ["username", "email", "is_staff", "comments_count"]
+    list_display = ("username", "email", "is_staff", "comments_count")
+    list_filter = ("is_staff",)
+    search_fields = ("username", "email")
+    
     fieldsets = UserAdmin.fieldsets + ((None, {"fields": ("bio", "date_of_birth", "photo")}),)
     add_fieldsets = UserAdmin.add_fieldsets + ((None, {"fields": ("bio", "date_of_birth", "photo")}),)
     
     
 @admin.register(PasswordReset)
 class PasswordResetAdmin(admin.ModelAdmin):
-    list_display = ("user", "created_at")
+    list_display = ("user", "expires")
     search_fields = ("user",)
     
     
 @admin.register(EmailConfirm)
 class EmailConfirmAdmin(admin.ModelAdmin):
-    list_display = ("email", "code", "created_at")
+    list_display = ("email", "code", "expires")
     search_fields = ("email",)
