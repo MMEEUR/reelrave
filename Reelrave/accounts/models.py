@@ -1,7 +1,6 @@
 import uuid, random
+from datetime import timedelta
 from django.db import models
-from django.dispatch import receiver
-from django.db.models.signals import pre_delete
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.models import AbstractUser
@@ -53,30 +52,47 @@ class CustomUser(AbstractUser):
 
             except OSError:
                 raise ValidationError(_("Invalid image file."))
-            
-            
+    
+    
 class PasswordReset(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, editable=False)
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    expires = models.DateTimeField(editable=False)
+    
+    class Meta:
+        ordering = ('-expires',)
+        
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.expires = timezone.now() + timedelta(minutes=5)
+         
+        self.validate_tokens_count()
+            
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Password reset request for {self.user.username}"
     
-    class Meta:
-        ordering = ('-created_at',)
-        
+    def validate_tokens_count(self):
+        if PasswordReset.objects.filter(user=self.user, expires__gte=timezone.now()).count() >= 3:
+            raise ValidationError("Too many requests.")
+    
         
 class EmailConfirm(models.Model):
     email = models.EmailField(editable=False)
-    code = models.PositiveSmallIntegerField(unique=True, editable=False)
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    code = models.PositiveSmallIntegerField(editable=False)
+    expires = models.DateTimeField(editable=False)
+    
+    class Meta:
+        ordering = ('-expires',)
+        unique_together = ('email', 'code')
     
     def __str__(self):
         return self.email
 
     def save(self, *args, **kwargs):
         if not self.pk:
+            self.expires = timezone.now() + timedelta(minutes=2)
             self.code = self.generate_code()
             
         self.validate_codes_count()
@@ -87,5 +103,5 @@ class EmailConfirm(models.Model):
         return random.randint(1000, 9999)
     
     def validate_codes_count(self):
-        if EmailConfirm.objects.filter(email=self.email).count() >= 3:
-            raise ValidationError("Maximum number of records with this email reached.")
+        if EmailConfirm.objects.filter(email=self.email, expires__gte=timezone.now()).exists():
+            raise ValidationError("You must wait 2 minutes before requesting resend code.")
