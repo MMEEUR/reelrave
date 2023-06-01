@@ -1,9 +1,7 @@
 from django.utils import timezone
-from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework.response import Response
 from .models import PasswordReset, EmailConfirm
 
 
@@ -12,7 +10,7 @@ User = get_user_model()
 
 class UserCreateSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
-    email_code = serializers.IntegerField(required=False, write_only=True)
+    email_code = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = User
@@ -30,22 +28,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
         if attrs['password'] != attrs['confirm_password']:
             raise serializers.ValidationError("Passwords must match.")
         
-        if code:
-            try:
-                EmailConfirm.objects.get(email=email, code=code)
-                
-            except EmailConfirm.DoesNotExist:
-                raise serializers.ValidationError("Confirm code is incorrect.")
+        try:
+            EmailConfirm.objects.get(email=email, code=code, expires__gte=timezone.now())
             
-        else:
-            if EmailConfirm.objects.filter(email=email).count() == 3:
-                raise serializers.ValidationError("Too many requests, try later.")
-            
-            code = EmailConfirm.objects.create(email=email).code
-            
-            send_mail("Activation Code", f"Your confirm code:\n\n\t {code}", "a@g.com", [email])
-            
-            raise serializers.ValidationError("Confirm code has been sent.")
+        except EmailConfirm.DoesNotExist:
+            raise serializers.ValidationError("Confirm code is incorrect.")
         
         validated_data.pop('confirm_password')
         validated_data.pop('email_code')
@@ -101,17 +88,29 @@ class ChangePasswordSerializer(ValidatePasswordSerializer):
 class PasswordResetRequestSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
 
-    def validate_username(self, username):
-        user = User.objects.get(username=username)
-
+    def validate(self, attrs):
+        validated_data = super().validate(attrs)
+        
+        user = User.objects.get(username=attrs['username'])
+        
         if not user or user.is_staff:
-            raise serializers.ValidationError("User with this username does not exist.")
+            raise serializers.ValidationError("User does not exist.")
 
-        if PasswordReset.objects.filter(user=user, created_at__date=timezone.now().date()).count() >= 5:
-            raise serializers.ValidationError("You have exceeded the maximum password reset requests for today.")
-
-        return username
+        if PasswordReset.objects.filter(user=user, expires__gte=timezone.now()).count() >= 3:
+            raise serializers.ValidationError("Too many requests.")
+        
+        validated_data['user'] = user
+        
+        return validated_data
     
     
 class ResendEmailConfirmCodeSerializer(serializers.Serializer):
     email = serializers.EmailField()
+    
+    def validate(self, attrs):
+        validated_data = super().validate(attrs)
+        
+        if User.objects.filter(email=attrs['email']).exists():
+            raise serializers.ValidationError("This email already exists.")
+            
+        return validated_data
