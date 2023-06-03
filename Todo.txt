@@ -6,6 +6,7 @@ Backend:
 - Complete the readme file
 - Add collection model
 - Add Testcases
+- Install daphne
 |
 - Create a task to delete expired records (Done)
 - Add email confirm code view (Done)
