@@ -8,6 +8,7 @@ Backend:
 - Add Testcases
 - Install daphne
 - Add persons endpoints
+- Add spec endpoints
 |
 - Create a task to delete expired records (Done)
 - Add email confirm code view (Done)
