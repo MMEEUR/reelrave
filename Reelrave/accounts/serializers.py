@@ -23,7 +23,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         validated_data = super().validate(attrs)
         
         email = attrs['email']
-        code = attrs.get('email_code')
+        code = attrs['email_code']
            
         if attrs['password'] != attrs['confirm_password']:
             raise serializers.ValidationError("Passwords must match.")
