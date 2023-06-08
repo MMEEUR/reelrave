@@ -1,5 +1,5 @@
 from django.utils import timezone
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from .models import PasswordReset, EmailConfirm
@@ -26,17 +26,34 @@ class UserCreateSerializer(serializers.ModelSerializer):
         code = attrs['email_code']
            
         if attrs['password'] != attrs['confirm_password']:
-            raise serializers.ValidationError("Passwords must match.")
+            raise serializers.ValidationError({"error": "Passwords must match."})
         
         try:
             EmailConfirm.objects.get(email=email, code=code, expires__gte=timezone.now())
             
         except EmailConfirm.DoesNotExist:
-            raise serializers.ValidationError("Confirm code is incorrect.")
+            raise serializers.ValidationError({"error": "Confirm code is incorrect."})
         
         validated_data.pop('confirm_password')
         validated_data.pop('email_code')
             
+        return validated_data
+    
+    
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    
+    def validate(self, attrs):
+        validated_data = super().validate(attrs)
+        
+        user = authenticate(username=attrs['username'], password=attrs['password'])
+        
+        if not user:
+            raise serializers.ValidationError({"error": "Invalid login credentials"})
+        
+        validated_data['user'] = user
+        
         return validated_data
 
         
@@ -77,10 +94,10 @@ class ChangePasswordSerializer(ValidatePasswordSerializer):
         user = self.context['user']
         
         if not user.check_password(attrs['old_password']):
-            raise serializers.ValidationError("Incorrect password.")
+            raise serializers.ValidationError({"error": "Incorrect password."})
         
         if attrs['new_password'] == attrs['old_password']:
-            raise serializers.ValidationError("New password should be different from the old password.")
+            raise serializers.ValidationError({"error": "New password should be different from the old password."})
         
         return super().validate(attrs)
     
@@ -94,10 +111,10 @@ class PasswordResetRequestSerializer(serializers.Serializer):
         user = User.objects.get(username=attrs['username'])
         
         if not user or user.is_staff:
-            raise serializers.ValidationError("User does not exist.")
+            raise serializers.ValidationError({"error": "User does not exist."})
 
         if PasswordReset.objects.filter(user=user, expires__gte=timezone.now()).count() >= 3:
-            raise serializers.ValidationError("Too many requests.")
+            raise serializers.ValidationError({"error": "Too many requests."})
         
         validated_data['user'] = user
         
@@ -111,6 +128,6 @@ class ResendEmailConfirmCodeSerializer(serializers.Serializer):
         validated_data = super().validate(attrs)
         
         if User.objects.filter(email=attrs['email']).exists():
-            raise serializers.ValidationError("This email already exists.")
+            raise serializers.ValidationError({"error": "This email already exists."})
             
         return validated_data
