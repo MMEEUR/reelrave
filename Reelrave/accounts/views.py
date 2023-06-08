@@ -12,7 +12,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import (
     UserCreateSerializer, GlobalProfileSerializer, UserProfileSerializer,
     ChangePasswordSerializer, PasswordResetRequestSerializer,
-    ValidatePasswordSerializer, ResendEmailConfirmCodeSerializer
+    ValidatePasswordSerializer, ResendEmailConfirmCodeSerializer,
+    LoginSerializer
 )
 from specifications.serializers import WatchListSerializer, ActivitySerializer
 from .models import PasswordReset, EmailConfirm
@@ -66,13 +67,10 @@ class LoginView(APIView):
         if request.user.is_authenticated:
             return redirect('accounts:profile')
         
-        username = request.data.get("username")
-        password = request.data.get("password")
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        user = authenticate(username=username, password=password)
-
-        if not user:
-            return Response({"error": "Invalid login credentials"}, status=HTTP_400_BAD_REQUEST)
+        user = serializer.validated_data['user']
 
         refresh = RefreshToken.for_user(user)
         access = refresh.access_token
