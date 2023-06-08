@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import EmailConfirm
 
 
@@ -62,3 +63,34 @@ class LoginTest(APITestCase):
         response = self.client.post(url, data)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        
+class ProfileTest(APITestCase):
+    def setUp(self) -> None:
+        self.user = User.objects.create(
+            username="testuser",
+            email="test@example.com",
+            password=make_password("testpassword")
+        )
+        
+        return super().setUp()
+    
+    def test_global_profile(self):
+        url = reverse("accounts:global_profile", kwargs={"user_id": self.user.id})
+        
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], self.user.username)
+        
+    def test_profile(self):
+        access_token = RefreshToken.for_user(self.user).access_token
+        
+        url = reverse("accounts:profile")
+        
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+        
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['user']['username'], self.user.username)
