@@ -115,3 +115,32 @@ class ProfileTest(APITestCase):
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, data)
+        
+        
+class RefreshTokenTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            username="testuser",
+            email="test@example.com",
+            password=make_password("testpassword")
+        )
+        
+        return super().setUp()
+    
+    def test_refresh_token(self):
+        refresh_token = RefreshToken.for_user(self.user)
+        
+        url = reverse("accounts:token_refresh")
+        
+        data = {
+            "refresh": str(refresh_token)
+        }
+        
+        response = self.client.post(url, data)
+        
+        authentication = JWTAuthentication()
+        validated_token = authentication.get_validated_token(response.data['access'])
+        user = authentication.get_user(validated_token)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.user.username, user.username)
