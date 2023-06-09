@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import EmailConfirm
 
 
@@ -18,7 +19,7 @@ class RegisterTest(APITestCase):
             "email": "test@example.com"
         }
         
-        response = self.client.post(url, data)
+        response = self.client.post(url, data, format='json')
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
@@ -37,13 +38,13 @@ class RegisterTest(APITestCase):
             "email_code": self.email_code
         }
         
-        response = self.client.post(url, data)
+        response = self.client.post(url, data, format='json')
         
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
         
 class LoginTest(APITestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.user = User.objects.create(
             username="testuser",
             email="test@example.com",
@@ -60,13 +61,13 @@ class LoginTest(APITestCase):
             "password": "testpassword"
         }
         
-        response = self.client.post(url, data)
+        response = self.client.post(url, data, format='json')
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         
 class ProfileTest(APITestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.user = User.objects.create(
             username="testuser",
             email="test@example.com",
@@ -86,11 +87,31 @@ class ProfileTest(APITestCase):
     def test_profile(self):
         access_token = RefreshToken.for_user(self.user).access_token
         
-        url = reverse("accounts:profile")
-        
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+        
+        url = reverse("accounts:profile")
         
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['user']['username'], self.user.username)
+        self.assertEqual(response.data['username'], self.user.username)
+        
+    def test_update_profile(self):
+        access_token = RefreshToken.for_user(self.user).access_token
+        
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+        
+        url = reverse("accounts:profile")
+        
+        data = {
+            'username': 'testuser2',
+            'email': 'test2@example.com',
+            'bio': 'Test Developer',
+            'date_of_birth': '2000-01-01',
+            'photo': None
+        }
+        
+        response = self.client.put(url, data, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, data)
