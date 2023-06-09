@@ -13,17 +13,7 @@ User = get_user_model()
 
 class RegisterTest(APITestCase):
     def setUp(self):
-        url = reverse("accounts:resend_code")
-        
-        data = {
-            "email": "test@example.com"
-        }
-        
-        response = self.client.post(url, data, format='json')
-        
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
-        self.email_code = EmailConfirm.objects.get(email="test@example.com").code
+        self.email_code = EmailConfirm.objects.create(email="test@example.com").code
         
         return super().setUp()
     
@@ -41,6 +31,52 @@ class RegisterTest(APITestCase):
         response = self.client.post(url, data, format='json')
         
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+        
+class ResendCodeTest(APITestCase):
+    def setUp(self):
+        self.user_2 = User.objects.create(
+            username="testuser2",
+            email="test2@example.com",
+            password=make_password("testpassword")
+        )
+        
+        return super().setUp()
+    
+    def test_resend_code(self):
+        url = reverse("accounts:resend_code")
+        
+        data = {
+            "email": "test@example.com"
+        }
+        
+        response = self.client.post(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+    def test_duplicate_resend_code(self):
+        url = reverse("accounts:resend_code")
+        
+        data = {
+            "email": "test@example.com"
+        }
+        
+        self.client.post(url, data)
+        
+        response = self.client.post(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_wrong_email_resend_code(self):
+        url = reverse("accounts:resend_code")
+        
+        data = {
+            "email": "test2@example.com"
+        }
+        
+        response = self.client.post(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         
         
 class LoginTest(APITestCase):
