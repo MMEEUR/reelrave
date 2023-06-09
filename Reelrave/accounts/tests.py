@@ -74,6 +74,10 @@ class ProfileTest(APITestCase):
             password=make_password("testpassword")
         )
         
+        access_token = RefreshToken.for_user(self.user).access_token
+        
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+        
         return super().setUp()
     
     def test_global_profile(self):
@@ -85,10 +89,6 @@ class ProfileTest(APITestCase):
         self.assertEqual(response.data['username'], self.user.username)
         
     def test_profile(self):
-        access_token = RefreshToken.for_user(self.user).access_token
-        
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
-        
         url = reverse("accounts:profile")
         
         response = self.client.get(url)
@@ -96,11 +96,7 @@ class ProfileTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['username'], self.user.username)
         
-    def test_update_profile(self):
-        access_token = RefreshToken.for_user(self.user).access_token
-        
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
-        
+    def test_update_profile(self): 
         url = reverse("accounts:profile")
         
         data = {
@@ -144,3 +140,56 @@ class RefreshTokenTest(APITestCase):
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.user.username, user.username)
+        
+        
+class ChangePasswordTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            username="testuser",
+            email="test@example.com",
+            password=make_password("testpassword")
+        )
+        
+        access_token = RefreshToken.for_user(self.user).access_token
+        
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+        
+        return super().setUp()
+    
+    def test_change_password(self):
+        url = reverse("accounts:change_password")
+        
+        data = {
+            "old_password": "testpassword",
+            "new_password": "testpassword1"
+        }
+        
+        response = self.client.patch(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        
+    def test_wrong_old_password(self):
+        url = reverse("accounts:change_password")
+        
+        data = {
+            "old_password": "testpassword2",
+            "new_password": "testpassword1"
+        }
+        
+        response = self.client.patch(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+        
+    def test_same_passwords(self):
+        url = reverse("accounts:change_password")
+        
+        data = {
+            "old_password": "testpassword",
+            "new_password": "testpassword"
+        }
+        
+        response = self.client.patch(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
