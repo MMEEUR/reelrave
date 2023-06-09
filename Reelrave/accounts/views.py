@@ -94,10 +94,8 @@ class ProfileView(APIView):
     def get(self, request):    
         watchlist = request.user.watchlist.all()
         
-        data = {
-            "user": UserProfileSerializer(request.user).data,
-            "watchlist": WatchListSerializer(watchlist, many=True).data,
-        }
+        data = UserProfileSerializer(request.user).data
+        data.update({"watchlist": WatchListSerializer(watchlist, many=True).data})
 
         return Response(data)
 
