@@ -64,7 +64,7 @@ class PasswordReset(models.Model):
         
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.expires = timezone.now() + timedelta(minutes=5)
+            self.expires = timezone.now() + timedelta(minutes=2)
          
         self.validate_tokens_count()
             
@@ -74,8 +74,8 @@ class PasswordReset(models.Model):
         return f"Password reset request for {self.user.username}"
     
     def validate_tokens_count(self):
-        if PasswordReset.objects.filter(user=self.user, expires__gte=timezone.now()).count() >= 3:
-            raise ValidationError("Too many requests.")
+        if PasswordReset.objects.filter(user=self.user, expires__gte=timezone.now()).exists():
+            raise ValidationError("You must wait 2 minutes before requesting resend code.")
     
         
 class EmailConfirm(models.Model):
