@@ -108,13 +108,17 @@ class PasswordResetRequestSerializer(serializers.Serializer):
     def validate(self, attrs):
         validated_data = super().validate(attrs)
         
-        user = User.objects.get(username=attrs['username'])
+        try:
+            user = User.objects.get(username=attrs['username'])
+            
+        except User.DoesNotExist:
+            raise serializers.ValidationError({"error": "User does not exist."})
         
-        if not user or user.is_staff:
+        if user.is_staff:
             raise serializers.ValidationError({"error": "User does not exist."})
 
-        if PasswordReset.objects.filter(user=user, expires__gte=timezone.now()).count() >= 3:
-            raise serializers.ValidationError({"error": "Too many requests."})
+        if PasswordReset.objects.filter(user=user, expires__gte=timezone.now()).exists():
+            raise serializers.ValidationError({"error": "You must wait 2 minutes before requesting resend code."})
         
         validated_data['user'] = user
         
