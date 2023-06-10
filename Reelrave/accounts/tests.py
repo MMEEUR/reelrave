@@ -295,3 +295,46 @@ class ResetPasswordRequestTest(APITestCase):
         response = self.client.post(url, data)
         
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+        
+class ResetPasswordTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            username="testuser",
+            email="test@example.com",
+            password=make_password("testpassword")
+        )
+        
+        self.password_reset = PasswordReset.objects.create(
+            user = self.user
+        )
+        
+        return super().setUp()
+    
+    def test_reset_password(self):
+        url = reverse("accounts:reset_password", kwargs={"token": self.password_reset.token})
+        
+        data = {
+            "new_password": "newtestpassword"
+        }
+        
+        response = self.client.post(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+    def test_wrong_reset_password_token(self):
+        token = uuid.uuid4()
+        
+        while token == self.password_reset.token:
+            
+            token = uuid.uuid4()
+        
+        url = reverse("accounts:reset_password", kwargs={"token": token})
+        
+        data = {
+            "new_password": "newtestpassword"
+        }
+        
+        response = self.client.post(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
