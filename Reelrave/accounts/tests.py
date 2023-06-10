@@ -1,3 +1,4 @@
+import uuid
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
@@ -5,7 +6,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from .models import EmailConfirm
+from .models import EmailConfirm, PasswordReset
 
 
 User = get_user_model()
@@ -227,5 +228,70 @@ class ChangePasswordTest(APITestCase):
         }
         
         response = self.client.patch(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+        
+class ResetPasswordRequestTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            username="testuser",
+            email="test@example.com",
+            password=make_password("testpassword")
+        )
+        
+        self.staff_user = User.objects.create(
+            username="Admin",
+            email="a@g.com",
+            password=make_password("adminadmin"),
+            is_staff=True
+        )
+        
+        return super().setUp()
+    
+    def test_reset_password_request(self):
+        url = reverse("accounts:reset_password_request")
+        
+        data = {
+            "username": self.user.username
+        }
+        
+        response = self.client.post(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(PasswordReset.objects.filter(user=self.user).exists(), True)
+        
+    def test_wrong_username_reset_password_request(self):
+        url = reverse("accounts:reset_password_request")
+        
+        data = {
+            "username": "wrongusername"
+        }
+        
+        response = self.client.post(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_staff_user_reset_password_request(self):
+        url = reverse("accounts:reset_password_request")
+        
+        data = {
+            "username": self.staff_user.username
+        }
+        
+        response = self.client.post(url, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_duplicate_reset_password_token(self):
+        PasswordReset.objects.create(user=self.user)
+        
+        url = reverse("accounts:reset_password_request")
+        
+        data = {
+            "username": self.staff_user.username
+        }
+        
+        response = self.client.post(url, data)
         
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
