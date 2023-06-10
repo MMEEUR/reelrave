@@ -178,7 +178,7 @@ class ResetPasswordRequestView(APIView):
 class ResetPasswordView(APIView):
     def post(self, request, token):
         try:
-            password_reset = PasswordReset.objects.get(token=token)
+            password_reset = PasswordReset.objects.get(token=token, expires__gte=timezone.now())
             
         except PasswordReset.DoesNotExist:
             
