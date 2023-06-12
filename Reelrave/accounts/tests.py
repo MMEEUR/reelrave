@@ -29,7 +29,7 @@ class RegisterTest(APITestCase):
             "email_code": self.email_code
         }
         
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, data)
         
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
@@ -98,7 +98,7 @@ class LoginTest(APITestCase):
             "password": "testpassword"
         }
         
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, data)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
@@ -144,7 +144,7 @@ class ProfileTest(APITestCase):
             'photo': None
         }
         
-        response = self.client.put(url, data, format='json')
+        response = self.client.put(url, data, format="json")
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, data)
