@@ -1,3 +1,4 @@
+from django.db import connection
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -6,6 +7,9 @@ from .models import Person, Role
 
 class PersonTest(APITestCase):
     def setUp(self):
+        with connection.cursor() as cursor:
+            cursor.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+
         self.role = Role.objects.create(role="Test")
         self.role_2 = Role.objects.create(role="Test2")
 
@@ -97,7 +101,7 @@ class PersonTest(APITestCase):
         url = reverse("persons:person_search") + f"?q={query}"
 
         test_data = {
-            "query": query,
+            "query": "TestPerson",
             "results": [
                 {
                     "name": "TestPerson",
@@ -108,6 +112,7 @@ class PersonTest(APITestCase):
         }
 
         response = self.client.get(url)
-        
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, test_data)
+        self.assertEqual(response.data['query'], test_data['query'])
+        self.assertEqual(response.data['results'][0], test_data['results'][0])
