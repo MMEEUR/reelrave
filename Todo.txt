@@ -9,6 +9,7 @@ Backend:
 - Install daphne
 - Add persons endpoints
 - Add spec endpoints
+- Install django channels
 |
 - Create a task to delete expired records (Done)
 - Add email confirm code view (Done)
