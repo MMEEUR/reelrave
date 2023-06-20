@@ -258,7 +258,7 @@ class GenreDetailView(APIView):
         serializer = self.serializer_class(page, many=True)
 
         data = {
-            'country': genre.name,
+            'genre': genre.name,
             self.model : serializer.data,
         }
 
@@ -289,7 +289,7 @@ class CountryDetailView(APIView):
         serializer = self.serializer_class(page, many=True)
 
         data = {
-            'genre': country.name,
+            'country': country.name,
             self.model : serializer.data,
         }
 
