@@ -42,4 +42,4 @@ class MovieListSerializer(ModelSerializer):
     class Meta:
         model = Movie
         fields = ('id', 'name', 'get_absolute_url', 'average_rating', 'baner', 'release_date',
-                  'time', 'genre', 'director', 'description', 'country_of_origin')
+                  'time', 'content_rating', 'genre', 'director', 'description', 'country_of_origin')
