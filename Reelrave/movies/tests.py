@@ -22,7 +22,7 @@ class MovieTest(APITestCase):
             storyline="test",
             description="test",
             featured=True,
-            baner="/movies/TestMovie/baners/test.jpg",
+            baner="files/movies/TestMovie/baners/test.jpg",
         )
 
         self.genre = Genre.objects.create(name="test")
