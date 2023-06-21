@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Movie
 from specifications.models import Genre, Country, Rating
 
@@ -40,6 +41,10 @@ class MovieTest(APITestCase):
             email="test@example.com",
             password=make_password("testpassword"),
         )
+        
+        access_token = RefreshToken.for_user(self.user).access_token
+        
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
 
         return super().setUp()
 
@@ -111,3 +116,56 @@ class MovieTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['top_movies'][0]['name'], self.movie.name)
         self.assertEqual(response.data['movie_genres'][0]['name'], self.genre.name)
+        
+    def test_movie_create_comment(self):
+        url = reverse("movies:movie_create_comment", kwargs={"slug": self.movie.slug})
+        
+        data = {
+            "body": "Test Comment"
+        }
+        
+        response = self.client.post(url, data, format="json")
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.movie.comments.first().body, data['body'])
+        self.assertEqual(self.movie.comments.first().user, self.user)
+        
+    def test_movie_rating(self):
+        url = reverse("movies:movie_rating", kwargs={"slug": self.movie.slug})
+        
+        response = self.client.post(url, {"rating": 10}, format="json")
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.movie.ratings.first().rating, 10)
+        self.assertEqual(self.movie.ratings.first().user, self.user)
+        
+        response = self.client.post(url, {"rating": 10}, format="json")
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+        response = self.client.patch(url, {"rating": 9}, format="json")
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.movie.ratings.first().rating, 9)
+        
+        response = self.client.delete(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(self.movie.ratings.exists(), False)
+        
+    def test_movie_watchlist(self):
+        url = reverse("movies:movie_watchlist", kwargs={"slug": self.movie.slug})
+        
+        response = self.client.post(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.movie.watchlist.first().user, self.user)
+        
+        response = self.client.post(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+        response = self.client.delete(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(self.movie.watchlist.exists(), False)
