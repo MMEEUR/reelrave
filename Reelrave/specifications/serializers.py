@@ -18,8 +18,8 @@ class PhotoListSerializer(ModelSerializer):
     content_object = OriginContentSerializer(read_only=True)
     
     class Meta:
-        model = Video
-        fields = ('title', 'video', 'released', 'content_object')
+        model = Photo
+        fields = ('title', 'image', 'released', 'content_object')
 
 
 class VideoListSerializer(ModelSerializer):
