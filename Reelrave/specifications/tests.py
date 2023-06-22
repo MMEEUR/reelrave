@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
 from rest_framework.test import APITestCase
 from movies.models import Movie
-from .models import Comment, Photo
+from .models import Comment, Photo, Video
 
 
 User = get_user_model()
@@ -40,3 +40,35 @@ class PhotoTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]["title"], self.photo.title)
+
+
+class VideoTest(APITestCase):
+    def setUp(self):
+        self.movie = Movie.objects.create(
+            name="TestMovie",
+            release_date="2023-06-20",
+            time="02:22:32",
+            content_rating="R",
+            storyline="test",
+            description="test",
+            featured=True,
+            baner="files/movies/TestMovie/baners/test.jpg",
+        )
+
+        self.video = Video.objects.create(
+            title="test",
+            content_type=ContentType.objects.get_for_model(self.movie._meta.model),
+            object_id=self.movie.id,
+            video="files/movies/TestMovie/video/test.jpg",
+            is_trailer=True,
+        )
+
+        return super().setUp()
+
+    def test_videos(self):
+        url = reverse("spec:videos")
+
+        response = self.client.get(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]["title"], self.video.title)
