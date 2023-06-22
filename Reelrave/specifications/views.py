@@ -307,8 +307,8 @@ class GenreListView(APIView):
         shows_genres = Genre.objects.filter(genre_shows__isnull=False).distinct()
         
         data = {
-            "movies": GenreCountryListSerializer(movie_genres, many=True).data,
-            "shows": GenreCountryListSerializer(shows_genres, many=True, include_movies_count=False).data,
+            "genre_movies": GenreCountryListSerializer(movie_genres, many=True).data,
+            "genre_shows": GenreCountryListSerializer(shows_genres, many=True, include_movies_count=False).data,
         }
 
         return Response(data)
@@ -320,8 +320,8 @@ class CountryListView(APIView):
         shows_countries = Country.objects.filter(country_shows__isnull=False).distinct()
         
         data = {
-            "movies": GenreCountryListSerializer(movie_countries, many=True).data,
-            "shows": GenreCountryListSerializer(shows_countries, many=True, include_movies_count=False).data,
+            "country_movies": GenreCountryListSerializer(movie_countries, many=True).data,
+            "country_shows": GenreCountryListSerializer(shows_countries, many=True, include_movies_count=False).data,
         }
 
         return Response(data)
