@@ -107,3 +107,34 @@ class GenreTest(APITestCase):
         self.assertEqual(response.data["genre_movies"][1]["name"], self.genre_2.name)
         self.assertEqual(response.data["genre_movies"][0]["movies_count"], 1)
         self.assertEqual(response.data["genre_movies"][1]["movies_count"], 1)
+
+
+class CountryTest(APITestCase):
+    def setUp(self):
+        self.movie = Movie.objects.create(
+            name="TestMovie",
+            release_date="2023-06-20",
+            time="02:22:32",
+            content_rating="R",
+            storyline="test",
+            description="test",
+            featured=True,
+            baner="files/movies/TestMovie/baners/test.jpg",
+        )
+
+        self.country = Country.objects.create(name="test")
+        self.country_2 = Country.objects.create(name="test2")
+
+        self.movie.country_of_origin.add(self.country)
+        self.movie.country_of_origin.add(self.country_2)
+
+    def test_countries(self):
+        url = reverse("spec:countries")
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["country_movies"][0]["name"], self.country.name)
+        self.assertEqual(response.data["country_movies"][1]["name"], self.country_2.name)
+        self.assertEqual(response.data["country_movies"][0]["movies_count"], 1)
+        self.assertEqual(response.data["country_movies"][1]["movies_count"], 1)
