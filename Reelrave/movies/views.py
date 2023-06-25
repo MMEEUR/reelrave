@@ -22,7 +22,7 @@ class TopMoviesView(APIView):
         cache_key = f"top_movies:{genre}"
         cached_result = cache.get(cache_key)
         
-        if cached_result is not None:
+        if cached_result:
             data = {
                 "top_movies": cached_result,
                 "movie_genres": GenreSerializer(movie_genres, many=True).data
@@ -47,8 +47,7 @@ class TopMoviesView(APIView):
         
         movie_serializer = TopMoviesSerializer(top_movies, many=True)
         
-        if top_movies:
-            cache.set(cache_key, movie_serializer.data, 86400) # cache for 24 hours
+        cache.set(cache_key, movie_serializer.data, 86400) # cache for 24 hours
             
         data = {
             "top_movies": movie_serializer.data,
