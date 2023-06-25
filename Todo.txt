@@ -5,13 +5,13 @@ Backend:
 - Dockerizing the project
 - Complete the readme file
 - Add collection model
-- Add Testcases
 - Install daphne
 - Add persons endpoints
 - Add spec endpoints
 - Install django channels
 - Add capthca
 |
+- Add Testcases (Done)
 - Create a task to delete expired records (Done)
 - Add email confirm code view (Done)
 - Install gunicorn (Done)
