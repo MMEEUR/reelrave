@@ -10,7 +10,7 @@ from .serializers import (
     SeasonListSerializer, EpisodeDetailSerializer,
     EpisodeListSerializer, TopShowsSerializer
 )
-from specifications.serializers import CommentSerializer
+from specifications.serializers import CommentSerializer, GenreSerializer
 from .models import Show, Episode
 from specifications.models import Genre
 from specifications.views import CommentCreateView, RatingView, WatchListView, GenreDetailView, CountryDetailView
@@ -18,14 +18,21 @@ from specifications.views import CommentCreateView, RatingView, WatchListView, G
 
 class TopShowsView(APIView):
     def get(self, request, genre=None):
+        show_genres = Genre.objects.filter(genre_shows__isnull=False).distinct()
+        
         if genre:
             genre_obj = get_object_or_404(Genre, slug=genre)
         
         cache_key = f"top_shows:{genre}"
         cached_result = cache.get(cache_key)
         
-        if cached_result is not None:
-            return Response(cached_result)
+        if cached_result:
+            data = {
+                "top_shows": cached_result,
+                "show_genres": GenreSerializer(show_genres, many=True).data
+            }
+            
+            return Response(data)
         
         minimum_ratings = settings.SHOW_MINIMUM_RATINGS
         minimum_episodes = settings.SHOW_MINIMUM_EPISODES
@@ -47,12 +54,16 @@ class TopShowsView(APIView):
                         .annotate(avg_rating=Avg('ratings__rating', filter=~Q(ratings__rating=0)))\
                         .order_by('-avg_rating')[:250]
         
-        serializer = TopShowsSerializer(top_shows, many=True)
+        show_serializer = TopShowsSerializer(top_shows, many=True)
         
-        if top_shows:
-            cache.set(cache_key, serializer.data, 86400) # cache for 24 hours
+        cache.set(cache_key, show_serializer.data, 86400) # cache for 24 hours
+            
+        data = {
+            "top_shows": show_serializer.data,
+            "show_genres": GenreSerializer(show_genres, many=True).data
+        }
         
-        return Response(serializer.data)
+        return Response(data)
 
 
 class ShowListView(APIView):
