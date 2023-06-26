@@ -4,7 +4,7 @@
         "name": "Breaking Bad",
         "get_absolute_url": "/shows/breaking-bad/",
         "average_rating": 10.0,
-        "baner": "/shows/Breaking%20Bad/baners/breaking_bad_FhOogQy.jpg",
+        "baner": "files/shows/Breaking%20Bad/baners/breaking_bad_FhOogQy.jpg",
         "release_date": "2008-01-20",
         "ending_date": "2013-09-29",
         "content_rating": "TV-MA",
@@ -27,7 +27,7 @@
             {
                 "name": "United States",
                 "slug": "united-states",
-                "flag": "/countries/United%20States/us-flag_PCWxzXs.gif"
+                "flag": "files/countries/United%20States/us-flag_PCWxzXs.gif"
             }
         ]
     }

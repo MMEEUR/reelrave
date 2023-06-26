@@ -11,42 +11,42 @@
       {
         "name": "United States",
         "slug": "united-states",
-        "flag": "/countries/United%20States/us-flag_PCWxzXs.gif"
+        "flag": "files/countries/United%20States/us-flag_PCWxzXs.gif"
       }
     ],
     "director": [
       {
         "name": "Frank Darabont",
-        "picture": "/presons/Frank%20Darabont/pictures/MV5BNjk0MTkxNzQwOF5BMl5BanBnXkFtZTcwODM5OTMwNA._V1__2MpMMOO.jpg"
+        "picture": "files/presons/Frank%20Darabont/pictures/MV5BNjk0MTkxNzQwOF5BMl5BanBnXkFtZTcwODM5OTMwNA._V1__2MpMMOO.jpg"
       }
     ],
     "writers": [
       {
         "name": "Frank Darabont",
-        "picture": "/presons/Frank%20Darabont/pictures/MV5BNjk0MTkxNzQwOF5BMl5BanBnXkFtZTcwODM5OTMwNA._V1__2MpMMOO.jpg"
+        "picture": "files/presons/Frank%20Darabont/pictures/MV5BNjk0MTkxNzQwOF5BMl5BanBnXkFtZTcwODM5OTMwNA._V1__2MpMMOO.jpg"
       },
       {
         "name": "Stephen King",
-        "picture": "/presons/Stephen%20King/pictures/3389_nbnvVXN.jpg"
+        "picture": "files/presons/Stephen%20King/pictures/3389_nbnvVXN.jpg"
       }
     ],
     "actors": [
       {
         "name": "Tim Robbins",
-        "picture": "/presons/Tim%20Robbins/pictures/MV5BMTI1OTYxNzAxOF5BMl5BanBnXkFtZTYwNTE5ODI4._V1__OpWUHGY.jpg"
+        "picture": "files/presons/Tim%20Robbins/pictures/MV5BMTI1OTYxNzAxOF5BMl5BanBnXkFtZTYwNTE5ODI4._V1__OpWUHGY.jpg"
       }
     ],
     "pictures": [
       {
         "title": "breaking is bad",
-        "image": "/movies/The%20Shawshank%20Redemption/photo/breaking_bad.jpg",
+        "image": "files/movies/The%20Shawshank%20Redemption/photo/breaking_bad.jpg",
         "released": "2023-04-16T20:53:56.764368Z"
       }
     ],
     "videos": [
       {
         "title": "breaking is very bad",
-        "video": "/movies/The%20Shawshank%20Redemption/videos/Galaxy_Brain_meme_2.mp4",
+        "video": "files/movies/The%20Shawshank%20Redemption/videos/Galaxy_Brain_meme_2.mp4",
         "released": "2023-04-16T20:54:20.806821Z",
         "is_trailer": true
       }
@@ -55,7 +55,7 @@
     "total_ratings": 1,
     "name": "The Shawshank Redemption",
     "slug": "the-shawshank-redemption",
-    "baner": "/movies/The%20Shawshank%20Redemption/baners/ShawshankRedemptionMoviePoster.jpg",
+    "baner": "files/movies/The%20Shawshank%20Redemption/baners/ShawshankRedemptionMoviePoster.jpg",
     "release_date": "1994-09-10",
     "time": "02:22:32",
     "content_rating": "R",
@@ -67,7 +67,7 @@
       "id": 1,
       "user": {
         "username": "Admin",
-        "photo": "/users/Admin/photos/102924-_k09H29t.jpg",
+        "photo": "files/users/Admin/photos/102924-_k09H29t.jpg",
         "get_absolute_url": "/account/profile/1/"
       },
       "body": "this is a test",

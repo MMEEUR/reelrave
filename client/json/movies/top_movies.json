@@ -1,19 +1,19 @@
 {
-  "top_movies": [
-    {
-      "id": 1,
-      "name": "The Shawshank Redemption",
-      "baner": "/movies/The%20Shawshank%20Redemption/baners/ShawshankRedemptionMoviePoster.jpg",
-      "get_absolute_url": "/movies/the-shawshank-redemption/",
-      "release_date": "1994-09-10",
-      "total_ratings": 1,
-      "average_rating": 10.0
-    }
-  ],
-  "movie_genres": [
-    {
-      "name": "Drama",
-      "slug": "drama"
-    }
-  ]
+    "top_movies": [
+      {
+          "id": 1,
+          "name": "The Shawshank Redemption",
+          "baner": "files/movies/The%20Shawshank%20Redemption/baners/ShawshankRedemptionMoviePoster.jpg",
+          "get_absolute_url": "/movies/the-shawshank-redemption/",
+          "release_date": "1994-09-10",
+          "total_ratings": 1,
+          "average_rating": 10.0
+      }
+    ],
+    "movie_genres": [
+        {
+            "name": "Drama",
+            "slug": "drama"
+        }
+    ]
 }

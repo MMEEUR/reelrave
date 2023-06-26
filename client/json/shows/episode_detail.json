@@ -6,14 +6,14 @@
         "pictures": [
             {
                 "title": "breaking is bad",
-                "image": "/episodes/Pilot/photo/pilot.jpg",
+                "image": "files/episodes/Pilot/photo/pilot.jpg",
                 "released": "2023-05-02T15:20:54.919438Z"
             }
         ],
         "videos": [
             {
                 "title": "breaking is very bad",
-                "video": "/episodes/Pilot/trailers/Galaxy_Brain_meme_2.mp4",
+                "video": "files/episodes/Pilot/trailers/Galaxy_Brain_meme_2.mp4",
                 "released": "2023-05-02T15:20:54.934398Z",
                 "is_trailer": true
             }
@@ -35,23 +35,23 @@
         "director": [
             {
                 "name": "Vince Gilligan",
-                "picture": "/presons/Vince%20Gilligan/pictures/479803_Rsr1W2E.webp"
+                "picture": "files/presons/Vince%20Gilligan/pictures/479803_Rsr1W2E.webp"
             }
         ],
         "writers": [
             {
                 "name": "Vince Gilligan",
-                "picture": "/presons/Vince%20Gilligan/pictures/479803_Rsr1W2E.webp"
+                "picture": "files/presons/Vince%20Gilligan/pictures/479803_Rsr1W2E.webp"
             }
         ],
         "actors": [
             {
                 "name": "Bryan Cranston",
-                "picture": "/presons/Bryan%20Cranston/pictures/3830800.jpg-c_310_420_x-f_jpg-q_x-xxyxx_sJ3oULF.jpg"
+                "picture": "files/presons/Bryan%20Cranston/pictures/3830800.jpg-c_310_420_x-f_jpg-q_x-xxyxx_sJ3oULF.jpg"
             },
             {
                 "name": "Aaron Paul",
-                "picture": "/presons/Aaron%20Paul/pictures/AaronPaulTIFFSept2012_V7Z5VLI.jpg"
+                "picture": "files/presons/Aaron%20Paul/pictures/AaronPaulTIFFSept2012_V7Z5VLI.jpg"
             }
         ],
         "comments": [
@@ -59,7 +59,7 @@
                 "id": 3,
                 "user": {
                     "username": "Admin",
-                    "photo": "/users/Admin/photos/102924-_k09H29t.jpg",
+                    "photo": "files/users/Admin/photos/102924-_k09H29t.jpg",
                     "get_absolute_url": "/account/profile/1/"
                 },
                 "body": "this is a test",
@@ -75,7 +75,7 @@
         "name": "Pilot",
         "content_rating": "TV-MA",
         "time": "00:58:06",
-        "baner": "/shows/Breaking%20Bad/Season%201/Episode-1/baner/pilot_LS2G0YB.jpg",
+        "baner": "files/shows/Breaking%20Bad/Season%201/Episode-1/baner/pilot_LS2G0YB.jpg",
         "description": "Diagnosed with terminal lung cancer, chemistry teacher Walter White teams up with former student Jesse Pinkman to cook and sell crystal meth.",
         "storyline": "Days after his 50th birthday, chemistry teacher Walter White's life of quiet desperation completely transforms when he's diagnosed with inoperable lung cancer. To support his pregnant wife and their son, he partners with Jesse, a former student, to turn an old RV into a mobile meth lab. But their first attempt at unloading their product takes a deadly turn when Jesse introduces Walt to his unstable business associates.",
         "release_date": "2008-01-20",
