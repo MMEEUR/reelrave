@@ -1,0 +1,10 @@
+{
+    "query": "TestPerson",
+    "results": [
+        {
+            "name": "TestPerson",
+            "picture": "files/presons/TestPerson/pictures/test.jpg",
+            "roles": [{"role": "Test", "slug": "test"}]
+        }
+    ]
+}

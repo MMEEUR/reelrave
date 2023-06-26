@@ -1,0 +1,12 @@
+{
+    "name": "TestPerson",
+    "birthday": "2018-04-20",
+    "height_centimeter": "200",
+    "picture": "files/presons/TestPerson/pictures/test.jpg",
+    "roles": [
+        {
+            "role": "Test",
+            "slug": "test"
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "Roles": [
+        {
+            "role": "Test",
+            "slug": "test"
+        },
+        {
+            "role": "Test2",
+            "slug": "test2"
+        }
+    ],
+    "Persons": [
+        {
+            "name": "TestPerson",
+            "picture": "files/presons/TestPerson/pictures/test.jpg",
+            "roles": [{"role": "Test", "slug": "test"}]
+        },
+        {
+            "name": "TestPerson2",
+            "picture": "files/presons/TestPerson2/pictures/test.jpg",
+            "roles": [{"role": "Test2", "slug": "test2"}]
+        }
+    ]
+}
