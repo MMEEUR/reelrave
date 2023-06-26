@@ -89,3 +89,29 @@ Get top 250 shows
 > **GET**
 Get top 250 shows by the genre (you must request with slug of a genre in url)
 *file: [top_shows_by_genre](json/shows/top_shows.json)* 
+
+## Persons
+
+- **/persons/**
+
+> **GET**
+Get 10 of all persons per page
+*file: [person_list](json/persons/person_list.json)*
+
+- **/persons/(id)/**
+
+> **GET**
+Get details of a person (you must request with id of a person)
+*file: [person_detail](json/persons/person_detail.json)*
+
+- **/persons/role/(role)**
+
+> **GET**
+Get 10 of all persons filtered by role per page
+*file: [person_list_by_role](json/persons/person_list_by_role.json)*
+
+- **/persons/search/**
+
+> **GET**
+Search a person (you must add /?q="query" to url)
+*file: [person_search](json/persons/person_search.json)*
