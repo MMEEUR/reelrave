@@ -15,7 +15,7 @@ from .serializers import SearchContentserializer
 
 class HomeView(APIView):
     
-    @method_decorator(cache_page(60*60*6))
+    @method_decorator(cache_page(60*60*1))
     def get(self, request):
         featured_movies = Movie.objects.filter(featured=True)[:6]
         latest_trailers = Video.objects.filter(is_trailer=True)[:6]
