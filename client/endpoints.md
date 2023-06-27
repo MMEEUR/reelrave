@@ -104,7 +104,7 @@ Get 10 of all persons per page
 Get details of a person (you must request with id of a person)
 *file: [person_detail](json/persons/person_detail.json)*
 
-- **/persons/role/(role)**
+- **/persons/role/(role)/**
 
 > **GET**
 Get 10 of all persons filtered by role per page
@@ -115,3 +115,53 @@ Get 10 of all persons filtered by role per page
 > **GET**
 Search a person (you must add /?q="query" to url)
 *file: [person_search](json/persons/person_search.json)*
+
+## Specifications
+
+- **/videos/**
+
+> **GET**
+Get 10 of latest videos per page
+*file: [videos](json/specifications/videos.json)*
+
+- **/photos/**
+
+> **GET**
+Get 10 of latest photos per page
+*file: [photos](json/specifications/photos.json)*
+
+- **/genres/**
+
+> **GET**
+Get all of the genres that have movie or show
+*file: [genres](json/specifications/genres.json)*
+
+- **/countries/**
+
+> **GET**
+Get all of the countries that have movie or show
+*file: [countries](json/specifications/countries.json)*
+
+- **/comment/(comment_id)/**
+
+> **PATCH**
+Update a comment (you must request with id of a comment and the header must have access token of jwt)
+*files: [comment_update](json/specifications/comment_update.json)*
+
+> **DELETE**
+Delete a comment (you must request with id of a comment and the header must have access token of jwt)
+*no files*
+
+- **/comment/(comment_id)/like_or_dislike/**
+
+>  **POST**
+Like or dislike a comment (you must request with id of a comment and the header must have access token of jwt)
+*file: [comment_like_or_dislike](json/specifications/comment_like_or_dislike.json)*
+
+> **PATCH**
+Change like to dislike or ... (you must request with id of a comment and the header must have access token of jwt)
+*file: [comment_like_or_dislike](json/specifications/comment_like_or_dislike.json)*
+
+> **DELETE**
+Delete the opinion on the comment (you must request with id of a comment and the header must have access token of jwt)
+*no files*
