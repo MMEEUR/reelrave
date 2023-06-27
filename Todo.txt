@@ -7,6 +7,9 @@ Backend:
 - Add collection model
 - Install daphne
 - Add spec endpoints
+- Add home endpoints
+- Add accounts endpoints
+- Add chat endpoints
 - Install django channels
 - Add capthca
 |
