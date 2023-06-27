@@ -1,0 +1,26 @@
+{
+    "genre_movies": [
+        {
+            "name": "Test",
+            "slug": "test",
+            "movies_count": 1
+        },
+        {
+            "name": "Test_2",
+            "slug": "test_2",
+            "movies_count": 1
+        }
+    ],
+    "genre_shows": [
+        {
+            "name": "Test_3",
+            "slug": "test_3",
+            "shows_count": 1
+        },
+        {
+            "name": "Test_4",
+            "slug": "test_4",
+            "shows_count": 1
+        }
+    ]
+}

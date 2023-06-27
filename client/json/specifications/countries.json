@@ -1,0 +1,18 @@
+{
+    "country_movies": [
+        {
+            "name": "Test",
+            "slug": "test",
+            "flag": "/files/countries/Test/test.jpg",
+            "movies_count": 1
+        }
+    ],
+    "country_shows": [
+        {
+            "name": "Test",
+            "slug": "test",
+            "flag": "/files/countries/Test/test.jpg",
+            "shows_count": 1
+        }
+    ]
+}

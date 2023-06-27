@@ -1,0 +1,22 @@
+[
+    {
+        "title": "Test-2",
+        "video": "/files/movies/TestMovie/videos/test.mp4",
+        "released": "2023-06-27T15:40:26.854143Z",
+        "is_trailer": false,
+        "content_object": {
+            "name": "TestMovie",
+            "get_absolute_url": "/movies/testmovie/"
+        }
+    },
+    {
+        "title": "Test",
+        "video": "/files/movies/TestMovie/trailers/test.mp4",
+        "released": "2023-06-27T15:39:26.433055Z",
+        "is_trailer": true,
+        "content_object": {
+            "name": "TestMovie",
+            "get_absolute_url": "/movies/testmovie/"
+        }
+    }
+]

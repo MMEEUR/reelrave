@@ -1,0 +1,11 @@
+[
+    {
+        "title": "Test",
+        "image": "/files/movies/TestMovie/photo/test.jpg",
+        "released": "2023-06-21T16:02:09.280263Z",
+        "content_object": {
+            "name": "TestMovie",
+            "get_absolute_url": "/movies/testmovie/"
+        }
+    }
+]
