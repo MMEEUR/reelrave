@@ -1,4 +1,6 @@
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.contrib.contenttypes.models import ContentType
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -104,7 +106,7 @@ class CommentLikeDisLikeView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         
-        return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(status=HTTP_201_CREATED)
         
     def patch(self, request, comment_id):
         comment_opinion = get_object_or_404(CommentLikeDisLike, comment=comment_id, user=request.user)
@@ -113,7 +115,7 @@ class CommentLikeDisLikeView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         
-        return Response(serializer.data)
+        return Response()
     
     def delete(self, request, comment_id):
         comment_opinion = get_object_or_404(CommentLikeDisLike, comment=comment_id, user=request.user)
@@ -222,7 +224,7 @@ class UpdateDeleteCommentView(APIView):
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
-            return Response(serializer.data)
+            return Response()
 
         else:
             return Response(status=HTTP_401_UNAUTHORIZED)
@@ -302,6 +304,8 @@ class CountryDetailView(APIView):
     
     
 class GenreListView(APIView):
+    
+    @method_decorator(cache_page(60*60*1))
     def get(self, request):
         movie_genres = Genre.objects.filter(genre_movies__isnull=False).distinct()
         shows_genres = Genre.objects.filter(genre_shows__isnull=False).distinct()
@@ -315,6 +319,8 @@ class GenreListView(APIView):
     
     
 class CountryListView(APIView):
+    
+    @method_decorator(cache_page(60*60*1))
     def get(self, request):
         movie_countries = Country.objects.filter(country_movies__isnull=False).distinct()
         shows_countries = Country.objects.filter(country_shows__isnull=False).distinct()
