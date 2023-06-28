@@ -6,12 +6,12 @@ Backend:
 - Complete the readme file
 - Add collection model
 - Install daphne
-- Add home endpoints
 - Add accounts endpoints
 - Add chat endpoints
 - Install django channels
 - Add capthca
 |
+- Add home endpoints (Done)
 - Add spec endpoints (Done)
 - Add persons endpoints (Done)
 - Add Testcases (Done)
