@@ -1,4 +1,4 @@
-# Endpoitns
+# Endpoints
 
 This file contains endpoints and http methods for **Frontend Developer**
 
@@ -15,6 +15,36 @@ This file contains endpoints and http methods for **Frontend Developer**
 > **GET**
 > Detail of a movie (you can request by get_absolute_url of a movie)
 > _file: [movie_detail](json/movies/movie_detail.json)_
+
+- **/movies/(slug)/comment/**:
+
+> **POST**
+> Create a comment (the header must have access token of jwt)
+> _file: [movie_create_comment](json/specifications/comment.json)_
+
+- **/movies/(slug)/rating/**:
+
+> **POST**
+> Create a rating (the header must have access token of jwt) - (rating score must be between 0 and 10 zero meens just watched and no opinon)
+> _file: [movie_create_rating](json/specifications/rating.json)_
+
+> **PATCH**
+> Update the rating score (the header must have access token of jwt) - (rating score must be between 0 and 10 zero meens just watched and no opinon)
+> _file: [movie_update_rating](json/specifications/rating.json)_
+
+> **DELETE**
+> Delete a rating (the header must have access token of jwt)
+> _no files_
+
+- **/movies/(slug)/watchlist/**:
+
+> **POST**
+> Create a watchlist (the header must have access token of jwt)
+> _no files_
+
+> **DELETE**
+> Delete a watchlist (the header must have access token of jwt)
+> _no files_
 
 - **/movies/genre/(genre)/**:
 
@@ -45,137 +75,137 @@ This file contains endpoints and http methods for **Frontend Developer**
 - **/shows/**:
 
 > **GET**
-Get 10 of all shows per page
-*file: [show_list](json/shows/shows_list.json)*
+> Get 10 of all shows per page
+> _file: [show_list](json/shows/shows_list.json)_
 
 - **/shows/(slug)/**:
 
 > **GET**
-Detail of a show (you can request by get_absolute_url of a show)
-*file: [show_detail](json/shows/show_detail.json)*
- 
+> Detail of a show (you can request by get_absolute_url of a show)
+> _file: [show_detail](json/shows/show_detail.json)_
+
 - **/shows/episodes/**:
 
 > **GET**
-List of a show's episodes
-*file: [episode_list](json/shows/episode_list.json)*
- 
+> List of a show's episodes
+> _file: [episode_list](json/shows/episode_list.json)_
+
 - **/shows/episodes/(id)/**:
 
 > **GET**
-Detail of a episode (you can request by get_absolute_url of a episode)
-*file: [episode_detail](json/shows/episode_detail.json)*
+> Detail of a episode (you can request by get_absolute_url of a episode)
+> _file: [episode_detail](json/shows/episode_detail.json)_
 
 - **/shows/genre/(genre)/**:
 
 > **GET**
-Get 10 shows by the genre per page (you must request with slug of a genre in url)
-*file: [show_by_genre](json/shows/show_by_genre.json)*
+> Get 10 shows by the genre per page (you must request with slug of a genre in url)
+> _file: [show_by_genre](json/shows/show_by_genre.json)_
 
 - **/shows/country/(country)/**:
 
 > **GET**
-Get 10 shows by the country per page (you must request with slug of a country in url)
-*file: [show_by_country](json/shows/show_by_country.json)*
+> Get 10 shows by the country per page (you must request with slug of a country in url)
+> _file: [show_by_country](json/shows/show_by_country.json)_
 
 - **/shows/top/**:
 
 > **GET**
-Get top 250 shows
-*file: [top_shows](json/shows/top_shows.json)* 
+> Get top 250 shows
+> _file: [top_shows](json/shows/top_shows.json)_
 
 - **/shows/top/(genre)/**:
 
 > **GET**
-Get top 250 shows by the genre (you must request with slug of a genre in url)
-*file: [top_shows_by_genre](json/shows/top_shows.json)* 
+> Get top 250 shows by the genre (you must request with slug of a genre in url)
+> _file: [top_shows_by_genre](json/shows/top_shows.json)_
 
 ## Persons
 
 - **/persons/**
 
 > **GET**
-Get 10 of all persons per page
-*file: [person_list](json/persons/person_list.json)*
+> Get 10 of all persons per page
+> _file: [person_list](json/persons/person_list.json)_
 
 - **/persons/(id)/**
 
 > **GET**
-Get details of a person (you must request with id of a person)
-*file: [person_detail](json/persons/person_detail.json)*
+> Get details of a person (you must request with id of a person)
+> _file: [person_detail](json/persons/person_detail.json)_
 
 - **/persons/role/(role)/**
 
 > **GET**
-Get 10 of all persons filtered by role per page
-*file: [person_list_by_role](json/persons/person_list_by_role.json)*
+> Get 10 of all persons filtered by role per page
+> _file: [person_list_by_role](json/persons/person_list_by_role.json)_
 
 - **/persons/search/**
 
 > **GET**
-Search a person (you must add /?q="query" to url)
-*file: [person_search](json/persons/person_search.json)*
+> Search a person (you must add /?q="query" to url)
+> _file: [person_search](json/persons/person_search.json)_
 
 ## Specifications
 
 - **/videos/**
 
 > **GET**
-Get 10 of latest videos per page
-*file: [videos](json/specifications/videos.json)*
+> Get 10 of latest videos per page
+> _file: [videos](json/specifications/videos.json)_
 
 - **/photos/**
 
 > **GET**
-Get 10 of latest photos per page
-*file: [photos](json/specifications/photos.json)*
+> Get 10 of latest photos per page
+> _file: [photos](json/specifications/photos.json)_
 
 - **/genres/**
 
 > **GET**
-Get all of the genres that have movie or show
-*file: [genres](json/specifications/genres.json)*
+> Get all of the genres that have movie or show
+> _file: [genres](json/specifications/genres.json)_
 
 - **/countries/**
 
 > **GET**
-Get all of the countries that have movie or show
-*file: [countries](json/specifications/countries.json)*
+> Get all of the countries that have movie or show
+> _file: [countries](json/specifications/countries.json)_
 
 - **/comment/(comment_id)/**
 
 > **PATCH**
-Update a comment (you must request with id of a comment and the header must have access token of jwt)
-*files: [comment_update](json/specifications/comment_update.json)*
+> Update a comment (you must request with id of a comment and the header must have access token of jwt)
+> _files: [comment_update](json/specifications/comment.json)_
 
 > **DELETE**
-Delete a comment (you must request with id of a comment and the header must have access token of jwt)
-*no files*
+> Delete a comment (you must request with id of a comment and the header must have access token of jwt)
+> _no files_
 
 - **/comment/(comment_id)/like_or_dislike/**
 
->  **POST**
-Like or dislike a comment (you must request with id of a comment and the header must have access token of jwt)
-*file: [comment_like_or_dislike](json/specifications/comment_like_or_dislike.json)*
+> **POST**
+> Like or dislike a comment (you must request with id of a comment and the header must have access token of jwt)
+> _file: [comment_like_or_dislike](json/specifications/comment_like_or_dislike.json)_
 
 > **PATCH**
-Change like to dislike or ... (you must request with id of a comment and the header must have access token of jwt)
-*file: [comment_like_or_dislike](json/specifications/comment_like_or_dislike.json)*
+> Change like to dislike or ... (you must request with id of a comment and the header must have access token of jwt)
+> _file: [comment_like_or_dislike](json/specifications/comment_like_or_dislike.json)_
 
 > **DELETE**
-Delete the opinion on the comment (you must request with id of a comment and the header must have access token of jwt)
-*no files*
+> Delete the opinion on the comment (you must request with id of a comment and the header must have access token of jwt)
+> _no files_
 
 ## Home
 
 - **/**
 
 > **GET**
-Get featured_movies, latest_trailers, latest_episodes, latest_movies
-*file: [home](json/home/home.json)*
+> Get featured_movies, latest_trailers, latest_episodes, latest_movies
+> _file: [home](json/home/home.json)_
 
 - **/search/**
 
 > **GET**
-Search among the all movies, shows and episodes (you must add /?q="query" to url)
-*file: [search](json/home/search.json)*
+> Search among the all movies, shows and episodes (you must add /?q="query" to url)
+> _file: [search](json/home/search.json)_
