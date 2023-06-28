@@ -165,3 +165,17 @@ Change like to dislike or ... (you must request with id of a comment and the hea
 > **DELETE**
 Delete the opinion on the comment (you must request with id of a comment and the header must have access token of jwt)
 *no files*
+
+## Home
+
+- **/**
+
+> **GET**
+Get featured_movies, latest_trailers, latest_episodes, latest_movies
+*file: [home](json/home/home.json)*
+
+- **/search/**
+
+> **GET**
+Search among the all movies, shows and episodes (you must add /?q="query" to url)
+*file: [search](json/home/search.json)*
