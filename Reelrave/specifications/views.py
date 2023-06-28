@@ -76,7 +76,7 @@ class WatchListView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(status=HTTP_201_CREATED)
     
     def delete(self, request, slug, episode_id=None):
         if episode_id:
@@ -150,7 +150,7 @@ class RatingView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(status=HTTP_201_CREATED)
     
     def patch(self, request, slug, episode_id=None):
         if episode_id:
@@ -167,7 +167,7 @@ class RatingView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         
-        return Response(serializer.data)
+        return Response()
     
     def delete(self, request, slug, episode_id=None):
         if episode_id:
@@ -210,7 +210,7 @@ class CommentCreateView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(status=HTTP_201_CREATED)
 
 
 class UpdateDeleteCommentView(APIView):
