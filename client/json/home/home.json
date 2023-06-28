@@ -1,0 +1,65 @@
+{
+    "featured_movies": [
+        {
+            "id": 1,
+            "name": "TestMovie",
+            "baner": "/files/movies/TestMovie/baners/test.jpg",
+            "get_absolute_url": "/movies/testmovie/",
+            "release_date": "2023-06-20",
+            "average_rating": 10.0
+        }
+    ],
+    "latest_trailers": [
+        {
+            "title": "Test",
+            "video": "/files/movies/TestMovie/trailers/test.mp4",
+            "released": "2023-06-27T15:39:26.433055Z",
+            "is_trailer": true
+        }
+    ],
+    "latest_episodes": [
+        {
+            "id": 1,
+            "name": "Test",
+            "title": "'TestShow' Season 1 Episode 1 'Test'",
+            "baner": "/files/shows/TestShow/Season%201/Episode-1/baner/test.jpg",
+            "get_absolute_url": "/shows/testshow/episodes/1/"
+        }
+    ],
+    "latest_movies": [
+        {
+            "id": 1,
+            "name": "TestMovie",
+            "get_absolute_url": "/movies/testmovie/",
+            "average_rating": 10.0,
+            "baner": "/files/movies/TestMovie/baners/test.jpg",
+            "release_date": "2023-06-20",
+            "time": "02:22:32",
+            "content_rating": "R",
+            "genre": [
+                {
+                    "name": "Test",
+                    "slug": "test"
+                },
+                {
+                    "name": "Test_2",
+                    "slug": "test_2"
+                }
+            ],
+            "director": [
+                {
+                    "name": "TestPersons",
+                    "picture": "/files/presons/TestPersons/pictures/test.png"
+                }
+            ],
+            "description": "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.",
+            "country_of_origin": [
+                {
+                    "name": "Test",
+                    "slug": "test",
+                    "flag": "/files/countries/Test/test.jpg"
+                }
+            ]
+        }
+    ]
+}

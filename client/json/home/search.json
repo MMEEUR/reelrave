@@ -1,0 +1,29 @@
+{
+    "query": "test",
+    "result": [
+        {
+            "object_id": 1,
+            "object_type": "episode",
+            "name": "Test",
+            "baner": "/files/shows/TestShow/Season%201/Episode-1/baner/test.jpg",
+            "release_date": "2023-06-27",
+            "get_absolute_url": "/shows/testshow/episodes/1/"
+        },
+        {
+            "object_id": 1,
+            "object_type": "show",
+            "name": "TestShow",
+            "baner": "/files/shows/TestShow/baners/test.jpg",
+            "release_date": "2023-06-27",
+            "get_absolute_url": "/shows/testshow/"
+        },
+        {
+            "object_id": 1,
+            "object_type": "movie",
+            "name": "TestMovie",
+            "baner": "/files/movies/TestMovie/baners/test.jpg",
+            "release_date": "2023-06-20",
+            "get_absolute_url": "/movies/testmovie/"
+        }
+    ]
+}
