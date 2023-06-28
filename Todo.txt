@@ -6,13 +6,13 @@ Backend:
 - Complete the readme file
 - Add collection model
 - Install daphne
-- Add spec endpoints
 - Add home endpoints
 - Add accounts endpoints
 - Add chat endpoints
 - Install django channels
 - Add capthca
 |
+- Add spec endpoints (Done)
 - Add persons endpoints (Done)
 - Add Testcases (Done)
 - Create a task to delete expired records (Done)
