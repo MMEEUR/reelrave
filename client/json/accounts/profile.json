@@ -1,0 +1,32 @@
+{
+    "username": "test",
+    "email": "test@example.com",
+    "bio": "Test bio",
+    "date_of_birth": "2023-06-29",
+    "photo": "/files/users/TestUser/photos/test.jpg",
+    "watchlist": [
+        {
+            "content_object": {
+                "name": "TestMovie",
+                "baner": "/files/movies/TestMovie/baners/test.jpg",
+                "get_absolute_url": "/movies/testmovie/",
+                "release_date": "2023-06-20",
+                "time": "02:22:32",
+                "content_rating": "R",
+                "genre": [
+                    {
+                        "name": "Test",
+                        "slug": "test"
+                    },
+                    {
+                        "name": "Test_2",
+                        "slug": "test_2"
+                    }
+                ],
+                "average_rating": 10.0,
+                "description": "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion."
+            },
+            "created": "2023-06-29T21:16:59.172281Z"
+        }
+    ]
+}

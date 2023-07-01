@@ -1,0 +1,19 @@
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4ODI4NzE0MSwiaWF0IjoxNjg4MjAwNzQxLCJqdGkiOiJjNmI1OTRiODczNzI0MWM5OTA5ODJiYTQyYTVkNjIzYyIsInVzZXJfaWQiOjF9.9SwwqNwZ6wmLCKQ2jNpFpYRV0SYgN9Wwy39CqDhySgE",
+    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg4MjAxMDQxLCJpYXQiOjE2ODgyMDA3NDEsImp0aSI6IjQzNDg4ZmRiNDA2NDRhYTI4YjAwOTI0NjY1YmZmODgxIiwidXNlcl9pZCI6MX0.eXrjLG-nNkAXJSlIN4RQNtzDbqa2WZddpS7X1lzudBE",
+    "activity": {
+        "watchlist": [
+            {
+                "content_type": "7",
+                "object_id": 1
+            }
+        ],
+        "ratings": [
+            {
+                "content_type": "7",
+                "object_id": 1,
+                "rating": 10.0
+            }
+        ]
+    }
+}

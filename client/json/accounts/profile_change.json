@@ -1,0 +1,7 @@
+{
+    "username": "test",
+    "email": "test@example.com",
+    "bio": "Test bio",
+    "date_of_birth": "2023-06-29",
+    "photo": "/files/users/TestUser/photos/test.jpg"
+}
