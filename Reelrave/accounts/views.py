@@ -39,7 +39,7 @@ class CreateUserView(APIView):
         
         send_welcome_email.delay(email=email, username=username)
 
-        return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(status=HTTP_201_CREATED)
     
     
 class ResendEmailConfirmCodeView(APIView):
@@ -59,7 +59,7 @@ class ResendEmailConfirmCodeView(APIView):
             
         send_mail("Activation Code", f"Your confirm code:\n\n\t {code}", "a@g.com", [email])
             
-        return Response({"detail": "Confirm code has been sent."})
+        return Response()
 
 
 class LoginView(APIView):
@@ -104,7 +104,7 @@ class ProfileView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(serializer.data)
+        return Response()
     
     
 class GlobalProfileView(APIView):
@@ -133,7 +133,7 @@ class ChangePasswordView(APIView):
         user.set_password(new_password)
         user.save()
         
-        return Response({"detail": "Password changed successfully."})
+        return Response()
 
     
 class CheckUsernameEmailView(APIView):
@@ -172,7 +172,7 @@ class ResetPasswordRequestView(APIView):
         
         send_mail(subject, message, from_email, [to_email], fail_silently=False)
 
-        return Response({"detail": "Password reset email has been sent."})
+        return Response()
     
     
 class ResetPasswordView(APIView):
@@ -196,4 +196,4 @@ class ResetPasswordView(APIView):
         
         PasswordReset.objects.filter(user=user).delete()
         
-        return Response({"detail": "Password has been reset successfully."})
+        return Response()
