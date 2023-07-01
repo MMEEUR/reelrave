@@ -269,3 +269,69 @@ This file contains endpoints and http methods for **Frontend Developer**
 > **GET**
 > Search among the all movies, shows and episodes (you must add /?q="query" to url)
 > _file: [search](json/home/search.json)_
+
+## Accounts
+
+- **/accounts/token/refresh/**
+
+> **POST**
+> Get a new access token
+> _file: [token_refresh_request](json/accounts/token_refresh_request.json) - [token_refresh_response](json/accounts/token_refresh_response.json)_
+
+- **/accounts/profile/(user_id)/**
+
+> **GET**
+> Get a global profile of a user
+> _file: [global_profile](json/accounts/global_profile.json)_
+
+- **/accounts/profile/**
+
+> **GET**
+> Users see their profile (you must request with id of a comment and the header must have access token of jwt)
+> _file: [profile](json/accounts/profile.json)_
+
+> **PUT**
+> Users can change their username, email, bio, date_of_birth or photo (you must request with id of a comment and the header must have access token of jwt)
+> _file: [profile_change](json/accounts/profile_change.json)_
+
+- **/accounts/resend-code/**
+
+> **POST**
+> Send verification code to an email (you must do this before register)
+> _file: [resend-code](json/accounts/resend_code.json)_
+
+- **/accounts/register/**
+
+> **POST**
+> Create a user (you must have code from resend code)
+> _file: [register](json/accounts/register.json)_
+
+- **/accounts/login/**
+
+> **POST**
+> Login to get tokens watchlist, and ratings
+> _files: [login_request](json/accounts/login_request.json) - [login_response](json/accounts/login_response.json)_
+
+- **/accounts/change-password/**
+
+> **PATCH**
+> Change the user's password (the header must have access token of jwt)
+> _file: [change_password](json/accounts/change_password.json)_
+
+- **/accounts/reset-password/**
+
+> **POST**
+> Users request to send a reset password token
+> _file: [reset_password_request](json/accounts/reset_password_request.json)_
+
+- **/accounts/reset-password/(token)/**
+
+> **POST**
+> Compelete reset password
+> _file: [reset_password](json/accounts/reset_password.json)_
+
+- **/accounts/check-username-email/**
+
+> **POST**
+> To check a username or email is available
+> _files: [check_username_email_request](json/accounts/check_username_email_request.json) - [check_username_email_response](json/accounts/check_username_email_response.json)_
