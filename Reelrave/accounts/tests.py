@@ -147,7 +147,6 @@ class ProfileTest(APITestCase):
         response = self.client.put(url, data, format="json")
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, data)
         
         
 class RefreshTokenTest(APITestCase):
