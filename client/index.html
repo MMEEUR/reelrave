@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .movie-section {
+            margin-bottom: 30px;
+        }
+
+        .movie {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .movie img {
+            width: 100%;
+            height: auto;
+        }
+
+        .movie-details {
+            padding: 15px;
+        }
+
+        .movie-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .movie-description {
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Movie Portal</h1>
+    </header>
+
+    <div class="container">
+        <div class="movie-section" id="featured-movies">
+            <h2>Featured Movies</h2>
+            <!-- Featured Movies will be inserted here dynamically -->
+        </div>
+
+        <div class="movie-section" id="latest-trailers">
+            <h2>Latest Trailers</h2>
+            <!-- Latest Trailers will be inserted here dynamically -->
+        </div>
+
+        <div class="movie-section" id="latest-episodes">
+            <h2>Latest Episodes</h2>
+            <!-- Latest Episodes will be inserted here dynamically -->
+        </div>
+
+        <div class="movie-section" id="latest-movies">
+            <h2>Latest Movies</h2>
+            <!-- Latest Movies will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Fetch data from the API using AJAX
+        function fetchData(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    callback(data);
+                }
+            };
+            xhr.open("GET", url, true);
+            xhr.send();
+        }
+
+        // Function to render movies section
+        function renderMoviesSection(sectionId, movies) {
+            var section = document.getElementById(sectionId);
+            movies.forEach(function (movie) {
+                var movieElement = document.createElement("div");
+                movieElement.classList.add("movie");
+
+                var image = document.createElement("img");
+                image.src = movie.baner;
+                movieElement.appendChild(image);
+
+                var details = document.createElement("div");
+                details.classList.add("movie-details");
+
+                var title = document.createElement("div");
+                title.classList.add("movie-title");
+                title.textContent = movie.name;
+                details.appendChild(title);
+
+                var description = document.createElement("div");
+                description.classList.add("movie-description");
+                description.textContent = movie.description;
+                details.appendChild(description);
+
+                movieElement.appendChild(details);
+                section.appendChild(movieElement);
+            });
+        }
+
+        // Fetch data and render sections
+        fetchData("http://localhost:8000/", function (data) {
+            renderMoviesSection("featured-movies", data.featured_movies);
+            renderMoviesSection("latest-trailers", data.latest_trailers);
+            renderMoviesSection("latest-episodes", data.latest_episodes);
+            renderMoviesSection("latest-movies", data.latest_movies);
+        });
+    </script>
+</body>
+</html>
