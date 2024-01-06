@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Comments</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="http://localhost:8000/files/movies/asdasd/baners/Screenshot_1.png" alt="Movie Poster" class="img-fluid">
+        </div>
+        <div class="col-md-8">
+            <h1>The Shawshank Redemption</h1>
+            <p>Chronicles the experiences of a formerly successful banker...</p>
+
+            <div class="mt-4">
+                <h2>Comments</h2>
+                <div id="comments">
+                </div>
+            </div>
+            <div class="mt-4">
+                <h3>Add a Comment</h3>
+                <form onsubmit="postComment(event)">
+
+                    <div class="form-group">
+                        <label for="comment">Your Comment</label>
+                        <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit Comment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+
+const movie_url = "http://localhost:8000/movies/heat/";
+const post_comment_url = "http://localhost:8000/movies/heat/comment/";
+const refresh_url = "http://localhost:8000/account/token/refresh/";
+
+function display(){
+    fetch(movie_url).then(response => response.json())
+    .then(data => {
+        let commentcard = "";
+        let all_comments = document.getElementById("comments");
+
+        data.comments.forEach(element => {
+            commentcard = `
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">${element.user.username}</h5>
+                    <p class="card-text">${element.body}</p>
+                </div>
+            </div>
+            `
+            all_comments.innerHTML += commentcard;
+        });
+
+        console.log(data);
+    })
+}
+
+window.addEventListener("load", display);
+
+function postComment(event){
+
+    event.preventDefault();
+
+    var body = document.getElementById("comment").value;
+
+    fetch(refresh_url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({refresh: localStorage.getItem("refreshToken")}),
+        })
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem("accessToken", data.access);
+
+            console.log("Tokens stored in local storage:", localStorage);
+        })
+        .catch(error => {
+            console.error("Error during login request:", error);
+    });
+
+    fetch(post_comment_url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": 'Bearer ' + localStorage.getItem("accessToken"),
+        },
+        body: JSON.stringify({body: body}),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.error("Error during login request:", error);
+    });
+}
+
+
+</script>
+
+</body>
+</html>
