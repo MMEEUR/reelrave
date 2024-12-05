@@ -14,8 +14,18 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ("is_staff",)
     search_fields = ("username", "email")
     
-    fieldsets = UserAdmin.fieldsets + ((None, {"fields": ("bio", "date_of_birth", "photo")}),)
-    add_fieldsets = UserAdmin.add_fieldsets + ((None, {"fields": ("bio", "date_of_birth", "photo")}),)
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        ("Personal Info", {"fields": ("email", "bio", "date_of_birth", "photo")}),
+        ("Permissions", {"fields": ("is_staff", "is_active", "groups", "user_permissions")}),
+        ("Important Dates", {"fields": ("last_login", "date_joined")}),
+    )
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("username", "email", "password1", "password2", "bio", "date_of_birth", "photo"),
+        }),
+    )
     
     
 @admin.register(PasswordReset)
