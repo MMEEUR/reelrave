@@ -5,11 +5,11 @@
       <v-toolbar-title>ReelRave</v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <v-btn text color="#FFD369" to="/">Home</v-btn>
+      <!-- <v-btn text color="#FFD369" to="/">Home</v-btn> -->
       <v-btn text color="#FFD369" to="/movies">Movies</v-btn>
-      <v-btn text color="#FFD369" to="/shows">Shows</v-btn>
-      <v-btn text color="#FFD369" to="/persons">Persons</v-btn>
-      <v-btn text color="#FFD369" to="/genres">Genres</v-btn>
+      <!-- <v-btn text color="#FFD369" to="/shows">Shows</v-btn> -->
+      <!-- <v-btn text color="#FFD369" to="/persons">Persons</v-btn> -->
+      <!-- <v-btn text color="#FFD369" to="/genres">Genres</v-btn> -->
 
       <template v-if="isLoggedIn">
         <v-btn text color="#FFD369" to="/profile">Profile</v-btn>
