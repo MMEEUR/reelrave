@@ -28,6 +28,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         if attrs['password'] != attrs['confirm_password']:
             raise serializers.ValidationError({"error": "Passwords must match."})
         
+        validate_password(attrs['password'])
+        
         try:
             EmailConfirm.objects.get(email=email, code=code, expires__gte=timezone.now())
             
@@ -38,6 +40,20 @@ class UserCreateSerializer(serializers.ModelSerializer):
         validated_data.pop('email_code')
             
         return validated_data
+    
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        validated_data.pop('confirm_password', None)
+        validated_data.pop('email_code', None)
+
+        user = User(**validated_data)
+        
+        if password:
+            user.set_password(password)
+            
+        user.save()
+        
+        return user
     
     
 class LoginSerializer(serializers.Serializer):
@@ -64,6 +80,16 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', 'bio', 'date_of_birth', 'photo')
+        
+        
+class UserProfileChangeSerializer(serializers.ModelSerializer):
+    bio = serializers.CharField(required=False)
+    date_of_birth = serializers.DateField(required=False)
+    photo = serializers.URLField(required=False)
+    
+    class Meta:
+        model = User
+        fields = ('bio', 'date_of_birth', 'photo')
 
 
 class UserCommentSerializer(serializers.ModelSerializer):

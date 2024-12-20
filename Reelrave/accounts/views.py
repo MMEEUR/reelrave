@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import (
-    UserCreateSerializer, GlobalProfileSerializer, UserProfileSerializer,
+    UserCreateSerializer, GlobalProfileSerializer, UserProfileSerializer, UserProfileChangeSerializer,
     ChangePasswordSerializer, PasswordResetRequestSerializer,
     ValidatePasswordSerializer, ResendEmailConfirmCodeSerializer,
     LoginSerializer
@@ -100,7 +100,7 @@ class ProfileView(APIView):
         return Response(data)
 
     def put(self, request):
-        serializer = UserProfileSerializer(request.user, request.data)
+        serializer = UserProfileChangeSerializer(request.user, request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 

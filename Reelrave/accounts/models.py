@@ -35,23 +35,23 @@ class CustomUser(AbstractUser):
     def __str__(self) -> str:
         return self.username
 
-    def clean(self):
-        super().clean()
+    # def clean(self):
+    #     super().clean()
 
-        if self.photo:
-            try:
-                image = ImageFile(self.photo)
+    #     if self.photo:
+    #         try:
+    #             image = ImageFile(self.photo)
 
-                if image.width > 1920 or image.height > 1080:
-                    raise ValidationError(
-                        _("Image dimensions should not exceed 1920x1080.")
-                    )
+    #             if image.width > 1920 or image.height > 1080:
+    #                 raise ValidationError(
+    #                     _("Image dimensions should not exceed 1920x1080.")
+    #                 )
 
-                if self.photo.size > 1024 * 1024 * 2:
-                    raise ValidationError(_("Image size should not exceed 2 MB."))
+    #             if self.photo.size > 1024 * 1024 * 2:
+    #                 raise ValidationError(_("Image size should not exceed 2 MB."))
 
-            except OSError:
-                raise ValidationError(_("Invalid image file."))
+    #         except OSError:
+    #             raise ValidationError(_("Invalid image file."))
     
     
 class PasswordReset(models.Model):
