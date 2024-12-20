@@ -68,15 +68,12 @@ export default {
         });
         const { refresh, access, activity } = response.data;
 
-        // Save tokens to localStorage
         localStorage.setItem("refreshToken", refresh);
         localStorage.setItem("accessToken", access);
 
-        // Store activity in localStorage or Vuex
         localStorage.setItem("userActivity", JSON.stringify(activity));
 
-        // Redirect to home or dashboard
-        this.$router.push("/profile");
+        window.location.reload();
       } catch (err) {
         this.error = err.response?.data?.detail || "Login failed. Please try again.";
       }
