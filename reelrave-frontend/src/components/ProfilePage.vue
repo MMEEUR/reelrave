@@ -129,7 +129,14 @@ export default {
           }
         });
 
-        this.fetchProfile();
+        // Extract slug from get_absolute_url
+        const slug = movieUrl.split('/').filter(Boolean).pop();
+
+        // Remove from localStorage
+        const watchlist = JSON.parse(localStorage.getItem('watchlist') || '{}');
+        delete watchlist[slug];
+        localStorage.setItem('watchlist', JSON.stringify(watchlist));
+
         this.fetchProfile();
       } catch (error) {
         console.error('Error removing movie from watchlist:', error);
@@ -137,7 +144,6 @@ export default {
     },
     logout() {
       localStorage.removeItem('refreshToken');
-      window.location.reload();
       window.location.reload();
     }
   },
