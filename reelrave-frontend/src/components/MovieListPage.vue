@@ -36,15 +36,6 @@
             </v-card>
           </v-col>
         </v-row>
-        <v-row justify="center" align="center" class="mt-4">
-          <v-pagination
-            v-model="currentPage"
-            :length="totalPages"
-            total-visible="5"
-            circle
-            @input="fetchMovies"
-          ></v-pagination>
-        </v-row>
       </v-container>
     </v-app>
   </template>
@@ -69,8 +60,6 @@
             },
           });
           this.movies = response.data;
-          this.totalPages = parseInt(response.headers['x-total-count']) / parseInt(response.headers['x-page-size']);
-          this.currentPage = parseInt(response.headers['x-page']);
         } catch (error) {
           console.error('Error fetching movies:', error);
         }
