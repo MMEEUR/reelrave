@@ -16,14 +16,16 @@
             </v-chip>
           </v-chip-group>
 
-          <v-btn
-            :color="isInWatchlist ? 'red' : 'green'"
-            class="mt-4"
-            @click="toggleWatchlist"
-            style="color: #EEEEEE; font-weight: bold;"
-          >
-            {{ isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist' }}
-          </v-btn>
+          <div v-if="isLoggedIn">
+            <v-btn
+              :color="isInWatchlist ? 'red' : 'green'"
+              class="mt-4"
+              @click="toggleWatchlist"
+              style="color: #EEEEEE; font-weight: bold;"
+            >
+              {{ isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist' }}
+            </v-btn>
+          </div>
 
           <v-list class="mt-5" style="background-color: #393E46; padding: 20px; border-radius: 8px;">
             <v-list-item>
