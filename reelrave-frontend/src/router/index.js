@@ -22,7 +22,7 @@ const routes = [
     component: ProfilePage
   },
   {
-    path: '/movies',
+    path: '/',
     name: 'MoviesList',
     component: MovieListPage
   },
