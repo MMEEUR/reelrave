@@ -16,7 +16,16 @@
             </v-chip>
           </v-chip-group>
 
-          <v-list class="mb-3" style="background-color: #393E46; padding: 20px; border-radius: 8px;">
+          <v-btn
+            :color="isInWatchlist ? 'red' : 'green'"
+            class="mt-4"
+            @click="toggleWatchlist"
+            style="color: #EEEEEE; font-weight: bold;"
+          >
+            {{ isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist' }}
+          </v-btn>
+
+          <v-list class="mt-5" style="background-color: #393E46; padding: 20px; border-radius: 8px;">
             <v-list-item>
               <v-list-item-content>
                 <strong style="color: #FFD369; font-size: 1.1rem;">Country of Origin:</strong>
@@ -122,11 +131,20 @@ export default {
       newComment: "",
       isLoggedIn: false,
       likedComments: JSON.parse(localStorage.getItem('likedComments')) || {},
+      isInWatchlist: false,
     };
   },
   created() {
     this.checkLoginStatus();
     this.refreshPage();
+  },
+  watch: {
+    movie: {
+      handler() {
+        this.checkWatchlistStatus();
+      },
+      immediate: true,
+    },
   },
   methods: {
     async checkLoginStatus() {
@@ -245,8 +263,64 @@ export default {
       } catch (error) {
         console.error("Failed to handle like/dislike:", error);
       }
-    }
-  }
+    },
+    checkWatchlistStatus() {
+      const watchlist = JSON.parse(localStorage.getItem("watchlist")) || {};
+      this.isInWatchlist = !!watchlist[this.movie.slug];
+    },
+    async toggleWatchlist() {
+      const tokenResponse = await axios.post("http://127.0.0.1:8000/accounts/token/refresh/", {
+        refresh: localStorage.getItem("refreshToken"),
+      });
+      const accessToken = tokenResponse.data.access;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      try {
+        if (this.isInWatchlist) {
+          try {
+            await axios.delete(`http://127.0.0.1:8000/movies/${this.movie.slug}/watchlist/`, config);
+            this.updateWatchlist(false);
+          } catch (error) {
+            if (error.response && error.response.status === 404) {
+              await axios.post(`http://127.0.0.1:8000/movies/${this.movie.slug}/watchlist/`, {}, config);
+              this.updateWatchlist(true);
+            } else {
+              throw error;
+            }
+          }
+        } else {
+          try {
+            await axios.post(`http://127.0.0.1:8000/movies/${this.movie.slug}/watchlist/`, {}, config);
+            this.updateWatchlist(true);
+          } catch (error) {
+            if (error.response && error.response.status === 400) {
+              await axios.delete(`http://127.0.0.1:8000/movies/${this.movie.slug}/watchlist/`, config);
+              this.updateWatchlist(false);
+            } else {
+              throw error;
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Failed to toggle watchlist status:", error);
+        alert("Failed to update watchlist. Please try again later.");
+      }
+    },
+    updateWatchlist(status) {
+      const watchlist = JSON.parse(localStorage.getItem("watchlist")) || {};
+      if (status) {
+        watchlist[this.movie.slug] = true;
+      } else {
+        delete watchlist[this.movie.slug];
+      }
+      localStorage.setItem("watchlist", JSON.stringify(watchlist));
+      this.isInWatchlist = status;
+    },
+  },
 };
 </script>
 
