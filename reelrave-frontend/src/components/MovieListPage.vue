@@ -14,7 +14,7 @@
                 {{ movie.name }}
               </v-card-title>
               <v-card-subtitle class="movie-subtitle">
-                Rating: {{ movie.average_rating || 'N/A' }} | Release: {{ movie.release_date }}
+                Release: {{ movie.release_date }}
               </v-card-subtitle>
               <v-card-text class="movie-details">
                 <span>Time: {{ movie.time }}</span>
